@@ -1327,6 +1327,41 @@
     .mode-option svg { width: 15px; }
     .mode-option.active { color: #fff; background: linear-gradient(135deg, var(--teal), var(--primary)); box-shadow: 0 6px 16px rgba(57, 111, 143, 0.2); }
 
+    .call-connect-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-bottom: 14px; }
+    .call-connect-tab { padding: 8px 6px; border: 1px solid var(--border); border-radius: 9px; color: var(--text-soft); background: var(--surface-solid); cursor: pointer; font-size: 8px; font-weight: 850; }
+    .call-connect-tab.active { color: var(--primary); border-color: var(--primary); background: var(--blue-soft); }
+    .call-connect-panel[hidden] { display: none; }
+    .call-connect-panel { min-height: 164px; padding: 13px; border: 1px solid var(--border); border-radius: 13px; background: var(--surface-solid); }
+    .call-connect-panel h4 { margin: 0; font-size: 11px; }
+    .call-connect-panel > p { margin: 5px 0 11px; color: var(--text-soft); font-size: 8px; line-height: 1.5; }
+    .peer-safety-consent { display: flex; align-items: flex-start; gap: 7px; margin: 0 0 12px; padding: 9px; border-radius: 10px; color: var(--text-soft); background: var(--danger-soft); font-size: 7px; line-height: 1.5; }
+    .peer-safety-consent input { flex: 0 0 auto; margin-top: 1px; accent-color: var(--primary); }
+
+    .match-status { display: flex; align-items: center; gap: 7px; min-height: 18px; margin-top: 9px; color: var(--text-soft); font-size: 8px; font-weight: 700; }
+    .match-status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); }
+    .match-status.searching .match-status-dot { background: #d39a55; animation: match-blink 1.1s ease-in-out infinite; }
+    .match-status.ready .match-status-dot { background: var(--success); }
+    .match-status.error .match-status-dot { background: var(--danger); }
+    .match-actions { display: flex; gap: 6px; }
+    .match-actions .call-primary { margin-top: 0; }
+    .match-actions .card-button { flex: 0 0 auto; }
+
+    .schedule-fields { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 7px; align-items: end; }
+    .schedule-fields .call-primary { width: auto; min-width: 105px; margin: 0; }
+    .booking-list { display: grid; gap: 6px; max-height: 150px; margin-top: 10px; overflow-y: auto; }
+    .booking-empty { padding: 10px; border-radius: 9px; color: var(--muted); background: var(--surface-soft); font-size: 8px; text-align: center; }
+    .booking-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: center; padding: 9px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-soft); }
+    .booking-item strong { display: block; font-size: 9px; }
+    .booking-item span { display: block; margin-top: 3px; color: var(--text-soft); font-size: 7px; }
+    .booking-actions { display: flex; gap: 4px; }
+    .booking-actions button { padding: 6px 7px; font-size: 7px; }
+    .backend-note { margin-top: 8px; color: var(--muted); font-size: 7px; line-height: 1.45; }
+
+    @keyframes match-blink {
+      0%, 100% { opacity: 0.4; transform: scale(0.85); }
+      50% { opacity: 1; transform: scale(1.1); }
+    }
+
     .call-field { display: grid; gap: 6px; }
     .call-field label { font-size: 9px; font-weight: 800; }
     .call-field input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 11px; outline: 0; color: var(--text); background: var(--surface-solid); font-family: Consolas, "Courier New", monospace; font-size: 11px; }
@@ -1526,6 +1561,11 @@
       .peer-id-wrap { margin-top: 13px; }
       .call-security { margin-top: 14px; }
       .mode-selector { margin: 13px 0 11px; }
+      .call-connect-panel { min-height: 0; }
+      .schedule-fields { grid-template-columns: 1fr; }
+      .schedule-fields .call-primary { width: 100%; }
+      .match-actions { display: grid; }
+      .match-actions .card-button { width: 100%; }
       .call-dialog.in-call .modal-head { display: none; }
       .call-dialog.in-call .call-body { height: 100vh; height: 100dvh; padding: 0; overflow: hidden; }
       .video-grid, .remote-video { width: 100%; min-height: 0; height: calc(100vh - 76px); height: calc(100dvh - 76px); border-radius: 12px; }
@@ -1806,7 +1846,7 @@
 
         <section class="call-join">
           <h3>Connect to another person</h3>
-          <p>Choose the call type, then enter the temporary ID shared by the other person.</p>
+          <p>Choose the call type, then match now, schedule for later, or use a shared ID.</p>
           <div class="mode-selector" role="radiogroup" aria-label="Call type">
             <button class="mode-option active" type="button" role="radio" aria-checked="true" data-call-mode="video">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="m16 10 5-3v10l-5-3v-4Z"/></svg>Video call
@@ -1815,16 +1855,59 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3M8 22h8" stroke-linecap="round"/></svg>Audio call
             </button>
           </div>
-          <form id="peerCallForm">
-            <div class="call-field">
-              <label for="remotePeerId">Other person's unique ID</label>
-              <input id="remotePeerId" type="text" maxlength="64" autocomplete="off" spellcheck="false" placeholder="calm-XXXX-XXXX-XXXX">
+          <label class="peer-safety-consent"><input id="peerSafetyConsent" type="checkbox">I am 18 or older and agree not to share identifying information. I will end and report unsafe behavior.</label>
+
+          <div class="call-connect-tabs" role="tablist" aria-label="Connection method">
+            <button class="call-connect-tab active" type="button" role="tab" aria-selected="true" data-call-tab="match">Match now</button>
+            <button class="call-connect-tab" type="button" role="tab" aria-selected="false" data-call-tab="schedule">Schedule</button>
+            <button class="call-connect-tab" type="button" role="tab" aria-selected="false" data-call-tab="manual">Use an ID</button>
+          </div>
+
+          <div class="call-connect-panel" id="onlineMatchPanel" data-call-panel="match">
+            <h4>Find someone online now</h4>
+            <p>Join the anonymous queue and connect with one available CalmWave user who selected the same call type.</p>
+            <div class="match-actions">
+              <button class="call-primary" id="findOnlinePeer" type="button" disabled>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2.5 19a5.5 5.5 0 0 1 11 0M13.5 17.5a4.5 4.5 0 0 1 8 1.5"/></svg>
+                Find someone online
+              </button>
+              <button class="card-button secondary" id="cancelOnlineMatch" type="button" hidden>Cancel</button>
             </div>
-            <button class="call-primary" id="startPeerCall" type="submit" disabled>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M15 10.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-2.5Z"/><path d="m15 9 6-3v10l-6-3V9Z"/></svg>
-              Start video call
-            </button>
-          </form>
+            <div class="match-status" id="onlineMatchStatus"><span class="match-status-dot"></span><span id="onlineMatchStatusText">Ready to search</span></div>
+            <div class="backend-note">Matching is anonymous. Stay on this screen while searching. You can decline any incoming call.</div>
+          </div>
+
+          <div class="call-connect-panel" id="scheduleCallPanel" data-call-panel="schedule" hidden>
+            <h4>Schedule for later</h4>
+            <p>Choose a future time. CalmWave pairs compatible bookings, then both people return and tap “Join” at that time.</p>
+            <form id="scheduleCallForm">
+              <div class="schedule-fields">
+                <div class="call-field">
+                  <label for="scheduleCallTime">Date and time</label>
+                  <input id="scheduleCallTime" type="datetime-local" step="900" required>
+                </div>
+                <button class="call-primary" id="scheduleCallButton" type="submit" disabled>Book call</button>
+              </div>
+            </form>
+            <div class="match-status" id="scheduleStatus"><span class="match-status-dot"></span><span id="scheduleStatusText">No booking selected</span></div>
+            <div class="booking-list" id="scheduledCallList"><div class="booking-empty">Your upcoming anonymous calls will appear here.</div></div>
+            <div class="backend-note">The app must be open near the booked time. Browser notifications are not guaranteed.</div>
+          </div>
+
+          <div class="call-connect-panel" id="manualCallPanel" data-call-panel="manual" hidden>
+            <h4>Use a shared temporary ID</h4>
+            <p>Enter the ID shared directly by someone you know or trust.</p>
+            <form id="peerCallForm">
+              <div class="call-field">
+                <label for="remotePeerId">Other person's unique ID</label>
+                <input id="remotePeerId" type="text" maxlength="64" autocomplete="off" spellcheck="false" placeholder="calm-XXXX-XXXX-XXXX">
+              </div>
+              <button class="call-primary" id="startPeerCall" type="submit" disabled>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M15 10.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-2.5Z"/><path d="m15 9 6-3v10l-6-3V9Z"/></svg>
+                Start video call
+              </button>
+            </form>
+          </div>
           <p class="call-error" id="callError" role="alert"></p>
         </section>
       </div>
@@ -1840,6 +1923,7 @@
           <div class="call-controls">
             <button class="call-control" id="toggleMicrophone" type="button" aria-label="Mute microphone" title="Mute microphone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3M8 22h8" stroke-linecap="round"/></svg></button>
             <button class="call-control" id="toggleCamera" type="button" aria-label="Turn camera off" title="Turn camera off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="m16 10 5-3v10l-5-3v-4Z"/></svg></button>
+            <button class="call-control" id="reportPeerCall" type="button" aria-label="Report and block this peer" title="Report and block" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="M12 8v5M12 17h.01" stroke-linecap="round"/></svg></button>
             <button class="call-control end" id="endPeerCall" type="button" aria-label="End call" title="End call"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 15.5c4.7-4.7 10.3-4.7 15 0l-2.8 2.8-3-2.1a10 10 0 0 0-3.4 0l-3 2.1-2.8-2.8Z" stroke-linejoin="round"/></svg></button>
           </div>
         </div>
@@ -1933,8 +2017,14 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <noscript><p style="padding:2rem;text-align:center">CalmWave needs JavaScript enabled to provide chat and guided exercises.</p></noscript>
   <script src="https://unpkg.com/peerjs@1.5.5/dist/peerjs.min.js" integrity="sha256-dgTYwxvsTxNLDRXC2AsdCV6hivAFNU9DnxQpH817QWg=" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@supabase/supabase-js@2.118.0/dist/umd/supabase.js" integrity="sha256-7jvo3hkrl8sdc9HpXWuCux9rZYwPl8TvdX/DMZlu09M=" crossorigin="anonymous"></script>
   <script>
     'use strict';
+
+    // SUPABASE SETUP: replace these two public values after running supabase-setup.sql.
+    // Use only the Project URL and publishable/anon key. Never place a service-role key here.
+    const SUPABASE_URL = 'https://dugvvryepclxbfwaufdh.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_u7OsIchrly9IAJnHFFG4Xg_qYTkEE3S';
 
     // ADD YOUR VERIFIED GROUPS HERE. Keep the array empty until you provide the real groups.
     // Fields: id, name, type, location, schedule, format, description, image, joinUrl.
@@ -2062,6 +2152,17 @@
     const callTimerElement = document.getElementById('callTimer');
     const microphoneButton = document.getElementById('toggleMicrophone');
     const cameraButton = document.getElementById('toggleCamera');
+    const reportPeerButton = document.getElementById('reportPeerCall');
+    const peerSafetyConsent = document.getElementById('peerSafetyConsent');
+    const findOnlinePeerButton = document.getElementById('findOnlinePeer');
+    const cancelOnlineMatchButton = document.getElementById('cancelOnlineMatch');
+    const onlineMatchStatus = document.getElementById('onlineMatchStatus');
+    const onlineMatchStatusText = document.getElementById('onlineMatchStatusText');
+    const scheduleCallTimeInput = document.getElementById('scheduleCallTime');
+    const scheduleCallButton = document.getElementById('scheduleCallButton');
+    const scheduleStatus = document.getElementById('scheduleStatus');
+    const scheduleStatusText = document.getElementById('scheduleStatusText');
+    const scheduledCallList = document.getElementById('scheduledCallList');
     const entryScreen = document.getElementById('entryScreen');
     const appShell = document.getElementById('appShell');
 
@@ -2120,6 +2221,24 @@
     let callConnectTimeout = null;
     let callStartedAt = null;
     let endingCall = false;
+    let supabaseClient = null;
+    let supabaseUser = null;
+    let supabaseChannel = null;
+    let supabaseInitPromise = null;
+    let matchmakingHeartbeat = null;
+    let matchmakingGeneration = 0;
+    let bookingRefreshTimer = null;
+    let onlineMatchSearching = false;
+    let onlineMatchAttemptInFlight = false;
+    let expectedOnlinePeerId = null;
+    let currentBackendCall = null;
+    let scheduledReadyCallId = null;
+    let scheduledReadyHeartbeat = null;
+    let scheduledReadyGeneration = 0;
+    let callCenterOpen = false;
+    let scheduledBookings = [];
+    const handledBackendCalls = new Set();
+    const blockedPeerIds = new Set(storage.getJSON('calmwave.blocked-peer-ids.v1', []));
     let conversationVersion = 0;
     let activeBreathing = null;
     let toastTimer = null;
@@ -2583,10 +2702,118 @@
       peerStatusText.textContent = text;
     }
 
+    function isSupabaseConfigured() {
+      return /^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(SUPABASE_URL) &&
+        !SUPABASE_ANON_KEY.startsWith('YOUR_') &&
+        SUPABASE_ANON_KEY.length > 20;
+    }
+
+    function setOnlineMatchState(state, text) {
+      onlineMatchStatus.className = `match-status${state ? ` ${state}` : ''}`;
+      onlineMatchStatusText.textContent = text;
+    }
+
+    function setScheduleState(state, text) {
+      scheduleStatus.className = `match-status${state ? ` ${state}` : ''}`;
+      scheduleStatusText.textContent = text;
+    }
+
+    function updateMatchmakingControls() {
+      const hasConnectionActivity = Boolean(activeMediaCall || pendingMediaCall || currentBackendCall || scheduledReadyCallId);
+      const canUseBackend = isSupabaseConfigured() && peerReady && peerSafetyConsent.checked && !hasConnectionActivity;
+      findOnlinePeerButton.disabled = !canUseBackend || onlineMatchSearching;
+      scheduleCallButton.disabled = !isSupabaseConfigured() || !peerSafetyConsent.checked || onlineMatchSearching || hasConnectionActivity;
+    }
+
+    function parseRpcData(data) {
+      if (typeof data !== 'string') return data;
+      try { return JSON.parse(data); } catch (error) { return null; }
+    }
+
+    async function backendRpc(name, parameters = {}) {
+      const client = await initializeSupabaseBackend();
+      if (!client) throw new Error('Supabase matchmaking is not configured. Add the project URL and publishable key near the top of index.html.');
+      const { data, error } = await client.rpc(name, parameters);
+      if (error) throw error;
+      return parseRpcData(data);
+    }
+
+    async function initializeSupabaseBackend() {
+      if (supabaseClient && supabaseUser) {
+        if (!supabaseChannel) subscribeToBackendCalls();
+        return supabaseClient;
+      }
+      if (supabaseInitPromise) return supabaseInitPromise;
+      if (!isSupabaseConfigured()) {
+        setOnlineMatchState('error', 'Supabase setup is required for real matching');
+        setScheduleState('error', 'Supabase setup is required for bookings');
+        updateMatchmakingControls();
+        return null;
+      }
+      if (!globalThis.supabase?.createClient) {
+        setOnlineMatchState('error', 'The matchmaking library could not be loaded');
+        return null;
+      }
+
+      supabaseInitPromise = (async () => {
+        const client = globalThis.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+          auth: {
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: false,
+            storageKey: 'calmwave-anonymous-auth'
+          }
+        });
+        let { data: sessionData, error: sessionError } = await client.auth.getSession();
+        if (sessionError) throw sessionError;
+        if (!sessionData.session) {
+          const signIn = await client.auth.signInAnonymously();
+          if (signIn.error) throw signIn.error;
+          sessionData = { session: signIn.data.session };
+        }
+        if (!sessionData.session?.user) throw new Error('Anonymous authentication did not create a session.');
+        supabaseClient = client;
+        supabaseUser = sessionData.session.user;
+        subscribeToBackendCalls();
+        await refreshScheduledBookings();
+        setOnlineMatchState('', 'Ready to find someone online');
+        setScheduleState('', 'Choose a future date and time');
+        updateMatchmakingControls();
+        return client;
+      })().catch(error => {
+        supabaseClient = null;
+        supabaseUser = null;
+        setOnlineMatchState('error', error?.message || 'Could not connect to matchmaking');
+        setScheduleState('error', 'Could not connect to scheduling');
+        return null;
+      }).finally(() => {
+        supabaseInitPromise = null;
+      });
+      return supabaseInitPromise;
+    }
+
+    function subscribeToBackendCalls() {
+      if (!supabaseClient || !supabaseUser) return;
+      if (supabaseChannel) supabaseClient.removeChannel(supabaseChannel);
+      supabaseChannel = supabaseClient
+        .channel(`calmwave-call-sessions-${supabaseUser.id}`)
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'call_sessions' }, payload => {
+          handleBackendSessionChange(payload.new);
+        })
+        .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'call_sessions' }, payload => {
+          handleBackendSessionChange(payload.new);
+        })
+        .subscribe(status => {
+          if (status === 'SUBSCRIBED') refreshScheduledBookings();
+        });
+    }
+
     function updateCallStartButton() {
       const hasRemoteId = Boolean(remotePeerIdInput.value.trim());
-      startPeerCallButton.disabled = !peerReady || !hasRemoteId || Boolean(activeMediaCall);
+      const hasConnectionActivity = Boolean(activeMediaCall || pendingMediaCall || currentBackendCall || onlineMatchSearching || scheduledReadyCallId);
+      startPeerCallButton.disabled = !peerReady || !hasRemoteId || hasConnectionActivity;
       startPeerCallButton.lastChild.textContent = ` Start ${selectedCallMode} call`;
+      updateMatchmakingControls();
     }
 
     function stopMediaStream(stream) {
@@ -2689,6 +2916,290 @@
       });
     }
 
+    function stopOnlineMatchHeartbeat() {
+      clearInterval(matchmakingHeartbeat);
+      matchmakingHeartbeat = null;
+      onlineMatchAttemptInFlight = false;
+    }
+
+    async function processBackendCallState(state) {
+      if (!state?.call_id || !state.partner_peer_id || !state.connection_token) return false;
+      if (!callCenterOpen) {
+        const cleanupRpc = state.kind === 'scheduled' ? 'leave_scheduled_ready' : 'end_call';
+        backendRpc(cleanupRpc, { p_call_id: state.call_id }).catch(() => {});
+        return false;
+      }
+      if (state.self_peer_id && state.self_peer_id !== callPeer?.id) return false;
+      if (state.kind === 'online' && onlineMatchSearching && state.self_peer_id !== expectedOnlinePeerId) return false;
+      if (state.kind === 'online' && !onlineMatchSearching && currentBackendCall?.call_id !== state.call_id) {
+        backendRpc('end_call', { p_call_id: state.call_id }).catch(() => {});
+        return false;
+      }
+      if (state.kind === 'scheduled' && scheduledReadyCallId !== state.call_id && currentBackendCall?.call_id !== state.call_id) {
+        backendRpc('leave_scheduled_ready', { p_call_id: state.call_id }).catch(() => {});
+        return false;
+      }
+      if (handledBackendCalls.has(state.call_id) && currentBackendCall?.call_id === state.call_id) return true;
+      handledBackendCalls.add(state.call_id);
+      currentBackendCall = state;
+      stopOnlineMatchHeartbeat();
+      onlineMatchSearching = false;
+      cancelOnlineMatchButton.hidden = true;
+      updateMatchmakingControls();
+      reportPeerButton.hidden = false;
+
+      if (state.kind === 'scheduled') {
+        clearInterval(scheduledReadyHeartbeat);
+        scheduledReadyHeartbeat = null;
+        scheduledReadyCallId = state.call_id;
+        setScheduleState('ready', 'Your scheduled partner is ready');
+      } else {
+        setOnlineMatchState('ready', 'A compatible person is ready');
+      }
+
+      if (state.should_call) {
+        await startMatchedOutgoingCall(state);
+      } else {
+        callError.textContent = 'Matched securely. Waiting for the other person to call...';
+      }
+      return true;
+    }
+
+    async function fetchAndProcessBackendCall(callId) {
+      if (!callId || (handledBackendCalls.has(callId) && currentBackendCall?.call_id === callId)) return;
+      try {
+        const state = await backendRpc('get_call_state', { p_call_id: callId });
+        await processBackendCallState(state);
+      } catch (error) {
+        callError.textContent = error?.message || 'Could not load the matched call.';
+      }
+    }
+
+    function handleBackendSessionChange(session) {
+      if (!session?.id) return;
+      if (['cancelled', 'expired', 'ended'].includes(session.status)) {
+        if (pendingMediaCall?.metadata?.matchId === session.id) declineIncomingCall();
+        if (scheduledReadyCallId === session.id) resetScheduledReadinessState();
+        if (currentBackendCall?.call_id === session.id) {
+          if (activeMediaCall) endActiveCall('The matched call is no longer active.', true);
+          else {
+            currentBackendCall = null;
+            reportPeerButton.hidden = true;
+            callError.textContent = 'The matched call is no longer active.';
+          }
+          updateCallStartButton();
+        }
+        refreshScheduledBookings();
+        return;
+      }
+      if (['ready', 'active'].includes(session.status) || session.ready_count === 2) {
+        fetchAndProcessBackendCall(session.id);
+      }
+      if (session.kind === 'scheduled') refreshScheduledBookings();
+    }
+
+    async function attemptOnlineMatch(generation = matchmakingGeneration) {
+      if (!onlineMatchSearching || generation !== matchmakingGeneration || onlineMatchAttemptInFlight || !callPeer?.id) return;
+      onlineMatchAttemptInFlight = true;
+      try {
+        const state = await backendRpc('join_online_queue', {
+          p_peer_id: callPeer.id,
+          p_call_mode: selectedCallMode
+        });
+        if (!onlineMatchSearching || generation !== matchmakingGeneration || !callCenterOpen) {
+          if (state?.call_id) backendRpc('end_call', { p_call_id: state.call_id }).catch(() => {});
+          else backendRpc('cancel_online_queue').catch(() => {});
+          return;
+        }
+        if (await processBackendCallState(state)) return;
+        setOnlineMatchState('searching', 'Waiting for another available person...');
+      } catch (error) {
+        stopOnlineMatchHeartbeat();
+        onlineMatchSearching = false;
+        cancelOnlineMatchButton.hidden = true;
+        setOnlineMatchState('error', error?.message || 'Could not join the matching queue');
+        updateMatchmakingControls();
+      } finally {
+        onlineMatchAttemptInFlight = false;
+      }
+    }
+
+    async function startOnlineMatching() {
+      if (activeMediaCall || currentBackendCall || scheduledReadyCallId) {
+        setOnlineMatchState('error', 'Finish or leave the current call first');
+        return;
+      }
+      if (!peerSafetyConsent.checked) {
+        setOnlineMatchState('error', 'Accept the adult safety agreement first');
+        return;
+      }
+      if (!peerReady || !callPeer?.id) {
+        setOnlineMatchState('error', 'Wait for your temporary call ID to become ready');
+        return;
+      }
+      if (!await initializeSupabaseBackend()) return;
+      const generation = ++matchmakingGeneration;
+      expectedOnlinePeerId = callPeer.id;
+      onlineMatchSearching = true;
+      findOnlinePeerButton.disabled = true;
+      cancelOnlineMatchButton.hidden = false;
+      setOnlineMatchState('searching', 'Searching for someone online...');
+      await attemptOnlineMatch(generation);
+      if (onlineMatchSearching && !matchmakingHeartbeat) {
+        matchmakingHeartbeat = setInterval(() => attemptOnlineMatch(generation), 12000);
+      }
+    }
+
+    async function cancelOnlineMatching(showStatus = true) {
+      const wasSearching = onlineMatchSearching;
+      matchmakingGeneration += 1;
+      onlineMatchSearching = false;
+      expectedOnlinePeerId = null;
+      stopOnlineMatchHeartbeat();
+      cancelOnlineMatchButton.hidden = true;
+      updateMatchmakingControls();
+      if (wasSearching && supabaseClient && supabaseUser) {
+        try { await backendRpc('cancel_online_queue'); } catch (error) { /* Queue rows expire automatically. */ }
+      }
+      if (showStatus) setOnlineMatchState('', 'Search cancelled');
+    }
+
+    function formatBookingDate(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return 'Invalid date';
+      return new Intl.DateTimeFormat([], { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }).format(date);
+    }
+
+    function renderScheduledBookings() {
+      if (!scheduledBookings.length) {
+        scheduledCallList.innerHTML = '<div class="booking-empty">Your upcoming anonymous calls will appear here.</div>';
+        return;
+      }
+      const now = Date.now();
+      scheduledCallList.innerHTML = scheduledBookings.map(booking => {
+        const startsAt = new Date(booking.starts_at).getTime();
+        const canJoin = Boolean(booking.call_id) && now >= startsAt - 10 * 60 * 1000 && now <= startsAt + 30 * 60 * 1000;
+        const status = booking.status === 'matched' ? 'Paired anonymously' : 'Waiting for a compatible booking';
+        return `
+          <div class="booking-item">
+            <div><strong>${escapeHTML(formatBookingDate(booking.starts_at))}</strong><span>${escapeHTML(booking.call_mode)} · ${status}</span></div>
+            <div class="booking-actions">
+              ${booking.call_id ? `<button class="card-button" type="button" data-booking-action="join" data-call-id="${escapeHTML(booking.call_id)}" ${canJoin ? '' : 'disabled'}>Join</button>` : ''}
+              <button class="card-button secondary" type="button" data-booking-action="cancel" data-booking-id="${escapeHTML(booking.booking_id)}">Cancel</button>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    async function refreshScheduledBookings() {
+      if (!supabaseClient || !supabaseUser) return;
+      try {
+        const result = await backendRpc('list_my_bookings');
+        scheduledBookings = Array.isArray(result) ? result : result?.bookings || [];
+        renderScheduledBookings();
+      } catch (error) {
+        setScheduleState('error', error?.message || 'Could not load scheduled calls');
+      }
+    }
+
+    async function bookScheduledCall() {
+      if (onlineMatchSearching || activeMediaCall || currentBackendCall || scheduledReadyCallId) {
+        setScheduleState('error', 'Finish or cancel the current connection first');
+        return;
+      }
+      if (!peerSafetyConsent.checked) {
+        setScheduleState('error', 'Accept the adult safety agreement first');
+        return;
+      }
+      const selectedDate = new Date(scheduleCallTimeInput.value);
+      if (Number.isNaN(selectedDate.getTime()) || selectedDate.getTime() < Date.now() + 5 * 60 * 1000) {
+        setScheduleState('error', 'Choose a time at least five minutes from now');
+        return;
+      }
+      scheduleCallButton.disabled = true;
+      setScheduleState('searching', 'Saving your anonymous booking...');
+      try {
+        const result = await backendRpc('book_scheduled_call', {
+          p_starts_at: selectedDate.toISOString(),
+          p_call_mode: selectedCallMode
+        });
+        setScheduleState('ready', result?.status === 'matched' ? 'Paired for the selected time' : 'Booked; waiting for a compatible person');
+        scheduleCallTimeInput.value = '';
+        await refreshScheduledBookings();
+      } catch (error) {
+        setScheduleState('error', error?.message || 'Could not schedule the call');
+      } finally {
+        updateMatchmakingControls();
+      }
+    }
+
+    async function cancelScheduledBooking(bookingId) {
+      try {
+        await backendRpc('cancel_scheduled_booking', { p_booking_id: bookingId });
+        setScheduleState('', 'Booking cancelled');
+        await refreshScheduledBookings();
+      } catch (error) {
+        setScheduleState('error', error?.message || 'Could not cancel the booking');
+      }
+    }
+
+    function resetScheduledReadinessState() {
+      const callId = scheduledReadyCallId;
+      scheduledReadyGeneration += 1;
+      scheduledReadyCallId = null;
+      clearInterval(scheduledReadyHeartbeat);
+      scheduledReadyHeartbeat = null;
+      updateMatchmakingControls();
+      return callId;
+    }
+
+    async function startScheduledReadiness(callId) {
+      if (onlineMatchSearching || activeMediaCall || currentBackendCall || scheduledReadyCallId) {
+        setScheduleState('error', 'Finish or cancel the current connection first');
+        return;
+      }
+      if (!peerReady || !callPeer?.id) {
+        setScheduleState('error', 'Wait for your temporary call ID to become ready');
+        return;
+      }
+      const generation = ++scheduledReadyGeneration;
+      scheduledReadyCallId = callId;
+      updateMatchmakingControls();
+      await markScheduledReady(callId, false, generation);
+    }
+
+    async function markScheduledReady(callId, quiet = false, generation = scheduledReadyGeneration) {
+      if (!peerReady || !callPeer?.id) {
+        setScheduleState('error', 'Wait for your temporary call ID to become ready');
+        return;
+      }
+      try {
+        const state = await backendRpc('mark_scheduled_ready', {
+          p_call_id: callId,
+          p_peer_id: callPeer.id
+        });
+        if (generation !== scheduledReadyGeneration || scheduledReadyCallId !== callId || !callCenterOpen) {
+          backendRpc('leave_scheduled_ready', { p_call_id: callId }).catch(() => {});
+          return;
+        }
+        if (await processBackendCallState(state)) return;
+        if (!quiet) setScheduleState('searching', 'You are ready; waiting for your scheduled partner...');
+        if (!scheduledReadyHeartbeat) {
+          scheduledReadyHeartbeat = setInterval(() => markScheduledReady(callId, true, generation), 30000);
+        }
+      } catch (error) {
+        if (scheduledReadyCallId === callId) resetScheduledReadinessState();
+        setScheduleState('error', error?.message || 'Could not join the scheduled call');
+      }
+    }
+
+    async function leaveScheduledReady() {
+      const callId = resetScheduledReadinessState();
+      if (callId && supabaseClient && supabaseUser && !activeMediaCall) {
+        try { await backendRpc('leave_scheduled_ready', { p_call_id: callId }); } catch (error) { /* Peer credentials expire automatically. */ }
+      }
+    }
+
     async function copyText(value) {
       try {
         if (navigator.clipboard && window.isSecureContext) {
@@ -2788,6 +3299,11 @@
       endingCall = true;
       const call = activeMediaCall;
       activeMediaCall = null;
+      const backendCall = currentBackendCall;
+      currentBackendCall = null;
+      reportPeerButton.hidden = true;
+      if (backendCall?.kind === 'online') expectedOnlinePeerId = null;
+      if (backendCall?.kind === 'scheduled' || scheduledReadyCallId) resetScheduledReadinessState();
       if (closeConnection && call) {
         try { call.close(); } catch (error) { /* Connection is already closed. */ }
       }
@@ -2811,6 +3327,10 @@
       updateCallStartButton();
       if (message) callError.textContent = message;
       endingCall = false;
+      if (backendCall?.call_id && supabaseClient && supabaseUser) {
+        backendRpc('end_call', { p_call_id: backendCall.call_id }).catch(() => {});
+        refreshScheduledBookings();
+      }
     }
 
     function declineIncomingCall() {
@@ -2822,13 +3342,48 @@
       }
     }
 
-    function handleIncomingPeerCall(call) {
+    async function handleIncomingPeerCall(call) {
       if (activeMediaCall || pendingMediaCall) {
         call.close();
         return;
       }
+      if (blockedPeerIds.has(call.peer)) {
+        call.close();
+        callError.textContent = 'A blocked peer attempted to call.';
+        return;
+      }
+      const matchId = call.metadata?.matchId;
+      const matchToken = call.metadata?.matchToken;
+      if (matchId) {
+        try {
+          const state = await backendRpc('get_call_state', { p_call_id: matchId });
+          const validMatch = state?.partner_peer_id === call.peer &&
+            state?.connection_token === matchToken &&
+            state?.call_mode === call.metadata?.mode &&
+            ['ready', 'active'].includes(state?.state);
+          if (!validMatch) {
+            call.close();
+            callError.textContent = 'Rejected a call with invalid matchmaking credentials.';
+            return;
+          }
+          currentBackendCall = state;
+          handledBackendCalls.add(matchId);
+          reportPeerButton.hidden = false;
+          stopOnlineMatchHeartbeat();
+          onlineMatchSearching = false;
+          cancelOnlineMatchButton.hidden = true;
+        } catch (error) {
+          call.close();
+          callError.textContent = 'Could not verify the incoming matched call.';
+          return;
+        }
+      } else if (onlineMatchSearching || currentBackendCall) {
+        call.close();
+        callError.textContent = 'Rejected an unverified call while matchmaking.';
+        return;
+      }
       pendingMediaCall = call;
-      const mode = call.metadata?.mode === 'audio' ? 'audio' : 'video';
+      const mode = currentBackendCall?.call_mode || (call.metadata?.mode === 'audio' ? 'audio' : 'video');
       incomingCallPanel.dataset.mode = mode;
       incomingCallTitle.textContent = `Incoming ${mode} call`;
       incomingPeerIdElement.textContent = call.peer;
@@ -2846,11 +3401,31 @@
     async function answerIncomingCall() {
       const call = pendingMediaCall;
       if (!call) return;
-      const mode = incomingCallPanel.dataset.mode === 'audio' ? 'audio' : 'video';
+      let mode = incomingCallPanel.dataset.mode === 'audio' ? 'audio' : 'video';
       incomingCallPanel.hidden = true;
       callError.textContent = '';
       try {
+        if (call.metadata?.matchId) {
+          const state = await backendRpc('get_call_state', { p_call_id: call.metadata.matchId });
+          const stillValid = state?.partner_peer_id === call.peer &&
+            state?.connection_token === call.metadata?.matchToken &&
+            state?.call_mode === call.metadata?.mode &&
+            ['ready', 'active'].includes(state?.state);
+          if (!stillValid) throw new Error('The matched call is no longer valid.');
+          currentBackendCall = state;
+          mode = state.call_mode;
+        }
         localMediaStream = await acquireCallMedia(mode);
+        if (pendingMediaCall !== call) throw new Error('The incoming call ended before permission was granted.');
+        if (call.metadata?.matchId) {
+          const latestState = await backendRpc('get_call_state', { p_call_id: call.metadata.matchId });
+          const stillValidAfterPermission = latestState?.partner_peer_id === call.peer &&
+            latestState?.connection_token === call.metadata?.matchToken &&
+            latestState?.call_mode === call.metadata?.mode &&
+            ['ready', 'active'].includes(latestState?.state);
+          if (!stillValidAfterPermission || pendingMediaCall !== call) throw new Error('The matched call ended before permission was granted.');
+          currentBackendCall = latestState;
+        }
         localCallVideo.srcObject = localMediaStream;
         localCallVideo.play().catch(() => {});
         pendingMediaCall = null;
@@ -2858,14 +3433,56 @@
         call.answer(localMediaStream);
       } catch (error) {
         pendingMediaCall = null;
+        stopMediaStream(localMediaStream);
+        localMediaStream = null;
+        localCallVideo.srcObject = null;
         call.close();
         callError.textContent = mediaPermissionMessage(error, mode);
+      }
+    }
+
+    async function createOutgoingPeerCall(remoteId, mode, metadata) {
+      try {
+        localMediaStream = await acquireCallMedia(mode);
+        localCallVideo.srcObject = localMediaStream;
+        localCallVideo.play().catch(() => {});
+        const call = callPeer.call(remoteId, localMediaStream, { metadata });
+        if (!call) throw new Error('The browser could not create the call.');
+        prepareActiveCall(call, mode, true);
+        return call;
+      } catch (error) {
+        stopMediaStream(localMediaStream);
+        localMediaStream = null;
+        localCallVideo.srcObject = null;
+        throw error;
+      }
+    }
+
+    async function startMatchedOutgoingCall(state) {
+      callError.textContent = 'Match found. Preparing your secure call...';
+      try {
+        await createOutgoingPeerCall(state.partner_peer_id, state.call_mode, {
+          mode: state.call_mode,
+          app: 'calmwave',
+          matchId: state.call_id,
+          matchToken: state.connection_token
+        });
+      } catch (error) {
+        callError.textContent = mediaPermissionMessage(error, state.call_mode);
+        const failedCall = currentBackendCall;
+        currentBackendCall = null;
+        reportPeerButton.hidden = true;
+        if (failedCall?.call_id) backendRpc('end_call', { p_call_id: failedCall.call_id }).catch(() => {});
       }
     }
 
     async function startOutgoingCall() {
       const remoteId = remotePeerIdInput.value.trim();
       callError.textContent = '';
+      if (onlineMatchSearching || scheduledReadyCallId || currentBackendCall || activeMediaCall) {
+        callError.textContent = 'Finish or cancel the current connection first.';
+        return;
+      }
       if (!peerReady || !callPeer) {
         callError.textContent = 'Wait until your temporary ID is ready.';
         return;
@@ -2881,33 +3498,49 @@
 
       startPeerCallButton.disabled = true;
       try {
-        localMediaStream = await acquireCallMedia(selectedCallMode);
-        localCallVideo.srcObject = localMediaStream;
-        localCallVideo.play().catch(() => {});
-        const call = callPeer.call(remoteId, localMediaStream, { metadata: { mode: selectedCallMode, app: 'calmwave' } });
-        if (!call) throw new Error('The browser could not create the call.');
-        prepareActiveCall(call, selectedCallMode, true);
+        await createOutgoingPeerCall(remoteId, selectedCallMode, { mode: selectedCallMode, app: 'calmwave' });
       } catch (error) {
-        stopMediaStream(localMediaStream);
-        localMediaStream = null;
-        localCallVideo.srcObject = null;
         callError.textContent = mediaPermissionMessage(error, selectedCallMode);
         updateCallStartButton();
       }
     }
 
     function openPeerCallCenter() {
+      callCenterOpen = true;
       callError.textContent = '';
       peerCallDialog.classList.remove('in-call');
       callLobby.hidden = false;
       callStage.hidden = true;
       if (!peerCallDialog.open) peerCallDialog.showModal();
       if (!callPeer || callPeer.destroyed) initializeCallPeer();
+      const minimumTime = new Date(Date.now() + 5 * 60 * 1000);
+      minimumTime.setMinutes(Math.ceil(minimumTime.getMinutes() / 15) * 15, 0, 0);
+      scheduleCallTimeInput.min = new Date(minimumTime.getTime() - minimumTime.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+      if (isSupabaseConfigured()) {
+        initializeSupabaseBackend();
+        clearInterval(bookingRefreshTimer);
+        bookingRefreshTimer = setInterval(refreshScheduledBookings, 30000);
+      } else {
+        setOnlineMatchState('error', 'Add Supabase configuration to enable real matching');
+        setScheduleState('error', 'Add Supabase configuration to enable scheduling');
+      }
+      updateMatchmakingControls();
     }
 
     function closePeerCallCenter() {
       if (activeMediaCall && !window.confirm('End the active call and close the call center?')) return;
+      callCenterOpen = false;
       if (activeMediaCall) endActiveCall('', true);
+      if (currentBackendCall?.call_id) {
+        backendRpc('end_call', { p_call_id: currentBackendCall.call_id }).catch(() => {});
+        currentBackendCall = null;
+      }
+      cancelOnlineMatching(false);
+      leaveScheduledReady();
+      clearInterval(bookingRefreshTimer);
+      bookingRefreshTimer = null;
+      if (supabaseClient && supabaseChannel) supabaseClient.removeChannel(supabaseChannel);
+      supabaseChannel = null;
       declineIncomingCall();
       destroyCallPeer();
       if (peerCallDialog.open) peerCallDialog.close();
@@ -3568,12 +4201,51 @@
       closePanel();
     }
 
+    function requestsHumanSupport(text) {
+      const normalized = normalizeText(text);
+      const declinesContact = /\b(?:i )?(?:don't|dont|do not|am not ready to|not ready to|would rather not)\s+(?:want to\s+)?(?:talk|speak|chat|call|connect|contact|reach out)\b/.test(normalized);
+      if (declinesContact) return false;
+      const asksForDefinition = /\b(?:what does|what is|define|meaning of|explain)\s+(?:a\s+)?(?:human support|professional help|hotline|help ?line|live agent|real person|human assistance|support worker)\b/.test(normalized);
+      if (asksForDefinition) return false;
+      const offeringSupport = /\b(?:i want to|i can|can i|could i|let me)\s+(?:help|support|listen to)\s+(?:someone|somebody|anyone|a person)\b/.test(normalized);
+      if (offeringSupport) return false;
+
+      const directRequests = [
+        /\b(?:talk|speak|chat)\s+(?:to|with)\s+(?:a\s+)?(?:real\s+)?(?:human|person|someone|somebody|anyone|professional|counsell?or|psychologist|therapist|peer|support worker|support team)\b/,
+        /\b(?:connect|link|refer|put)\s+me\s+(?:to|with|in touch with)\s+(?:a\s+)?(?:real\s+)?(?:human|person|someone|somebody|professional|counsell?or|psychologist|therapist|support worker|support team)\b/,
+        /\b(?:i\s+)?(?:need|want|would like|wish|am looking for)\s+(?:to\s+)?(?:talk|speak|chat|call|connect|contact|reach out)\b/,
+        /\b(?:i\s+)?(?:need|want|would like|am looking for)\s+(?:a\s+)?(?:real\s+)?(?:person|human|professional|counsell?or|psychologist|therapist|support worker)\b/,
+        /\b(?:is there|are there)\s+(?:someone|somebody|anyone|a person|a human|a professional)\b/,
+        /\b(?:someone|somebody|anyone|a person)\s+(?:to|who can)\s+(?:talk|speak|listen|help|call)\b/,
+        /\b(?:can|could|may|would)\s+(?:i|you)\s+(?:talk|speak|connect|link|call|contact|reach)\b/,
+        /\b(?:human|live|real person)\s+(?:support|help|agent|chat)\b/,
+        /\b(?:hotline|help ?line|support line|crisis line|someone to call)\b/,
+        /\bi\s+(?:really\s+)?need\s+(?:someone|somebody|a person)(?:\s+right now)?\b/,
+        /\b(?:find|locate|reach)\s+(?:me\s+)?(?:a\s+)?(?:human|person|professional|counsell?or|psychologist|therapist|support worker)\b/,
+        /\b(?:need|want|looking for)\s+(?:some\s+)?real support\b/,
+        /\b(?:real person|human)(?:,?\s+please|\s+right now)\b/,
+        /\b(?:get|bring|take|transfer|send)\s+me\s+(?:to\s+)?(?:a\s+)?(?:real\s+)?(?:person|human|someone|somebody|professional|support worker)\b/,
+        /\b(?:put|patch)\s+me\s+through\s+(?:to\s+)?(?:a\s+)?(?:person|human|someone|somebody|professional)\b/,
+        /\b(?:give|find)\s+me\s+(?:someone|somebody|a person|a human)\s+to\s+(?:talk|speak|chat)\s*(?:to|with)?\b/,
+        /\b(?:let me|allow me to)\s+(?:talk|speak|chat|connect)\s+(?:to|with)\s+(?:a\s+)?(?:person|human|someone|somebody|professional)\b/,
+        /\bconnect\s+(?:to|with)\s+(?:a\s+)?(?:real\s+)?(?:person|human|someone|somebody|professional)\b/,
+        /\b(?:real|live)\s+(?:human|person|agent|helper)(?:,?\s+please)?\b/,
+        /\b(?:human|personal)\s+assistance\b/
+      ];
+      if (directRequests.some(pattern => pattern.test(normalized))) return true;
+
+      const hasHumanTarget = /\b(?:human|person|someone|somebody|anyone|professional|counsell?or|psychologist|therapist|support worker|support team|listener)\b/.test(normalized);
+      const hasRequestSignal = /\b(?:need|want|please|can|could|would|find|connect|refer|looking|wish|help)\b/.test(normalized);
+      const hasContactAction = /\b(?:talk|speak|chat|call|contact|connect|reach|listen|help)\b/.test(normalized);
+      return hasHumanTarget && hasRequestSignal && hasContactAction;
+    }
+
     function detectRequestedTool(text) {
       if (/\b(breath|breathing|4-7-8)\b/i.test(text)) return 'breathing';
       if (/\b(ground|grounding|5-4-3-2-1)\b/i.test(text)) return 'grounding';
       if (/\b(affirmation|positive reminder)\b/i.test(text)) return 'affirmation';
-      if (/\b(i need (?:a )?therapist|refer me|find (?:me )?(?:a )?therapist|recommend (?:me )?(?:a )?therapist|therapist directory)\b/i.test(text)) return 'therapists';
-      if (/\b((?:talk|speak) (?:to|with) (?:a )?(?:someone|person|human|psychologist)|real person|hotline|helpline|therapist|psychologist|counsellor|counselor|human help)\b/i.test(text)) return 'support';
+      if (/\b(i need (?:a )?(?:therapist|psychologist)|refer me (?:to )?(?:a )?(?:therapist|psychologist|counsell?or)|find (?:me )?(?:a )?(?:therapist|psychologist)|recommend (?:me )?(?:a )?(?:therapist|psychologist)|(?:therapist|psychologist) directory)\b/i.test(text)) return 'therapists';
+      if (requestsHumanSupport(text)) return 'support';
       return null;
     }
 
@@ -3731,6 +4403,33 @@
       event.preventDefault();
       startOutgoingCall();
     });
+    document.querySelectorAll('[data-call-tab]').forEach(button => {
+      button.addEventListener('click', () => {
+        const target = button.dataset.callTab;
+        document.querySelectorAll('[data-call-tab]').forEach(tab => {
+          const selected = tab === button;
+          tab.classList.toggle('active', selected);
+          tab.setAttribute('aria-selected', String(selected));
+        });
+        document.querySelectorAll('[data-call-panel]').forEach(panel => {
+          panel.hidden = panel.dataset.callPanel !== target;
+        });
+        if (target === 'schedule') refreshScheduledBookings();
+      });
+    });
+    peerSafetyConsent.addEventListener('change', updateMatchmakingControls);
+    findOnlinePeerButton.addEventListener('click', startOnlineMatching);
+    cancelOnlineMatchButton.addEventListener('click', () => cancelOnlineMatching(true));
+    document.getElementById('scheduleCallForm').addEventListener('submit', event => {
+      event.preventDefault();
+      bookScheduledCall();
+    });
+    scheduledCallList.addEventListener('click', event => {
+      const button = event.target.closest('[data-booking-action]');
+      if (!button || button.disabled) return;
+      if (button.dataset.bookingAction === 'join') startScheduledReadiness(button.dataset.callId);
+      if (button.dataset.bookingAction === 'cancel') cancelScheduledBooking(button.dataset.bookingId);
+    });
     document.querySelectorAll('[data-call-mode]').forEach(button => {
       button.addEventListener('click', () => {
         selectedCallMode = button.dataset.callMode === 'audio' ? 'audio' : 'video';
@@ -3770,6 +4469,29 @@
     document.getElementById('answerPeerCall').addEventListener('click', answerIncomingCall);
     document.getElementById('declinePeerCall').addEventListener('click', declineIncomingCall);
     document.getElementById('endPeerCall').addEventListener('click', () => endActiveCall('Call ended.', true));
+    reportPeerButton.addEventListener('click', async () => {
+      const backendCall = currentBackendCall;
+      const callId = backendCall?.call_id;
+      if (!callId || !window.confirm('Report and block this anonymous peer, then end the call?')) return;
+      let reported = false;
+      try {
+        await backendRpc('report_call_partner', { p_call_id: callId, p_reason: 'unsafe_behavior' });
+        reported = true;
+        if (backendCall.partner_peer_id) {
+          blockedPeerIds.add(backendCall.partner_peer_id);
+          storage.setJSON('calmwave.blocked-peer-ids.v1', [...blockedPeerIds].slice(-50));
+        }
+        showToast('Peer reported and blocked');
+      } catch (error) {
+        showToast('The report could not be submitted, but the call will end');
+        try { await backendRpc('end_call', { p_call_id: callId }); } catch (cleanupError) { /* Credentials expire automatically. */ }
+      }
+      if (scheduledReadyCallId) resetScheduledReadinessState();
+      currentBackendCall = null;
+      endActiveCall(reported ? 'Call ended and peer blocked.' : 'Call ended.', true);
+      destroyCallPeer();
+      if (callCenterOpen) initializeCallPeer();
+    });
     microphoneButton.addEventListener('click', () => {
       const track = localMediaStream?.getAudioTracks()[0];
       if (!track) return;
