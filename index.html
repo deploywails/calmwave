@@ -1571,6 +1571,8 @@
       .icon-button { width: 33px; height: 33px; border-radius: 10px; }
       .find-therapist-button { width: 33px; min-height: 33px; padding: 0; justify-content: center; border-radius: 10px; }
       .find-therapist-button span { display: none; }
+      #accountButton { width: auto; padding: 0 9px; }
+      #accountButton span { display: inline; }
       .messages { padding-top: 16px; }
       .directory-dialog { width: calc(100% - 12px); max-height: calc(100dvh - 12px); }
       .therapist-directory-body { max-height: calc(100dvh - 154px); }
@@ -1679,6 +1681,10 @@
           <button class="entry-button" id="entryBreathingButton" type="button">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="7"/><path d="M12 2v3M12 19v3" stroke-linecap="round"/></svg>
             Start with breathing
+          </button>
+          <button class="entry-button" id="entryAccountButton" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+            Email sign in
           </button>
         </div>
       </div>
@@ -1845,7 +1851,7 @@
           </button>
           <button class="find-therapist-button" id="accountButton" type="button" aria-label="Open account" title="Account">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
-            <span>Account</span>
+            <span id="accountButtonLabel">Sign in</span>
           </button>
           <button class="icon-button" id="themeButton" type="button" aria-label="Switch to dark mode" title="Toggle theme">
             <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z" stroke-linejoin="round"/></svg>
@@ -3031,6 +3037,7 @@
       const signedInView = document.getElementById('signedInAccountView');
       const authTabs = signedOutView.querySelector('.auth-tabs');
       if (passwordRecoveryMode) {
+        document.getElementById('accountButtonLabel').textContent = 'Account';
         signedOutView.hidden = false;
         signedInView.hidden = true;
         authTabs.hidden = true;
@@ -3042,6 +3049,7 @@
       authTabs.hidden = false;
       if (!isPermanentAccount()) {
         accountContext = null;
+        document.getElementById('accountButtonLabel').textContent = 'Sign in';
         signedOutView.hidden = false;
         signedInView.hidden = true;
         return;
@@ -3049,6 +3057,7 @@
 
       signedOutView.hidden = true;
       signedInView.hidden = false;
+      document.getElementById('accountButtonLabel').textContent = 'Account';
       document.getElementById('accountEmail').textContent = supabaseUser.email;
       document.getElementById('accountAvatar').textContent = supabaseUser.email.charAt(0).toUpperCase();
       const claim = await supabaseClient.rpc('claim_professional_profile');
@@ -4870,6 +4879,7 @@
 
     document.getElementById('enterChatButton').addEventListener('click', () => enterCalmWave(false));
     document.getElementById('entryBreathingButton').addEventListener('click', () => enterCalmWave(true));
+    document.getElementById('entryAccountButton').addEventListener('click', openAccount);
 
     document.getElementById('peerCallButton').addEventListener('click', openPeerCallCenter);
     document.getElementById('mobilePeerCallButton').addEventListener('click', () => {
