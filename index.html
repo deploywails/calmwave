@@ -1150,6 +1150,21 @@
       box-shadow: 0 7px 18px rgba(35, 75, 91, 0.16);
     }
 
+    .provider-avatar {
+      display: grid;
+      flex: 0 0 auto;
+      place-items: center;
+      width: 55px;
+      height: 55px;
+      border: 3px solid var(--surface-solid);
+      border-radius: 50%;
+      color: #fff;
+      background: linear-gradient(135deg, var(--teal), var(--primary), var(--purple));
+      box-shadow: 0 7px 18px rgba(35, 75, 91, 0.16);
+      font-size: 10px;
+      font-weight: 850;
+    }
+
     .therapist-name { display: block; font-size: 11px; line-height: 1.3; }
     .therapist-specialty { display: block; margin-top: 3px; color: var(--primary); font-size: 8px; font-weight: 750; }
     .availability-badge {
@@ -1187,6 +1202,46 @@
       font-size: 8px;
       line-height: 1.5;
     }
+
+    .account-dialog { width: min(560px, calc(100% - 28px)); }
+    .auth-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; padding: 4px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-soft); }
+    .auth-tab { padding: 9px; border: 0; border-radius: 9px; color: var(--text-soft); background: transparent; cursor: pointer; font-size: 9px; font-weight: 850; }
+    .auth-tab.active { color: #fff; background: linear-gradient(135deg, var(--teal), var(--primary)); }
+    .auth-panel[hidden], .account-view[hidden] { display: none; }
+    .auth-form { display: grid; gap: 11px; margin-top: 14px; }
+    .auth-form .call-primary { margin-top: 0; }
+    .auth-secondary { border: 0; color: var(--primary); background: transparent; cursor: pointer; font-size: 8px; font-weight: 800; text-align: left; }
+    .auth-message { min-height: 16px; margin: 2px 0 0; color: var(--text-soft); font-size: 8px; line-height: 1.5; }
+    .auth-message.error { color: var(--danger); }
+
+    .account-summary { display: flex; align-items: center; gap: 11px; padding: 13px; border: 1px solid var(--border); border-radius: 13px; background: var(--surface-soft); }
+    .account-avatar { display: grid; flex: 0 0 auto; place-items: center; width: 42px; height: 42px; border-radius: 13px; color: #fff; background: linear-gradient(135deg, var(--teal), var(--primary), var(--purple)); font-size: 12px; font-weight: 850; }
+    .account-summary strong { display: block; overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+    .account-summary span { display: inline-block; margin-top: 4px; padding: 3px 6px; border-radius: 999px; color: var(--primary); background: var(--blue-soft); font-size: 7px; font-weight: 800; }
+    .account-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .account-section-title { margin: 18px 0 8px; color: var(--text-soft); font-size: 9px; font-weight: 850; letter-spacing: 0.08em; text-transform: uppercase; }
+
+    .appointment-list { display: grid; gap: 7px; max-height: 290px; overflow-y: auto; }
+    .appointment-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 9px; padding: 11px; border: 1px solid var(--border); border-radius: 11px; background: var(--surface-soft); }
+    .appointment-item strong { display: block; font-size: 9px; }
+    .appointment-item span { display: block; margin-top: 3px; color: var(--text-soft); font-size: 7px; line-height: 1.4; }
+    .appointment-status { display: inline-flex !important; align-items: center; width: fit-content; padding: 3px 6px; border-radius: 999px; color: var(--primary) !important; background: var(--blue-soft); font-weight: 800; text-transform: capitalize; }
+    .appointment-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px; }
+    .appointment-actions button { padding: 6px 7px; font-size: 7px; }
+
+    .booking-dialog { width: min(650px, calc(100% - 28px)); }
+    .slot-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; max-height: 430px; overflow-y: auto; }
+    .slot-item { padding: 12px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-soft); }
+    .slot-item strong { display: block; font-size: 10px; }
+    .slot-item span { display: block; margin-top: 4px; color: var(--text-soft); font-size: 8px; }
+    .slot-item .card-button { width: 100%; margin-top: 9px; }
+
+    .professional-dashboard { width: min(850px, calc(100% - 28px)); }
+    .dashboard-grid { display: grid; grid-template-columns: minmax(250px, 0.75fr) minmax(0, 1.25fr); gap: 13px; }
+    .dashboard-panel { padding: 14px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface-soft); }
+    .dashboard-panel h3 { margin: 0 0 10px; font-size: 12px; }
+    .availability-form { display: grid; gap: 9px; }
+    .availability-form .call-primary { margin-top: 0; }
 
     .profile-content { text-align: center; }
     .profile-content .therapist-photo { width: 82px; height: 82px; }
@@ -1364,8 +1419,9 @@
 
     .call-field { display: grid; gap: 6px; }
     .call-field label { font-size: 9px; font-weight: 800; }
-    .call-field input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 11px; outline: 0; color: var(--text); background: var(--surface-solid); font-family: Consolas, "Courier New", monospace; font-size: 11px; }
-    .call-field input:focus { border-color: var(--primary); box-shadow: var(--focus); }
+    .call-field input, .call-field select { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 11px; outline: 0; color: var(--text); background: var(--surface-solid); font-size: 11px; }
+    .call-field input { font-family: Consolas, "Courier New", monospace; }
+    .call-field input:focus, .call-field select:focus { border-color: var(--primary); box-shadow: var(--focus); }
 
     .call-primary {
       display: flex;
@@ -1498,6 +1554,7 @@
       .privacy-line { display: none; }
       .therapist-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .group-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .dashboard-grid { grid-template-columns: 1fr; }
       .call-lobby { grid-template-columns: 1fr; }
       .call-identity { gap: 0; }
     }
@@ -1549,6 +1606,9 @@
       .group-filters { display: grid; }
       .therapist-grid { grid-template-columns: 1fr; }
       .group-grid { grid-template-columns: 1fr; }
+      .slot-list { grid-template-columns: 1fr; }
+      .appointment-item { grid-template-columns: 1fr; }
+      .appointment-actions { justify-content: flex-start; }
       .call-dialog { inset: 0; width: 100%; max-width: none; height: 100vh; height: 100dvh; max-height: none; margin: 0; border: 0; border-radius: 0; }
       .call-dialog .modal-head { min-height: 56px; padding: 9px 11px; }
       .call-dialog .modal-head h2 { max-width: calc(100% - 45px); font-size: 13px; }
@@ -1783,6 +1843,10 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0M17 8v6M14 11h6" stroke-linecap="round"/></svg>
             <span>Find Therapist</span>
           </button>
+          <button class="find-therapist-button" id="accountButton" type="button" aria-label="Open account" title="Account">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+            <span>Account</span>
+          </button>
           <button class="icon-button" id="themeButton" type="button" aria-label="Switch to dark mode" title="Toggle theme">
             <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z" stroke-linejoin="round"/></svg>
             <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke-linecap="round"/></svg>
@@ -1940,6 +2004,106 @@
             <button class="card-button" id="answerPeerCall" type="button">Answer call</button>
           </div>
         </div>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog class="account-dialog" id="accountDialog" aria-labelledby="accountTitle">
+    <div class="modal-head">
+      <h2 id="accountTitle">CalmWave Account</h2>
+      <button class="icon-button" id="accountClose" type="button" aria-label="Close account">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 6 12 12M18 6 6 18" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="account-view" id="signedOutAccountView">
+        <div class="auth-tabs" role="tablist" aria-label="Account action">
+          <button class="auth-tab active" type="button" role="tab" aria-selected="true" data-auth-tab="signin">Sign in</button>
+          <button class="auth-tab" type="button" role="tab" aria-selected="false" data-auth-tab="signup">Create account</button>
+        </div>
+        <div class="auth-panel" data-auth-panel="signin">
+          <form class="auth-form" id="signInForm">
+            <div class="call-field"><label for="signInEmail">Email address</label><input id="signInEmail" type="email" autocomplete="email" required></div>
+            <div class="call-field"><label for="signInPassword">Password</label><input id="signInPassword" type="password" autocomplete="current-password" minlength="8" required></div>
+            <button class="call-primary" type="submit">Sign in</button>
+            <button class="auth-secondary" id="forgotPasswordButton" type="button">Send password-reset email</button>
+          </form>
+        </div>
+        <div class="auth-panel" data-auth-panel="signup" hidden>
+          <form class="auth-form" id="signUpForm">
+            <div class="call-field"><label for="signUpEmail">Email address</label><input id="signUpEmail" type="email" autocomplete="email" required></div>
+            <div class="call-field"><label for="signUpPassword">Create password</label><input id="signUpPassword" type="password" autocomplete="new-password" minlength="8" required></div>
+            <div class="call-field"><label for="signUpPasswordConfirm">Confirm password</label><input id="signUpPasswordConfirm" type="password" autocomplete="new-password" minlength="8" required></div>
+            <button class="call-primary" type="submit">Create account</button>
+          </form>
+        </div>
+        <div class="auth-panel" data-auth-panel="recovery" hidden>
+          <form class="auth-form" id="passwordRecoveryForm">
+            <div class="call-field"><label for="recoveryPassword">New password</label><input id="recoveryPassword" type="password" autocomplete="new-password" minlength="8" required></div>
+            <div class="call-field"><label for="recoveryPasswordConfirm">Confirm new password</label><input id="recoveryPasswordConfirm" type="password" autocomplete="new-password" minlength="8" required></div>
+            <button class="call-primary" type="submit">Update password</button>
+          </form>
+        </div>
+        <p class="auth-message" id="authMessage" role="status"></p>
+      </div>
+
+      <div class="account-view" id="signedInAccountView" hidden>
+        <div class="account-summary">
+          <div class="account-avatar" id="accountAvatar">C</div>
+          <div><strong id="accountEmail"></strong><span id="accountRole">Patient</span></div>
+        </div>
+        <div class="account-actions">
+          <button class="card-button" id="professionalDashboardButton" type="button" hidden>Professional dashboard</button>
+          <button class="card-button secondary" id="refreshAppointmentsButton" type="button">Refresh appointments</button>
+          <button class="card-button secondary" id="signOutButton" type="button">Sign out</button>
+        </div>
+        <div class="account-section-title">My upcoming appointments</div>
+        <div class="appointment-list" id="patientAppointmentList"><div class="booking-empty">No appointments yet.</div></div>
+        <p class="auth-message" id="accountMessage" role="status"></p>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog class="booking-dialog" id="professionalBookingDialog" aria-labelledby="professionalBookingTitle">
+    <div class="modal-head">
+      <h2 id="professionalBookingTitle">Book a professional session</h2>
+      <button class="icon-button" id="professionalBookingClose" type="button" aria-label="Close professional booking">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 6 12 12M18 6 6 18" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="account-summary">
+        <div class="account-avatar" id="bookingProfessionalInitials">P</div>
+        <div><strong id="bookingProfessionalName">Professional</strong><span id="bookingProfessionalSpecialty">Mental wellness</span></div>
+      </div>
+      <p class="auth-message" id="professionalBookingMessage">Choose an available appointment time.</p>
+      <div class="slot-list" id="professionalSlotList"><div class="booking-empty">Loading available times...</div></div>
+    </div>
+  </dialog>
+
+  <dialog class="professional-dashboard" id="professionalDashboardDialog" aria-labelledby="professionalDashboardTitle">
+    <div class="modal-head">
+      <h2 id="professionalDashboardTitle">Professional Dashboard</h2>
+      <button class="icon-button" id="professionalDashboardClose" type="button" aria-label="Close professional dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 6 12 12M18 6 6 18" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="dashboard-grid">
+        <section class="dashboard-panel">
+          <h3>Add availability</h3>
+          <form class="availability-form" id="availabilityForm">
+            <div class="call-field"><label for="availabilityStart">Starts</label><input id="availabilityStart" type="datetime-local" step="900" required></div>
+            <div class="call-field"><label for="availabilityEnd">Ends</label><input id="availabilityEnd" type="datetime-local" step="900" required></div>
+            <div class="call-field"><label for="availabilityMode">Session type</label><select id="availabilityMode"><option value="video">Video</option><option value="audio">Audio</option></select></div>
+            <button class="call-primary" type="submit">Publish time slot</button>
+          </form>
+          <p class="auth-message" id="availabilityMessage"></p>
+        </section>
+        <section class="dashboard-panel">
+          <h3>Assigned sessions</h3>
+          <div class="appointment-list" id="professionalAppointmentList"><div class="booking-empty">No assigned sessions.</div></div>
+        </section>
       </div>
     </div>
   </dialog>
@@ -2163,6 +2327,12 @@
     const scheduleStatus = document.getElementById('scheduleStatus');
     const scheduleStatusText = document.getElementById('scheduleStatusText');
     const scheduledCallList = document.getElementById('scheduledCallList');
+    const accountDialog = document.getElementById('accountDialog');
+    const professionalBookingDialog = document.getElementById('professionalBookingDialog');
+    const professionalDashboardDialog = document.getElementById('professionalDashboardDialog');
+    const patientAppointmentList = document.getElementById('patientAppointmentList');
+    const professionalAppointmentList = document.getElementById('professionalAppointmentList');
+    const professionalSlotList = document.getElementById('professionalSlotList');
     const entryScreen = document.getElementById('entryScreen');
     const appShell = document.getElementById('appShell');
 
@@ -2237,6 +2407,12 @@
     let scheduledReadyGeneration = 0;
     let callCenterOpen = false;
     let scheduledBookings = [];
+    let accountContext = null;
+    let backendProfessionals = [];
+    let selectedProfessional = null;
+    let accountRefreshTimer = null;
+    let authListenerRegistered = false;
+    let passwordRecoveryMode = false;
     const handledBackendCalls = new Set();
     const blockedPeerIds = new Set(storage.getJSON('calmwave.blocked-peer-ids.v1', []));
     let conversationVersion = 0;
@@ -2514,10 +2690,16 @@
     }
 
     function therapistCardMarkup(therapist) {
+      const visual = therapist.image
+        ? `<img class="therapist-photo" src="${escapeHTML(therapist.image)}" alt="Profile portrait for ${escapeHTML(therapist.name)}" loading="lazy">`
+        : `<div class="provider-avatar" aria-hidden="true">${escapeHTML(groupInitials(therapist.name))}</div>`;
+      const bookAction = therapist.backend && therapist.acceptingPatients
+        ? `<button class="card-button" type="button" data-action="book-professional" data-professional-id="${escapeHTML(therapist.id)}">Book Session</button>`
+        : '<button class="card-button secondary" type="button" disabled>Booking unavailable</button>';
       return `
         <article class="therapist-card">
           <div class="therapist-card-top">
-            <img class="therapist-photo" src="${escapeHTML(therapist.image)}" alt="Demo portrait for ${escapeHTML(therapist.name)}" loading="lazy">
+            ${visual}
             <div>
               <strong class="therapist-name">${escapeHTML(therapist.name)}</strong>
               <span class="therapist-specialty">${escapeHTML(therapist.specialty)}</span>
@@ -2525,25 +2707,27 @@
             </div>
           </div>
           <div class="therapist-meta">
-            <span>${escapeHTML(therapist.experience)} years experience</span>
-            <span class="therapist-rating" aria-label="Rated ${escapeHTML(therapist.rating)} out of 5">★★★★★ ${escapeHTML(therapist.rating)}</span>
+            ${therapist.experience ? `<span>${escapeHTML(therapist.experience)} years experience</span>` : ''}
+            ${therapist.rating ? `<span class="therapist-rating" aria-label="Rated ${escapeHTML(therapist.rating)} out of 5">★★★★★ ${escapeHTML(therapist.rating)}</span>` : ''}
+            ${therapist.location ? `<span>${escapeHTML(therapist.location)}</span>` : ''}
           </div>
           <p class="therapist-bio">${escapeHTML(therapist.bio)}</p>
           <div class="therapist-languages">Languages: ${escapeHTML(therapist.languages.join(', '))}</div>
           <div class="therapist-card-actions">
-            <a class="card-button" href="${whatsappLink(therapist)}" target="_blank" rel="noopener noreferrer">Book Session</a>
+            ${bookAction}
             <button class="card-button secondary" type="button" data-action="view-therapist" data-therapist-id="${escapeHTML(therapist.id)}">View Profile</button>
           </div>
         </article>`;
     }
 
     function renderTherapistDirectory(filter = 'All') {
+      const directory = getDirectoryTherapists();
       const matches = filter === 'All'
-        ? therapists
-        : therapists.filter(therapist => therapist.categories.includes(filter));
+        ? directory
+        : directory.filter(therapist => therapist.categories.includes(filter));
       therapistGrid.innerHTML = matches.length
         ? matches.map(therapistCardMarkup).join('')
-        : '<p class="professional-note">No demo profiles match this specialty yet.</p>';
+        : '<p class="professional-note">No profiles match this specialty yet.</p>';
     }
 
     function openTherapistDirectory(filter = 'All') {
@@ -2551,26 +2735,27 @@
       filterElement.value = filter;
       renderTherapistDirectory(filter);
       if (!therapistDialog.open) therapistDialog.showModal();
+      loadProfessionalDirectory();
     }
 
     function openTherapistProfile(therapistId) {
-      const therapist = therapists.find(item => item.id === therapistId);
+      const therapist = getDirectoryTherapists().find(item => item.id === therapistId);
       if (!therapist) return;
       therapistProfileContent.innerHTML = `
         <div>
-          <img class="therapist-photo" src="${escapeHTML(therapist.image)}" alt="Demo portrait for ${escapeHTML(therapist.name)}">
+          ${therapist.image ? `<img class="therapist-photo" src="${escapeHTML(therapist.image)}" alt="Profile portrait for ${escapeHTML(therapist.name)}">` : `<div class="provider-avatar" style="margin:auto">${escapeHTML(groupInitials(therapist.name))}</div>`}
           <h3>${escapeHTML(therapist.name)}</h3>
           <span class="therapist-specialty">${escapeHTML(therapist.specialty)}</span>
           <span class="availability-badge ${availabilityClass(therapist)}">${escapeHTML(therapist.availability)}</span>
         </div>
         <div class="profile-detail-grid">
-          <div class="profile-detail"><span>Experience</span><strong>${escapeHTML(therapist.experience)} years</strong></div>
-          <div class="profile-detail"><span>Rating</span><strong>★ ${escapeHTML(therapist.rating)} / 5</strong></div>
+          <div class="profile-detail"><span>Profile</span><strong>${therapist.backend ? 'Verified account' : 'Demo only'}</strong></div>
+          <div class="profile-detail"><span>Location</span><strong>${escapeHTML(therapist.location || 'Not listed')}</strong></div>
           <div class="profile-detail"><span>Languages</span><strong>${escapeHTML(therapist.languages.join(', '))}</strong></div>
         </div>
         <p class="profile-bio">${escapeHTML(therapist.bio)}</p>
         <div class="card-actions">
-          <a class="card-button" href="${whatsappLink(therapist)}" target="_blank" rel="noopener noreferrer">Book Session on WhatsApp</a>
+          ${therapist.backend && therapist.acceptingPatients ? `<button class="card-button" type="button" data-action="book-professional" data-professional-id="${escapeHTML(therapist.id)}">View appointment times</button>` : '<button class="card-button secondary" type="button" disabled>Booking unavailable</button>'}
           <button class="card-button secondary" type="button" data-action="back-to-directory">Back to directory</button>
         </div>`;
       if (therapistDialog.open) therapistDialog.close();
@@ -2579,8 +2764,9 @@
 
     function renderTherapistRecommendations(message) {
       const { row, content } = createMessageShell(message, true);
-      const selected = (message.therapistIds || therapists.slice(0, 3).map(item => item.id))
-        .map(id => therapists.find(item => item.id === id))
+      const directory = getDirectoryTherapists();
+      const selected = (message.therapistIds || directory.slice(0, 3).map(item => item.id))
+        .map(id => directory.find(item => item.id === id))
         .filter(Boolean)
         .slice(0, 3);
       const card = document.createElement('div');
@@ -2595,9 +2781,9 @@
           <div class="chat-therapist-grid">
             ${selected.map(therapist => `
               <div class="chat-therapist">
-                <img src="${escapeHTML(therapist.image)}" alt="Demo portrait for ${escapeHTML(therapist.name)}" loading="lazy">
-                <div><strong>${escapeHTML(therapist.name)}</strong><span>${escapeHTML(therapist.specialty)} · ★ ${escapeHTML(therapist.rating)}</span></div>
-                <a class="card-button" href="${whatsappLink(therapist)}" target="_blank" rel="noopener noreferrer">Book Session</a>
+                ${therapist.image ? `<img src="${escapeHTML(therapist.image)}" alt="Profile portrait for ${escapeHTML(therapist.name)}" loading="lazy">` : `<div class="provider-avatar">${escapeHTML(groupInitials(therapist.name))}</div>`}
+                <div><strong>${escapeHTML(therapist.name)}</strong><span>${escapeHTML(therapist.specialty)}${therapist.rating ? ` · ★ ${escapeHTML(therapist.rating)}` : ''}</span></div>
+                ${therapist.backend ? `<button class="card-button" type="button" data-action="book-professional" data-professional-id="${escapeHTML(therapist.id)}">Book Session</button>` : '<button class="card-button secondary" type="button" disabled>Demo</button>'}
               </div>`).join('')}
           </div>
           <div class="card-actions"><button class="card-button secondary" type="button" data-action="open-therapist-directory">View full directory</button></div>
@@ -2743,6 +2929,17 @@
         if (!supabaseChannel) subscribeToBackendCalls();
         return supabaseClient;
       }
+      if (supabaseClient && !supabaseUser) {
+        const existing = await supabaseClient.auth.getSession();
+        if (existing.data.session?.user) supabaseUser = existing.data.session.user;
+        else {
+          const signIn = await supabaseClient.auth.signInAnonymously();
+          if (signIn.error) throw signIn.error;
+          supabaseUser = signIn.data.user;
+        }
+        subscribeToBackendCalls();
+        return supabaseClient;
+      }
       if (supabaseInitPromise) return supabaseInitPromise;
       if (!isSupabaseConfigured()) {
         setOnlineMatchState('error', 'Supabase setup is required for real matching');
@@ -2760,10 +2957,21 @@
           auth: {
             persistSession: true,
             autoRefreshToken: true,
-            detectSessionInUrl: false,
+            detectSessionInUrl: true,
             storageKey: 'calmwave-anonymous-auth'
           }
         });
+        if (!authListenerRegistered) {
+          client.auth.onAuthStateChange((event, session) => {
+            supabaseUser = session?.user || null;
+            if (event === 'PASSWORD_RECOVERY') passwordRecoveryMode = true;
+            setTimeout(() => {
+              updateAccountInterface();
+              loadProfessionalDirectory();
+            }, 0);
+          });
+          authListenerRegistered = true;
+        }
         let { data: sessionData, error: sessionError } = await client.auth.getSession();
         if (sessionError) throw sessionError;
         if (!sessionData.session) {
@@ -2806,6 +3014,275 @@
         .subscribe(status => {
           if (status === 'SUBSCRIBED') refreshScheduledBookings();
         });
+    }
+
+    function isPermanentAccount() {
+      return Boolean(supabaseUser?.email && !supabaseUser?.is_anonymous);
+    }
+
+    function setAuthMessage(text, error = false) {
+      const element = document.getElementById('authMessage');
+      element.textContent = text;
+      element.classList.toggle('error', error);
+    }
+
+    async function updateAccountInterface() {
+      const signedOutView = document.getElementById('signedOutAccountView');
+      const signedInView = document.getElementById('signedInAccountView');
+      const authTabs = signedOutView.querySelector('.auth-tabs');
+      if (passwordRecoveryMode) {
+        signedOutView.hidden = false;
+        signedInView.hidden = true;
+        authTabs.hidden = true;
+        signedOutView.querySelectorAll('[data-auth-panel]').forEach(panel => { panel.hidden = panel.dataset.authPanel !== 'recovery'; });
+        setAuthMessage('Enter a new password for your account.');
+        if (!accountDialog.open) accountDialog.showModal();
+        return;
+      }
+      authTabs.hidden = false;
+      if (!isPermanentAccount()) {
+        accountContext = null;
+        signedOutView.hidden = false;
+        signedInView.hidden = true;
+        return;
+      }
+
+      signedOutView.hidden = true;
+      signedInView.hidden = false;
+      document.getElementById('accountEmail').textContent = supabaseUser.email;
+      document.getElementById('accountAvatar').textContent = supabaseUser.email.charAt(0).toUpperCase();
+      const claim = await supabaseClient.rpc('claim_professional_profile');
+      if (claim.error && !/no valid professional invitation/i.test(claim.error.message)) {
+        document.getElementById('accountMessage').textContent = claim.error.message;
+      }
+      const { data, error } = await supabaseClient.rpc('get_my_account');
+      if (error) {
+        document.getElementById('accountMessage').textContent = error.message;
+        return;
+      }
+      accountContext = parseRpcData(data) || { role: 'patient' };
+      const professional = accountContext.role === 'professional';
+      document.getElementById('accountRole').textContent = professional ? 'Professional' : 'Patient';
+      document.getElementById('professionalDashboardButton').hidden = !professional;
+      await loadMyAppointments();
+    }
+
+    async function openAccount() {
+      await initializeSupabaseBackend();
+      await updateAccountInterface();
+      if (!accountDialog.open) accountDialog.showModal();
+      startAccountRefresh();
+    }
+
+    function startAccountRefresh() {
+      clearInterval(accountRefreshTimer);
+      if (isPermanentAccount()) accountRefreshTimer = setInterval(loadMyAppointments, 30000);
+    }
+
+    function stopAccountRefresh() {
+      clearInterval(accountRefreshTimer);
+      accountRefreshTimer = null;
+    }
+
+    async function prepareForPermanentAuth() {
+      const client = await initializeSupabaseBackend();
+      if (!client) throw new Error('Account service unavailable');
+      if (supabaseUser?.is_anonymous) {
+        await cancelOnlineMatching(false);
+        const { error } = await client.auth.signOut({ scope: 'local' });
+        if (error) throw error;
+        supabaseUser = null;
+      }
+      return client;
+    }
+
+    async function signInWithPassword(email, password) {
+      const client = await prepareForPermanentAuth();
+      const { data, error } = await client.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      supabaseUser = data.user;
+      await updateAccountInterface();
+    }
+
+    async function createEmailAccount(email, password) {
+      const client = await prepareForPermanentAuth();
+      const redirect = location.protocol.startsWith('http') ? `${location.origin}${location.pathname}` : undefined;
+      const { data, error } = await client.auth.signUp({
+        email,
+        password,
+        options: redirect ? { emailRedirectTo: redirect } : undefined
+      });
+      if (error) throw error;
+      if (data.session) {
+        supabaseUser = data.user;
+        await updateAccountInterface();
+        return 'Account created and signed in.';
+      }
+      return 'Check your email to verify the account, then sign in.';
+    }
+
+    async function loadProfessionalDirectory() {
+      const client = await initializeSupabaseBackend();
+      if (!client) return;
+      const { data, error } = await client
+        .from('professional_directory')
+        .select('id,display_name,title,specialties,languages,location,bio,avatar_url,accepting_patients')
+        .eq('published', true)
+        .order('display_name');
+      if (error) return;
+      backendProfessionals = (data || []).map(item => ({
+        id: item.id,
+        name: item.display_name,
+        image: item.avatar_url || '',
+        specialty: item.title,
+        categories: item.specialties || [],
+        experience: '',
+        rating: '',
+        languages: item.languages || [],
+        bio: item.bio || `${item.title} offering scheduled CalmWave sessions.`,
+        availability: item.accepting_patients ? 'Booking available' : 'Not accepting bookings',
+        location: item.location || '',
+        backend: true,
+        acceptingPatients: item.accepting_patients
+      }));
+      renderTherapistDirectory(document.getElementById('therapistFilter').value);
+    }
+
+    function getDirectoryTherapists() {
+      return [...backendProfessionals, ...therapists.map(item => ({ ...item, demo: true }))];
+    }
+
+    async function openProfessionalBooking(professionalId) {
+      if (!isPermanentAccount()) {
+        if (therapistDialog.open) therapistDialog.close();
+        await openAccount();
+        setAuthMessage('Sign in with a verified email to book a professional session.', false);
+        return;
+      }
+      selectedProfessional = backendProfessionals.find(item => item.id === professionalId);
+      if (!selectedProfessional) return;
+      document.getElementById('bookingProfessionalName').textContent = selectedProfessional.name;
+      document.getElementById('bookingProfessionalSpecialty').textContent = selectedProfessional.specialty;
+      document.getElementById('bookingProfessionalInitials').textContent = groupInitials(selectedProfessional.name);
+      document.getElementById('professionalBookingMessage').textContent = 'Choose an available appointment time.';
+      professionalSlotList.innerHTML = '<div class="booking-empty">Loading available times...</div>';
+      if (therapistDialog.open) therapistDialog.close();
+      if (!professionalBookingDialog.open) professionalBookingDialog.showModal();
+      await loadProfessionalSlots(professionalId);
+    }
+
+    async function loadProfessionalSlots(professionalId) {
+      const from = new Date();
+      const to = new Date(Date.now() + 60 * 24 * 60 * 60 * 1000);
+      const { data, error } = await supabaseClient.rpc('list_available_slots', {
+        p_professional_id: professionalId,
+        p_from: from.toISOString(),
+        p_to: to.toISOString()
+      });
+      if (error) {
+        professionalSlotList.innerHTML = `<div class="booking-empty">${escapeHTML(error.message)}</div>`;
+        return;
+      }
+      const slots = parseRpcData(data) || [];
+      professionalSlotList.innerHTML = slots.length ? slots.map(slot => `
+        <div class="slot-item">
+          <strong>${escapeHTML(formatBookingDate(slot.starts_at))}</strong>
+          <span>${escapeHTML(slot.call_mode)} · ${escapeHTML(formatBookingDate(slot.ends_at))}</span>
+          <button class="card-button" type="button" data-professional-slot="${escapeHTML(slot.slot_id)}">Book this session</button>
+        </div>`).join('') : '<div class="booking-empty">No available sessions have been published yet.</div>';
+    }
+
+    async function bookProfessionalSlot(slotId) {
+      const message = document.getElementById('professionalBookingMessage');
+      message.textContent = 'Booking session...';
+      const requestId = globalThis.crypto?.randomUUID ? globalThis.crypto.randomUUID() : makeId();
+      const { error } = await supabaseClient.rpc('book_appointment', { p_slot_id: slotId, p_request_id: requestId });
+      if (error) {
+        message.textContent = error.message;
+        return;
+      }
+      message.textContent = 'Session requested. The professional has been notified to accept or decline.';
+      await loadProfessionalSlots(selectedProfessional.id);
+      await loadMyAppointments();
+    }
+
+    function renderAppointmentItems(items) {
+      if (!items.length) return '<div class="booking-empty">No upcoming appointments.</div>';
+      const now = Date.now();
+      return items.map(item => {
+        const professionalView = item.viewer_role === 'professional';
+        const start = new Date(item.starts_at).getTime();
+        const canJoin = item.status === 'accepted' && item.call_id && now >= start - 10 * 60 * 1000 && now <= new Date(item.ends_at).getTime() + 30 * 60 * 1000;
+        let actions = '';
+        if (professionalView && item.status === 'pending') {
+          actions = `<button class="card-button" data-appointment-action="accept" data-appointment-id="${escapeHTML(item.appointment_id)}">Accept</button><button class="card-button secondary" data-appointment-action="decline" data-appointment-id="${escapeHTML(item.appointment_id)}">Decline</button>`;
+        } else if (item.status === 'accepted') {
+          actions = `${canJoin ? `<button class="card-button" data-appointment-action="join" data-call-id="${escapeHTML(item.call_id)}">Join call</button>` : ''}<button class="card-button secondary" data-appointment-action="${professionalView ? 'cancel-professional' : 'cancel-patient'}" data-appointment-id="${escapeHTML(item.appointment_id)}">Cancel</button>`;
+        } else if (!professionalView && item.status === 'pending') {
+          actions = `<button class="card-button secondary" data-appointment-action="cancel-patient" data-appointment-id="${escapeHTML(item.appointment_id)}">Cancel</button>`;
+        }
+        return `<div class="appointment-item"><div><strong>${escapeHTML(item.counterpart_name || item.professional_name)}</strong><span>${escapeHTML(formatBookingDate(item.starts_at))} · ${escapeHTML(item.call_mode)}</span><span class="appointment-status">${escapeHTML(item.status)}</span></div><div class="appointment-actions">${actions}</div></div>`;
+      }).join('');
+    }
+
+    async function loadMyAppointments() {
+      if (!isPermanentAccount()) return;
+      const { data, error } = await supabaseClient.rpc('list_my_appointments');
+      if (error) {
+        document.getElementById('accountMessage').textContent = error.message;
+        return;
+      }
+      const items = parseRpcData(data) || [];
+      patientAppointmentList.innerHTML = renderAppointmentItems(items.filter(item => item.viewer_role === 'patient'));
+      professionalAppointmentList.innerHTML = renderAppointmentItems(items.filter(item => item.viewer_role === 'professional'));
+    }
+
+    async function handleAppointmentAction(action, appointmentId, callId) {
+      if (action === 'join') {
+        openPeerCallCenter();
+        const started = Date.now();
+        while (!peerReady && Date.now() - started < 10000) await pause(200);
+        if (!peerReady) {
+          showToast('Call identity could not become ready');
+          return;
+        }
+        startScheduledReadiness(callId);
+        return;
+      }
+      const rpc = action === 'accept' ? 'professional_accept_appointment'
+        : action === 'decline' ? 'professional_decline_appointment'
+          : action === 'cancel-professional' ? 'professional_cancel_appointment' : 'patient_cancel_appointment';
+      const { error } = await supabaseClient.rpc(rpc, { p_appointment_id: appointmentId });
+      if (error) showToast(error.message);
+      else {
+        showToast(`Appointment ${action === 'accept' ? 'accepted' : action === 'decline' ? 'declined' : 'cancelled'}`);
+        await loadMyAppointments();
+      }
+    }
+
+    async function openProfessionalDashboard() {
+      if (accountContext?.role !== 'professional') return;
+      if (accountDialog.open) accountDialog.close();
+      if (!professionalDashboardDialog.open) professionalDashboardDialog.showModal();
+      await loadMyAppointments();
+      startAccountRefresh();
+    }
+
+    async function createAvailabilitySlot() {
+      const start = new Date(document.getElementById('availabilityStart').value);
+      const end = new Date(document.getElementById('availabilityEnd').value);
+      const mode = document.getElementById('availabilityMode').value;
+      const message = document.getElementById('availabilityMessage');
+      if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()) || end <= start) {
+        message.textContent = 'Choose a valid start and end time.';
+        return;
+      }
+      const requestId = globalThis.crypto?.randomUUID ? globalThis.crypto.randomUUID() : makeId();
+      const { error } = await supabaseClient.rpc('create_availability_slot', {
+        p_starts_at: start.toISOString(), p_ends_at: end.toISOString(), p_call_mode: mode, p_request_id: requestId
+      });
+      message.textContent = error ? error.message : 'Availability published.';
+      if (!error) document.getElementById('availabilityForm').reset();
     }
 
     function updateCallStartButton() {
@@ -2977,6 +3454,7 @@
 
     function handleBackendSessionChange(session) {
       if (!session?.id) return;
+      if (session.kind === 'scheduled' && isPermanentAccount()) loadMyAppointments();
       if (['cancelled', 'expired', 'ended'].includes(session.status)) {
         if (pendingMediaCall?.metadata?.matchId === session.id) declineIncomingCall();
         if (scheduledReadyCallId === session.id) resetScheduledReadinessState();
@@ -4561,6 +5039,7 @@
       const card = actionButton.closest('.interactive-card');
       if (actionButton.dataset.action === 'open-therapist-directory') openTherapistDirectory();
       if (actionButton.dataset.action === 'view-therapist') openTherapistProfile(actionButton.dataset.therapistId);
+      if (actionButton.dataset.action === 'book-professional') openProfessionalBooking(actionButton.dataset.professionalId);
       if (actionButton.dataset.action === 'breath-toggle') toggleBreathing(card);
       if (actionButton.dataset.action === 'new-affirmation') {
         card.querySelector('.affirmation-quote').textContent = pick(affirmations);
@@ -4595,8 +5074,10 @@
     });
 
     therapistGrid.addEventListener('click', event => {
-      const button = event.target.closest('[data-action="view-therapist"]');
-      if (button) openTherapistProfile(button.dataset.therapistId);
+      const button = event.target.closest('[data-action]');
+      if (!button) return;
+      if (button.dataset.action === 'view-therapist') openTherapistProfile(button.dataset.therapistId);
+      if (button.dataset.action === 'book-professional') openProfessionalBooking(button.dataset.professionalId);
     });
 
     document.getElementById('therapistFilter').addEventListener('change', event => {
@@ -4604,10 +5085,109 @@
     });
 
     therapistProfileContent.addEventListener('click', event => {
-      const button = event.target.closest('[data-action="back-to-directory"]');
+      const button = event.target.closest('[data-action]');
       if (!button) return;
-      therapistProfileDialog.close();
-      openTherapistDirectory(document.getElementById('therapistFilter').value);
+      if (button.dataset.action === 'back-to-directory') {
+        therapistProfileDialog.close();
+        openTherapistDirectory(document.getElementById('therapistFilter').value);
+      }
+      if (button.dataset.action === 'book-professional') {
+        therapistProfileDialog.close();
+        openProfessionalBooking(button.dataset.professionalId);
+      }
+    });
+
+    document.getElementById('accountButton').addEventListener('click', openAccount);
+    document.getElementById('accountClose').addEventListener('click', () => {
+      stopAccountRefresh();
+      accountDialog.close();
+    });
+    document.querySelectorAll('[data-auth-tab]').forEach(button => {
+      button.addEventListener('click', () => {
+        const target = button.dataset.authTab;
+        document.querySelectorAll('[data-auth-tab]').forEach(tab => {
+          const selected = tab === button;
+          tab.classList.toggle('active', selected);
+          tab.setAttribute('aria-selected', String(selected));
+        });
+        document.querySelectorAll('[data-auth-panel]').forEach(panel => { panel.hidden = panel.dataset.authPanel !== target; });
+        setAuthMessage('');
+      });
+    });
+    document.getElementById('signInForm').addEventListener('submit', async event => {
+      event.preventDefault();
+      setAuthMessage('Signing in...');
+      try {
+        await signInWithPassword(document.getElementById('signInEmail').value.trim(), document.getElementById('signInPassword').value);
+        setAuthMessage('Signed in.');
+      } catch (error) { setAuthMessage(error.message, true); }
+    });
+    document.getElementById('signUpForm').addEventListener('submit', async event => {
+      event.preventDefault();
+      const password = document.getElementById('signUpPassword').value;
+      if (password !== document.getElementById('signUpPasswordConfirm').value) {
+        setAuthMessage('Passwords do not match.', true);
+        return;
+      }
+      setAuthMessage('Creating account...');
+      try {
+        const message = await createEmailAccount(document.getElementById('signUpEmail').value.trim(), password);
+        setAuthMessage(message);
+      } catch (error) { setAuthMessage(error.message, true); }
+    });
+    document.getElementById('passwordRecoveryForm').addEventListener('submit', async event => {
+      event.preventDefault();
+      const password = document.getElementById('recoveryPassword').value;
+      if (password !== document.getElementById('recoveryPasswordConfirm').value) {
+        setAuthMessage('Passwords do not match.', true);
+        return;
+      }
+      const { error } = await supabaseClient.auth.updateUser({ password });
+      if (error) setAuthMessage(error.message, true);
+      else {
+        passwordRecoveryMode = false;
+        setAuthMessage('Password updated successfully.');
+        await updateAccountInterface();
+      }
+    });
+    document.getElementById('forgotPasswordButton').addEventListener('click', async () => {
+      const email = document.getElementById('signInEmail').value.trim();
+      if (!email) { setAuthMessage('Enter your email address first.', true); return; }
+      try {
+        const client = await prepareForPermanentAuth();
+        const redirectTo = location.protocol.startsWith('http') ? `${location.origin}${location.pathname}` : undefined;
+        const { error } = await client.auth.resetPasswordForEmail(email, redirectTo ? { redirectTo } : undefined);
+        if (error) throw error;
+        setAuthMessage('Password-reset email sent.');
+      } catch (error) { setAuthMessage(error.message, true); }
+    });
+    document.getElementById('signOutButton').addEventListener('click', async () => {
+      if (supabaseClient) await supabaseClient.auth.signOut();
+      supabaseUser = null;
+      accountContext = null;
+      stopAccountRefresh();
+      await updateAccountInterface();
+    });
+    document.getElementById('refreshAppointmentsButton').addEventListener('click', loadMyAppointments);
+    document.getElementById('professionalDashboardButton').addEventListener('click', openProfessionalDashboard);
+    professionalSlotList.addEventListener('click', event => {
+      const button = event.target.closest('[data-professional-slot]');
+      if (button) bookProfessionalSlot(button.dataset.professionalSlot);
+    });
+    [patientAppointmentList, professionalAppointmentList].forEach(list => {
+      list.addEventListener('click', event => {
+        const button = event.target.closest('[data-appointment-action]');
+        if (button) handleAppointmentAction(button.dataset.appointmentAction, button.dataset.appointmentId, button.dataset.callId);
+      });
+    });
+    document.getElementById('availabilityForm').addEventListener('submit', event => {
+      event.preventDefault();
+      createAvailabilitySlot();
+    });
+    document.getElementById('professionalBookingClose').addEventListener('click', () => professionalBookingDialog.close());
+    document.getElementById('professionalDashboardClose').addEventListener('click', () => {
+      stopAccountRefresh();
+      professionalDashboardDialog.close();
     });
 
     document.getElementById('groupTypeFilter').addEventListener('change', renderSupportGroups);
@@ -4653,6 +5233,17 @@
       const rect = therapistProfileDialog.getBoundingClientRect();
       const outside = event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom;
       if (outside) therapistProfileDialog.close();
+    });
+
+    [accountDialog, professionalBookingDialog, professionalDashboardDialog].forEach(dialog => {
+      dialog.addEventListener('click', event => {
+        const rect = dialog.getBoundingClientRect();
+        const outside = event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom;
+        if (outside) {
+          if (dialog === accountDialog || dialog === professionalDashboardDialog) stopAccountRefresh();
+          dialog.close();
+        }
+      });
     });
 
     supportGroupsDialog.addEventListener('click', event => {
