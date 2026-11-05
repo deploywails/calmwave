@@ -925,8 +925,12 @@
       padding: 12px;
       border: 1px solid var(--border);
       border-radius: 12px;
+      color: var(--text);
       background: var(--surface-solid);
+      cursor: pointer;
+      font: inherit;
       text-decoration: none;
+      text-align: left;
       transition: transform 170ms ease, border-color 170ms ease;
     }
 
@@ -1365,12 +1369,6 @@
     .peer-status.ready .peer-status-dot { background: var(--success); box-shadow: 0 0 0 4px rgba(72, 168, 133, 0.11); }
     .peer-status.error .peer-status-dot { background: var(--danger); }
 
-    .peer-id-wrap { margin-top: 17px; }
-    .peer-id-wrap label { display: block; margin-bottom: 6px; color: var(--muted); font-size: 8px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
-    .peer-id-box { display: flex; align-items: center; gap: 6px; padding: 7px 7px 7px 11px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-solid); }
-    .peer-id-box code { min-width: 0; flex: 1; overflow: hidden; color: var(--primary); font-family: Consolas, "Courier New", monospace; font-size: 11px; font-weight: 800; text-overflow: ellipsis; white-space: nowrap; }
-    .peer-id-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 7px; }
-
     .call-security { margin-top: auto; padding: 13px; }
     .call-security strong { display: flex; align-items: center; gap: 6px; font-size: 9px; }
     .call-security strong svg { width: 14px; color: var(--teal); }
@@ -1386,7 +1384,7 @@
     .call-account-strip strong { display: block; font-size: 8px; }
     .call-account-strip span { display: block; margin-top: 2px; color: var(--text-soft); font-size: 7px; }
     .call-account-strip .card-button { flex: 0 0 auto; padding: 7px 9px; font-size: 8px; }
-    .call-connect-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 14px; }
+    .call-connect-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-bottom: 14px; }
     .call-connect-tab { padding: 8px 6px; border: 1px solid var(--border); border-radius: 9px; color: var(--text-soft); background: var(--surface-solid); cursor: pointer; font-size: 8px; font-weight: 850; }
     .call-connect-tab.active { color: var(--primary); border-color: var(--primary); background: var(--blue-soft); }
     .call-connect-panel[hidden] { display: none; }
@@ -1501,7 +1499,6 @@
     .incoming-avatar svg { width: 31px; }
     .incoming-card h3 { margin: 0; font-size: 17px; }
     .incoming-card p { margin: 7px 0 0; color: rgba(255, 255, 255, 0.7); font-size: 9px; line-height: 1.5; }
-    .incoming-peer-id { display: block; margin-top: 11px; font-family: Consolas, "Courier New", monospace; font-size: 10px; }
     .incoming-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 18px; }
 
     @keyframes call-pulse {
@@ -1632,7 +1629,6 @@
       .call-identity, .call-join { padding: 14px; border-radius: 14px; }
       .call-identity-mark { width: 44px; height: 44px; border-radius: 14px; }
       .call-identity h3, .call-join h3 { margin-top: 11px; font-size: 14px; }
-      .peer-id-wrap { margin-top: 13px; }
       .call-security { margin-top: 14px; }
       .mode-selector { margin: 13px 0 11px; }
       .call-connect-panel { min-height: 0; }
@@ -1652,7 +1648,7 @@
       .call-overlay-info { top: max(10px, env(safe-area-inset-top)); left: 10px; }
       .incoming-call { padding: 12px; border-radius: 0; }
       .incoming-card { padding: 20px; }
-      .peer-id-actions, .incoming-actions { grid-template-columns: 1fr; }
+      .incoming-actions { grid-template-columns: 1fr; }
       .chat-therapist { grid-template-columns: auto minmax(0, 1fr); }
       .chat-therapist .card-button { grid-column: 1 / -1; }
       .profile-detail-grid { grid-template-columns: 1fr; }
@@ -1815,7 +1811,7 @@
           <div class="resource-content">
             <a href="tel:1199">Kenya: 1199</a>
             <a href="tel:+254722178177">Befrienders Kenya: +254 722 178 177</a>
-            <a href="tel:988">US &amp; Canada: 988</a>
+            <a href="tel:+254768053032">Mindful Hands CBO: +254 768 053 032</a>
             <a href="tel:116123">UK &amp; ROI Samaritans: 116 123</a>
             <a href="https://findahelpline.com/" target="_blank" rel="noopener noreferrer">Find a verified helpline worldwide</a>
           </div>
@@ -1903,26 +1899,18 @@
           <div class="call-identity-mark" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M19 8v6M16 11h6" stroke-linecap="round"/></svg>
           </div>
-          <h3>Your temporary call identity</h3>
-          <p>Share this ID only with the person you intend to call. A new ID is created whenever the call center is reopened.</p>
+          <h3>Private platform matching</h3>
+          <p>CalmWave creates temporary routing credentials privately and connects only the person matched by the platform.</p>
           <div class="peer-status" id="peerStatus"><span class="peer-status-dot"></span><span id="peerStatusText">Creating a secure session...</span></div>
-          <div class="peer-id-wrap">
-            <label>Your unique ID</label>
-            <div class="peer-id-box"><code id="localPeerId">Generating...</code><button class="icon-button" id="copyPeerId" type="button" aria-label="Copy call ID" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg></button></div>
-            <div class="peer-id-actions">
-              <button class="card-button secondary" id="sharePeerId" type="button" disabled>Share invitation</button>
-              <button class="card-button secondary" id="newPeerId" type="button">Create new ID</button>
-            </div>
-          </div>
           <div class="call-security">
             <strong><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>Security and privacy</strong>
-            <p>WebRTC encrypts media in transit. PeerJS Cloud sees connection IDs and signaling metadata, not call media. IDs do not verify identity, so confirm the ID through a trusted channel. Calls are not recorded by CalmWave.</p>
+            <p>WebRTC encrypts media in transit. PeerJS Cloud sees temporary signaling metadata, not call media. Routing credentials are hidden, short-lived, and validated against the matched session. Calls are not recorded by CalmWave.</p>
           </div>
         </section>
 
         <section class="call-join">
           <h3>Connect to another person</h3>
-          <p>Choose the call type, then match now, schedule for later, or use a shared ID.</p>
+          <p>Choose the call type, then match now, schedule a peer conversation, or book a therapist.</p>
           <div class="call-account-strip">
             <div><strong id="callAccountTitle">Scheduling requires email sign in</strong><span id="callAccountText">Immediate anonymous calls remain available.</span></div>
             <button class="card-button" id="callAccountButton" type="button">Sign in</button>
@@ -1941,7 +1929,6 @@
             <button class="call-connect-tab active" type="button" role="tab" aria-selected="true" data-call-tab="match">Match now</button>
             <button class="call-connect-tab" type="button" role="tab" aria-selected="false" data-call-tab="schedule">Peer schedule</button>
             <button class="call-connect-tab" type="button" role="tab" aria-selected="false" data-call-tab="therapist">Therapist</button>
-            <button class="call-connect-tab" type="button" role="tab" aria-selected="false" data-call-tab="manual">Use an ID</button>
           </div>
 
           <div class="call-connect-panel" id="onlineMatchPanel" data-call-panel="match">
@@ -1979,20 +1966,6 @@
             <button class="card-button secondary" id="browseTherapistsFromCall" type="button">Open therapist directory</button>
           </div>
 
-          <div class="call-connect-panel" id="manualCallPanel" data-call-panel="manual" hidden>
-            <h4>Use a shared temporary ID</h4>
-            <p>Enter the ID shared directly by someone you know or trust.</p>
-            <form id="peerCallForm">
-              <div class="call-field">
-                <label for="remotePeerId">Other person's unique ID</label>
-                <input id="remotePeerId" type="text" maxlength="64" autocomplete="off" spellcheck="false" placeholder="calm-XXXX-XXXX-XXXX">
-              </div>
-              <button class="call-primary" id="startPeerCall" type="submit" disabled>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M15 10.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-2.5Z"/><path d="m15 9 6-3v10l-6-3V9Z"/></svg>
-                Start video call
-              </button>
-            </form>
-          </div>
           <p class="call-error" id="callError" role="alert"></p>
         </section>
       </div>
@@ -2018,8 +1991,7 @@
         <div class="incoming-card">
           <div class="incoming-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div>
           <h3 id="incomingCallTitle">Incoming video call</h3>
-          <p>An anonymous peer wants to connect. Only answer if you recognize the ID.</p>
-          <code class="incoming-peer-id" id="incomingPeerId"></code>
+          <p>A platform-matched peer is ready to connect. You remain in control of whether to answer.</p>
           <div class="incoming-actions">
             <button class="card-button danger" id="declinePeerCall" type="button">Decline</button>
             <button class="card-button" id="answerPeerCall" type="button">Answer call</button>
@@ -2215,85 +2187,21 @@
     // Fields: id, name, type, location, schedule, format, description, image, joinUrl.
     const supportGroups = [];
 
-    // EDIT THIS ARRAY to replace demo profiles with your verified psychologists.
-    // Add WhatsApp numbers in international format without + or spaces (example: 254700000000).
+    // Pending directory entry. It is replaced automatically after the invited account is verified and claimed.
     const therapists = [
       {
-        id: 'sarah-mwangi',
-        name: 'Dr. Sarah Mwangi',
-        image: 'https://i.pravatar.cc/150?img=47',
-        specialty: 'Anxiety & Depression',
-        categories: ['Anxiety', 'Depression'],
-        experience: 12,
-        rating: 4.9,
-        languages: ['English', 'Swahili'],
-        bio: 'Warm, evidence-based support for anxiety, low mood, and major life transitions.',
-        availability: 'Available Today',
-        whatsapp: ''
-      },
-      {
-        id: 'james-ochieng',
-        name: 'Dr. James Ochieng',
-        image: 'https://i.pravatar.cc/150?img=12',
-        specialty: 'Cognitive Behavioral Therapy',
-        categories: ['Anxiety', 'Depression'],
-        experience: 10,
-        rating: 4.8,
-        languages: ['English', 'Swahili'],
-        bio: 'Practical CBT sessions focused on changing unhelpful patterns and building coping skills.',
-        availability: 'Next Available: Tue',
-        whatsapp: ''
-      },
-      {
-        id: 'aisha-patel',
-        name: 'Dr. Aisha Patel',
-        image: 'https://i.pravatar.cc/150?img=32',
-        specialty: 'Trauma & Recovery',
-        categories: ['Trauma', 'Anxiety'],
-        experience: 9,
-        rating: 4.9,
-        languages: ['English', 'Swahili'],
-        bio: 'Trauma-informed care that prioritizes safety, choice, and a manageable pace.',
-        availability: 'Available Today',
-        whatsapp: ''
-      },
-      {
-        id: 'grace-wanjiku',
-        name: 'Dr. Grace Wanjiku',
-        image: 'https://i.pravatar.cc/150?img=49',
-        specialty: 'Family Therapy',
-        categories: ['Family', 'Depression'],
-        experience: 14,
-        rating: 4.7,
-        languages: ['English', 'Swahili'],
-        bio: 'Supports couples and families with communication, conflict, and changing relationships.',
-        availability: 'Next Available: Wed',
-        whatsapp: ''
-      },
-      {
-        id: 'david-kimani',
-        name: 'Dr. David Kimani',
-        image: 'https://i.pravatar.cc/150?img=13',
-        specialty: 'Sleep Issues & Stress',
-        categories: ['Anxiety', 'Depression'],
-        experience: 8,
-        rating: 4.8,
-        languages: ['English', 'Swahili'],
-        bio: 'Helps adults develop healthier sleep patterns and sustainable stress-management tools.',
-        availability: 'Available Today',
-        whatsapp: ''
-      },
-      {
-        id: 'emily-atieno',
-        name: 'Dr. Emily Atieno',
-        image: 'https://i.pravatar.cc/150?img=45',
-        specialty: 'Youth Counseling',
-        categories: ['Family', 'Anxiety', 'Trauma'],
-        experience: 7,
-        rating: 4.9,
-        languages: ['English', 'Swahili'],
-        bio: 'A supportive space for teens and young adults navigating identity, school, and family life.',
-        availability: 'Next Available: Thu',
+        id: 'eugene-gwaya-pending',
+        name: 'Eugene Gwaya',
+        image: '',
+        specialty: 'Therapist',
+        categories: ['Counselling'],
+        experience: '',
+        rating: '',
+        languages: [],
+        location: '',
+        phone: '+254790095796',
+        bio: 'Available for scheduled CalmWave counselling sessions after account activation.',
+        availability: 'Activation pending',
         whatsapp: ''
       }
     ];
@@ -2322,14 +2230,10 @@
     const callStage = document.getElementById('callStage');
     const peerStatus = document.getElementById('peerStatus');
     const peerStatusText = document.getElementById('peerStatusText');
-    const localPeerIdElement = document.getElementById('localPeerId');
-    const remotePeerIdInput = document.getElementById('remotePeerId');
-    const startPeerCallButton = document.getElementById('startPeerCall');
     const callError = document.getElementById('callError');
     const localCallVideo = document.getElementById('localCallVideo');
     const remoteCallVideo = document.getElementById('remoteCallVideo');
     const incomingCallPanel = document.getElementById('incomingCall');
-    const incomingPeerIdElement = document.getElementById('incomingPeerId');
     const incomingCallTitle = document.getElementById('incomingCallTitle');
     const callWaitingTitle = document.getElementById('callWaitingTitle');
     const callWaitingText = document.getElementById('callWaitingText');
@@ -2633,11 +2537,11 @@
         <div class="hotline-grid">
           <a class="hotline" href="tel:1199"><span>Kenya · 24/7 support</span><strong>Call 1199</strong></a>
           <a class="hotline" href="tel:+254722178177"><span>Befrienders Kenya</span><strong>+254 722 178 177</strong></a>
-          <a class="hotline" href="tel:988"><span>US &amp; Canada · 24/7</span><strong>Call or text 988</strong></a>
+          <a class="hotline" href="tel:+254768053032"><span>Mindful Hands CBO</span><strong>+254 768 053 032</strong></a>
           <a class="hotline" href="tel:116123"><span>UK &amp; ROI · Samaritans</span><strong>Call 116 123</strong></a>
         </div>
         <div class="card-actions">
-          <a class="card-button ${danger ? 'danger' : ''}" href="https://www.google.com/search?q=therapist+near+me" target="_blank" rel="noopener noreferrer">Find therapist near me</a>
+          <button class="card-button ${danger ? 'danger' : ''}" type="button" data-action="open-therapist-directory">Find a therapist</button>
           <a class="card-button secondary" href="https://findahelpline.com/" target="_blank" rel="noopener noreferrer">Worldwide helplines</a>
         </div>`;
     }
@@ -2676,16 +2580,12 @@
           </div>
           <div class="support-panel" role="tabpanel" data-panel="psychologist">
             <div class="psychologist-options">
-              <a class="psychologist-option" href="https://www.google.com/search?q=licensed+psychologist+near+me" target="_blank" rel="noopener noreferrer">
+              <button class="psychologist-option" type="button" data-action="open-therapist-directory">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
-                <span><strong>Nearby psychologist</strong><span>Find a licensed professional in your area</span></span>
-              </a>
-              <a class="psychologist-option" href="https://www.google.com/search?q=online+licensed+psychologist+consultation" target="_blank" rel="noopener noreferrer">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4" stroke-linecap="round"/></svg>
-                <span><strong>Online consultation</strong><span>Explore remote sessions with a psychologist</span></span>
-              </a>
+                <span><strong>Nearby psychologist</strong><span>View available CalmWave therapists</span></span>
+              </button>
             </div>
-            <p class="professional-note">These buttons open a new browser tab so you can compare licensed providers. CalmWave does not endorse or select a provider.</p>
+            <p class="professional-note">Only professionals activated in the CalmWave therapist directory are shown.</p>
           </div>
           <div class="support-panel" role="tabpanel" data-panel="support-lines" hidden>
             ${hotlineMarkup(false)}
@@ -2732,6 +2632,7 @@
             ${therapist.experience ? `<span>${escapeHTML(therapist.experience)} years experience</span>` : ''}
             ${therapist.rating ? `<span class="therapist-rating" aria-label="Rated ${escapeHTML(therapist.rating)} out of 5">★★★★★ ${escapeHTML(therapist.rating)}</span>` : ''}
             ${therapist.location ? `<span>${escapeHTML(therapist.location)}</span>` : ''}
+            ${therapist.phone ? `<a href="tel:${escapeHTML(therapist.phone.replace(/[^\d+]/g, ''))}">${escapeHTML(therapist.phone)}</a>` : ''}
           </div>
           <p class="therapist-bio">${escapeHTML(therapist.bio)}</p>
           <div class="therapist-languages">Languages: ${escapeHTML(therapist.languages.join(', '))}</div>
@@ -2778,6 +2679,7 @@
         <p class="profile-bio">${escapeHTML(therapist.bio)}</p>
         <div class="card-actions">
           ${therapist.backend && therapist.acceptingPatients ? `<button class="card-button" type="button" data-action="book-professional" data-professional-id="${escapeHTML(therapist.id)}">View appointment times</button>` : '<button class="card-button secondary" type="button" disabled>Booking unavailable</button>'}
+          ${therapist.phone ? `<a class="card-button secondary" href="tel:${escapeHTML(therapist.phone.replace(/[^\d+]/g, ''))}">Call professional</a>` : ''}
           <button class="card-button secondary" type="button" data-action="back-to-directory">Back to directory</button>
         </div>`;
       if (therapistDialog.open) therapistDialog.close();
@@ -3167,7 +3069,7 @@
       if (!client) return;
       const { data, error } = await client
         .from('professional_directory')
-        .select('id,display_name,title,specialties,languages,location,bio,avatar_url,accepting_patients')
+        .select('id,display_name,title,specialties,languages,location,phone,bio,avatar_url,accepting_patients')
         .eq('published', true)
         .order('display_name');
       if (error) return;
@@ -3183,6 +3085,7 @@
         bio: item.bio || `${item.title} offering scheduled CalmWave sessions.`,
         availability: item.accepting_patients ? 'Booking available' : 'Not accepting bookings',
         location: item.location || '',
+        phone: item.phone || '',
         backend: true,
         acceptingPatients: item.accepting_patients
       }));
@@ -3191,7 +3094,9 @@
     }
 
     function getDirectoryTherapists() {
-      return [...backendProfessionals, ...therapists.map(item => ({ ...item, demo: true }))];
+      const activatedNames = new Set(backendProfessionals.map(item => item.name.toLowerCase()));
+      const pending = therapists.filter(item => !activatedNames.has(item.name.toLowerCase())).map(item => ({ ...item, demo: true }));
+      return [...backendProfessionals, ...pending];
     }
 
     async function openProfessionalBooking(professionalId) {
@@ -3286,7 +3191,7 @@
         const started = Date.now();
         while (!peerReady && Date.now() - started < 10000) await pause(200);
         if (!peerReady) {
-          showToast('Call identity could not become ready');
+          showToast('Secure call connection could not become ready');
           return;
         }
         startScheduledReadiness(callId);
@@ -3329,10 +3234,6 @@
     }
 
     function updateCallStartButton() {
-      const hasRemoteId = Boolean(remotePeerIdInput.value.trim());
-      const hasConnectionActivity = Boolean(activeMediaCall || pendingMediaCall || currentBackendCall || onlineMatchSearching || scheduledReadyCallId);
-      startPeerCallButton.disabled = !peerReady || !hasRemoteId || hasConnectionActivity;
-      startPeerCallButton.lastChild.textContent = ` Start ${selectedCallMode} call`;
       updateMatchmakingControls();
     }
 
@@ -3354,16 +3255,13 @@
       callPeer = null;
       peerReady = false;
       if (peer && !peer.destroyed) peer.destroy();
-      localPeerIdElement.textContent = 'Not connected';
-      document.getElementById('copyPeerId').disabled = true;
-      document.getElementById('sharePeerId').disabled = true;
       updateCallStartButton();
     }
 
     function handlePeerError(error) {
       const type = error?.type || '';
       if (type === 'unavailable-id') {
-        setPeerConnectionStatus('', 'Creating another unique ID...');
+        setPeerConnectionStatus('', 'Creating another secure route...');
         destroyCallPeer();
         setTimeout(initializeCallPeer, 250);
         return;
@@ -3396,7 +3294,6 @@
       destroyCallPeer();
       const requestedId = generateAnonymousCallId();
       setPeerConnectionStatus('', 'Connecting to secure signaling...');
-      localPeerIdElement.textContent = requestedId;
       let peer;
       try {
         peer = new globalThis.Peer(requestedId, { debug: 1 });
@@ -3410,9 +3307,6 @@
       peer.on('open', id => {
         if (callPeer !== peer) return;
         peerReady = true;
-        localPeerIdElement.textContent = id;
-        document.getElementById('copyPeerId').disabled = false;
-        document.getElementById('sharePeerId').disabled = false;
         setPeerConnectionStatus('ready', 'Ready for a private one-to-one call');
         updateCallStartButton();
       });
@@ -3431,7 +3325,7 @@
       peer.on('close', () => {
         if (callPeer !== peer) return;
         peerReady = false;
-        setPeerConnectionStatus('error', 'The call identity is no longer active.');
+        setPeerConnectionStatus('error', 'The secure call connection is no longer active.');
         updateCallStartButton();
       });
     }
@@ -3555,7 +3449,7 @@
         return;
       }
       if (!peerReady || !callPeer?.id) {
-        setOnlineMatchState('error', 'Wait for your temporary call ID to become ready');
+        setOnlineMatchState('error', 'Wait for the secure call connection to become ready');
         return;
       }
       if (!await initializeSupabaseBackend()) return;
@@ -3665,7 +3559,7 @@
       }
       container.innerHTML = backendProfessionals.map(item => `
         <div class="call-therapist-item">
-          <div><strong>${escapeHTML(item.name)}</strong><span>${escapeHTML(item.specialty)}</span></div>
+          <div><strong>${escapeHTML(item.name)}</strong><span>${escapeHTML(item.specialty)}${item.phone ? ` · ${escapeHTML(item.phone)}` : ''}</span></div>
           <button class="card-button" type="button" data-call-professional="${escapeHTML(item.id)}">Times</button>
         </div>`).join('');
     }
@@ -3732,7 +3626,7 @@
         return;
       }
       if (!peerReady || !callPeer?.id) {
-        setScheduleState('error', 'Wait for your temporary call ID to become ready');
+        setScheduleState('error', 'Wait for the secure call connection to become ready');
         return;
       }
       const generation = ++scheduledReadyGeneration;
@@ -3743,7 +3637,7 @@
 
     async function markScheduledReady(callId, quiet = false, generation = scheduledReadyGeneration) {
       if (!peerReady || !callPeer?.id) {
-        setScheduleState('error', 'Wait for your temporary call ID to become ready');
+        setScheduleState('error', 'Wait for the secure call connection to become ready');
         return;
       }
       try {
@@ -3770,26 +3664,6 @@
       const callId = resetScheduledReadinessState();
       if (callId && supabaseClient && supabaseUser && !activeMediaCall) {
         try { await backendRpc('leave_scheduled_ready', { p_call_id: callId }); } catch (error) { /* Peer credentials expire automatically. */ }
-      }
-    }
-
-    async function copyText(value) {
-      try {
-        if (navigator.clipboard && window.isSecureContext) {
-          await navigator.clipboard.writeText(value);
-        } else {
-          const helper = document.createElement('textarea');
-          helper.value = value;
-          helper.style.position = 'fixed';
-          helper.style.opacity = '0';
-          document.body.appendChild(helper);
-          helper.select();
-          document.execCommand('copy');
-          helper.remove();
-        }
-        return true;
-      } catch (error) {
-        return false;
       }
     }
 
@@ -3950,16 +3824,15 @@
           callError.textContent = 'Could not verify the incoming matched call.';
           return;
         }
-      } else if (onlineMatchSearching || currentBackendCall) {
+      } else {
         call.close();
-        callError.textContent = 'Rejected an unverified call while matchmaking.';
+        callError.textContent = 'Rejected a call that was not created by CalmWave matching.';
         return;
       }
       pendingMediaCall = call;
       const mode = currentBackendCall?.call_mode || (call.metadata?.mode === 'audio' ? 'audio' : 'video');
       incomingCallPanel.dataset.mode = mode;
       incomingCallTitle.textContent = `Incoming ${mode} call`;
-      incomingPeerIdElement.textContent = call.peer;
       incomingCallPanel.hidden = false;
       call.on('close', () => {
         if (pendingMediaCall === call) {
@@ -4046,35 +3919,6 @@
         currentBackendCall = null;
         reportPeerButton.hidden = true;
         if (failedCall?.call_id) backendRpc('end_call', { p_call_id: failedCall.call_id }).catch(() => {});
-      }
-    }
-
-    async function startOutgoingCall() {
-      const remoteId = remotePeerIdInput.value.trim();
-      callError.textContent = '';
-      if (onlineMatchSearching || scheduledReadyCallId || currentBackendCall || activeMediaCall) {
-        callError.textContent = 'Finish or cancel the current connection first.';
-        return;
-      }
-      if (!peerReady || !callPeer) {
-        callError.textContent = 'Wait until your temporary ID is ready.';
-        return;
-      }
-      if (!/^[A-Za-z0-9_-]{3,64}$/.test(remoteId)) {
-        callError.textContent = 'Enter a valid temporary call ID.';
-        return;
-      }
-      if (remoteId === callPeer.id) {
-        callError.textContent = 'Use the ID from the other person, not your own ID.';
-        return;
-      }
-
-      startPeerCallButton.disabled = true;
-      try {
-        await createOutgoingPeerCall(remoteId, selectedCallMode, { mode: selectedCallMode, app: 'calmwave' });
-      } catch (error) {
-        callError.textContent = mediaPermissionMessage(error, selectedCallMode);
-        updateCallStartButton();
       }
     }
 
@@ -4976,10 +4820,6 @@
       openPeerCallCenter();
     });
     document.getElementById('peerCallClose').addEventListener('click', closePeerCallCenter);
-    document.getElementById('peerCallForm').addEventListener('submit', event => {
-      event.preventDefault();
-      startOutgoingCall();
-    });
     document.querySelectorAll('[data-call-tab]').forEach(button => {
       button.addEventListener('click', () => {
         const target = button.dataset.callTab;
@@ -5038,31 +4878,6 @@
         });
         updateCallStartButton();
       });
-    });
-    remotePeerIdInput.addEventListener('input', () => {
-      remotePeerIdInput.value = remotePeerIdInput.value.replace(/\s+/g, '');
-      updateCallStartButton();
-    });
-    document.getElementById('copyPeerId').addEventListener('click', async () => {
-      if (!callPeer?.id) return;
-      showToast(await copyText(callPeer.id) ? 'Call ID copied' : 'Could not copy the call ID');
-    });
-    document.getElementById('sharePeerId').addEventListener('click', async () => {
-      if (!callPeer?.id) return;
-      const shareText = `Join my private CalmWave call with this temporary ID: ${callPeer.id}`;
-      if (navigator.share) {
-        try {
-          await navigator.share({ title: 'CalmWave private call', text: shareText });
-          return;
-        } catch (error) {
-          if (error?.name === 'AbortError') return;
-        }
-      }
-      showToast(await copyText(shareText) ? 'Call invitation copied' : 'Could not share the invitation');
-    });
-    document.getElementById('newPeerId').addEventListener('click', () => {
-      declineIncomingCall();
-      initializeCallPeer();
     });
     document.getElementById('answerPeerCall').addEventListener('click', answerIncomingCall);
     document.getElementById('declinePeerCall').addEventListener('click', declineIncomingCall);
