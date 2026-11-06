@@ -2017,7 +2017,7 @@
         </form>
         <div class="auth-panel" id="otpVerificationPanel" hidden>
           <form class="auth-form" id="otpVerifyForm">
-            <div class="call-field"><label for="otpCode">Six-digit code</label><input id="otpCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="000000" required></div>
+            <div class="call-field"><label for="otpCode">One-time code</label><input id="otpCode" type="text" inputmode="numeric" autocomplete="one-time-code" minlength="6" maxlength="8" pattern="[0-9]{6,8}" placeholder="00000000" required></div>
             <button class="call-primary" type="submit">Verify and sign in</button>
             <button class="auth-secondary" id="resendOtpButton" type="button">Send another code</button>
             <button class="auth-secondary" id="changeOtpEmailButton" type="button">Use a different email</button>
@@ -5018,7 +5018,7 @@
       setAuthMessage('Sending one-time code...');
       try {
         await requestEmailOtp(email);
-        setAuthMessage(`A six-digit code was sent to ${email}.`);
+        setAuthMessage(`A one-time code was sent to ${email}.`);
         document.getElementById('otpCode').focus();
       } catch (error) { setAuthMessage(error.message, true); }
       finally { button.disabled = false; }
@@ -5026,7 +5026,7 @@
     document.getElementById('otpVerifyForm').addEventListener('submit', async event => {
       event.preventDefault();
       const code = document.getElementById('otpCode').value.replace(/\D/g, '');
-      if (code.length !== 6) { setAuthMessage('Enter the six-digit code.', true); return; }
+      if (code.length < 6 || code.length > 8) { setAuthMessage('Enter the complete code from your email.', true); return; }
       setAuthMessage('Verifying code...');
       try {
         await verifyEmailOtp(code);
