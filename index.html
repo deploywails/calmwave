@@ -241,11 +241,12 @@
       border: 0;
       border-radius: 999px;
       color: #fff;
-      background: linear-gradient(135deg, var(--teal), var(--primary-dark));
-      box-shadow: 0 10px 24px rgba(50, 107, 139, 0.24);
+      background: linear-gradient(120deg, #27bfb3, #438fd3, #806bd4, #5f8fe3, #27bfb3);
+      background-size: 300% 300%;
+      box-shadow: 0 12px 28px rgba(72, 105, 184, 0.3);
       font-size: 13px;
       transform-origin: center;
-      animation: entry-cta-bubble 1.8s ease-in-out infinite;
+      animation: entry-cta-bubble 1.8s ease-in-out infinite, entry-cta-gradient 6s ease infinite;
     }
 
     .entry-button.primary::before {
@@ -273,7 +274,7 @@
       animation: entry-bubble-dots 1.8s ease-in-out infinite;
     }
 
-    .entry-button.primary svg { width: 30px; height: 30px; padding: 7px; border-radius: 50%; background: rgba(255, 255, 255, 0.16); }
+    .entry-button.primary svg { width: 30px; height: 30px; padding: 7px; border: 1px solid rgba(255, 255, 255, 0.34); border-radius: 50%; background: rgba(255, 255, 255, 0.2); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.32); }
 
     .entry-button:hover { transform: translateY(-2px); border-color: var(--primary); box-shadow: var(--shadow-small); }
     .entry-button svg { width: 17px; }
@@ -344,8 +345,13 @@
     }
 
     @keyframes entry-cta-bubble {
-      0%, 100% { transform: translateY(0) scale(1); box-shadow: 0 10px 24px rgba(50, 107, 139, 0.24), 0 0 0 0 rgba(77, 183, 170, 0.2); }
-      50% { transform: translateY(-6px) scale(1.055); box-shadow: 0 18px 34px rgba(50, 107, 139, 0.34), 0 0 0 13px rgba(77, 183, 170, 0); }
+      0%, 100% { transform: translateY(0) scale(1); box-shadow: 0 12px 28px rgba(72, 105, 184, 0.3), 0 0 0 0 rgba(85, 158, 218, 0.22); }
+      50% { transform: translateY(-6px) scale(1.055); box-shadow: 0 20px 38px rgba(97, 86, 190, 0.38), 0 0 0 13px rgba(58, 190, 179, 0); }
+    }
+
+    @keyframes entry-cta-gradient {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
     }
 
     @keyframes entry-cta-ring {
