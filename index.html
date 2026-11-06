@@ -2010,31 +2010,17 @@
     </div>
     <div class="modal-body">
       <div class="account-view" id="signedOutAccountView">
-        <div class="auth-tabs" role="tablist" aria-label="Account action">
-          <button class="auth-tab active" type="button" role="tab" aria-selected="true" data-auth-tab="signin">Sign in</button>
-          <button class="auth-tab" type="button" role="tab" aria-selected="false" data-auth-tab="signup">Create account</button>
-        </div>
-        <div class="auth-panel" data-auth-panel="signin">
-          <form class="auth-form" id="signInForm">
-            <div class="call-field"><label for="signInEmail">Email address</label><input id="signInEmail" type="email" autocomplete="email" required></div>
-            <div class="call-field"><label for="signInPassword">Password</label><input id="signInPassword" type="password" autocomplete="current-password" minlength="8" required></div>
-            <button class="call-primary" type="submit">Sign in</button>
-            <button class="auth-secondary" id="forgotPasswordButton" type="button">Send password-reset email</button>
-          </form>
-        </div>
-        <div class="auth-panel" data-auth-panel="signup" hidden>
-          <form class="auth-form" id="signUpForm">
-            <div class="call-field"><label for="signUpEmail">Email address</label><input id="signUpEmail" type="email" autocomplete="email" required></div>
-            <div class="call-field"><label for="signUpPassword">Create password</label><input id="signUpPassword" type="password" autocomplete="new-password" minlength="8" required></div>
-            <div class="call-field"><label for="signUpPasswordConfirm">Confirm password</label><input id="signUpPasswordConfirm" type="password" autocomplete="new-password" minlength="8" required></div>
-            <button class="call-primary" type="submit">Create account</button>
-          </form>
-        </div>
-        <div class="auth-panel" data-auth-panel="recovery" hidden>
-          <form class="auth-form" id="passwordRecoveryForm">
-            <div class="call-field"><label for="recoveryPassword">New password</label><input id="recoveryPassword" type="password" autocomplete="new-password" minlength="8" required></div>
-            <div class="call-field"><label for="recoveryPasswordConfirm">Confirm new password</label><input id="recoveryPasswordConfirm" type="password" autocomplete="new-password" minlength="8" required></div>
-            <button class="call-primary" type="submit">Update password</button>
+        <p class="auth-message">Enter your email and CalmWave will send a one-time sign-in code. New emails create an account automatically.</p>
+        <form class="auth-form" id="otpRequestForm">
+          <div class="call-field"><label for="otpEmail">Email address</label><input id="otpEmail" type="email" autocomplete="email" required></div>
+          <button class="call-primary" id="sendOtpButton" type="submit">Send one-time code</button>
+        </form>
+        <div class="auth-panel" id="otpVerificationPanel" hidden>
+          <form class="auth-form" id="otpVerifyForm">
+            <div class="call-field"><label for="otpCode">Six-digit code</label><input id="otpCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="000000" required></div>
+            <button class="call-primary" type="submit">Verify and sign in</button>
+            <button class="auth-secondary" id="resendOtpButton" type="button">Send another code</button>
+            <button class="auth-secondary" id="changeOtpEmailButton" type="button">Use a different email</button>
           </form>
         </div>
         <p class="auth-message" id="authMessage" role="status"></p>
@@ -2337,7 +2323,7 @@
     let selectedProfessional = null;
     let accountRefreshTimer = null;
     let authListenerRegistered = false;
-    let passwordRecoveryMode = false;
+    let pendingOtpEmail = '';
     let selectedPeerScheduleTime = null;
     const handledBackendCalls = new Set();
     const blockedPeerIds = new Set(storage.getJSON('calmwave.blocked-peer-ids.v1', []));
@@ -2888,7 +2874,6 @@
         if (!authListenerRegistered) {
           client.auth.onAuthStateChange((event, session) => {
             supabaseUser = session?.user || null;
-            if (event === 'PASSWORD_RECOVERY') passwordRecoveryMode = true;
             setTimeout(() => {
               updateAccountInterface();
               loadProfessionalDirectory();
@@ -2969,23 +2954,13 @@
     async function updateAccountInterface() {
       const signedOutView = document.getElementById('signedOutAccountView');
       const signedInView = document.getElementById('signedInAccountView');
-      const authTabs = signedOutView.querySelector('.auth-tabs');
-      if (passwordRecoveryMode) {
-        updateCallAccountStrip();
-        signedOutView.hidden = false;
-        signedInView.hidden = true;
-        authTabs.hidden = true;
-        signedOutView.querySelectorAll('[data-auth-panel]').forEach(panel => { panel.hidden = panel.dataset.authPanel !== 'recovery'; });
-        setAuthMessage('Enter a new password for your account.');
-        if (!accountDialog.open) accountDialog.showModal();
-        return;
-      }
-      authTabs.hidden = false;
       if (!isPermanentAccount()) {
         accountContext = null;
         updateCallAccountStrip();
         signedOutView.hidden = false;
         signedInView.hidden = true;
+        document.getElementById('otpRequestForm').hidden = Boolean(pendingOtpEmail);
+        document.getElementById('otpVerificationPanel').hidden = !pendingOtpEmail;
         return;
       }
 
@@ -3039,29 +3014,28 @@
       return client;
     }
 
-    async function signInWithPassword(email, password) {
+    async function requestEmailOtp(email) {
       const client = await prepareForPermanentAuth();
-      const { data, error } = await client.auth.signInWithPassword({ email, password });
+      const { error } = await client.auth.signInWithOtp({
+        email,
+        options: { shouldCreateUser: true }
+      });
       if (error) throw error;
-      supabaseUser = data.user;
+      pendingOtpEmail = email;
       await updateAccountInterface();
     }
 
-    async function createEmailAccount(email, password) {
-      const client = await prepareForPermanentAuth();
-      const redirect = location.protocol.startsWith('http') ? `${location.origin}${location.pathname}` : undefined;
-      const { data, error } = await client.auth.signUp({
-        email,
-        password,
-        options: redirect ? { emailRedirectTo: redirect } : undefined
+    async function verifyEmailOtp(code) {
+      if (!pendingOtpEmail) throw new Error('Request a new code first.');
+      const { data, error } = await supabaseClient.auth.verifyOtp({
+        email: pendingOtpEmail,
+        token: code,
+        type: 'email'
       });
       if (error) throw error;
-      if (data.session) {
-        supabaseUser = data.user;
-        await updateAccountInterface();
-        return 'Account created and signed in.';
-      }
-      return 'Check your email to verify the account, then sign in.';
+      supabaseUser = data.user;
+      pendingOtpEmail = '';
+      await updateAccountInterface();
     }
 
     async function loadProfessionalDirectory() {
@@ -5036,69 +5010,48 @@
       stopAccountRefresh();
       accountDialog.close();
     });
-    document.querySelectorAll('[data-auth-tab]').forEach(button => {
-      button.addEventListener('click', () => {
-        const target = button.dataset.authTab;
-        document.querySelectorAll('[data-auth-tab]').forEach(tab => {
-          const selected = tab === button;
-          tab.classList.toggle('active', selected);
-          tab.setAttribute('aria-selected', String(selected));
-        });
-        document.querySelectorAll('[data-auth-panel]').forEach(panel => { panel.hidden = panel.dataset.authPanel !== target; });
-        setAuthMessage('');
-      });
-    });
-    document.getElementById('signInForm').addEventListener('submit', async event => {
+    document.getElementById('otpRequestForm').addEventListener('submit', async event => {
       event.preventDefault();
-      setAuthMessage('Signing in...');
+      const email = document.getElementById('otpEmail').value.trim();
+      const button = document.getElementById('sendOtpButton');
+      button.disabled = true;
+      setAuthMessage('Sending one-time code...');
       try {
-        await signInWithPassword(document.getElementById('signInEmail').value.trim(), document.getElementById('signInPassword').value);
-        setAuthMessage('Signed in.');
+        await requestEmailOtp(email);
+        setAuthMessage(`A six-digit code was sent to ${email}.`);
+        document.getElementById('otpCode').focus();
+      } catch (error) { setAuthMessage(error.message, true); }
+      finally { button.disabled = false; }
+    });
+    document.getElementById('otpVerifyForm').addEventListener('submit', async event => {
+      event.preventDefault();
+      const code = document.getElementById('otpCode').value.replace(/\D/g, '');
+      if (code.length !== 6) { setAuthMessage('Enter the six-digit code.', true); return; }
+      setAuthMessage('Verifying code...');
+      try {
+        await verifyEmailOtp(code);
+        setAuthMessage('Signed in successfully.');
       } catch (error) { setAuthMessage(error.message, true); }
     });
-    document.getElementById('signUpForm').addEventListener('submit', async event => {
-      event.preventDefault();
-      const password = document.getElementById('signUpPassword').value;
-      if (password !== document.getElementById('signUpPasswordConfirm').value) {
-        setAuthMessage('Passwords do not match.', true);
-        return;
-      }
-      setAuthMessage('Creating account...');
+    document.getElementById('resendOtpButton').addEventListener('click', async () => {
+      if (!pendingOtpEmail) return;
+      setAuthMessage('Sending another code...');
       try {
-        const message = await createEmailAccount(document.getElementById('signUpEmail').value.trim(), password);
-        setAuthMessage(message);
+        await requestEmailOtp(pendingOtpEmail);
+        setAuthMessage(`A new code was sent to ${pendingOtpEmail}.`);
       } catch (error) { setAuthMessage(error.message, true); }
     });
-    document.getElementById('passwordRecoveryForm').addEventListener('submit', async event => {
-      event.preventDefault();
-      const password = document.getElementById('recoveryPassword').value;
-      if (password !== document.getElementById('recoveryPasswordConfirm').value) {
-        setAuthMessage('Passwords do not match.', true);
-        return;
-      }
-      const { error } = await supabaseClient.auth.updateUser({ password });
-      if (error) setAuthMessage(error.message, true);
-      else {
-        passwordRecoveryMode = false;
-        setAuthMessage('Password updated successfully.');
-        await updateAccountInterface();
-      }
-    });
-    document.getElementById('forgotPasswordButton').addEventListener('click', async () => {
-      const email = document.getElementById('signInEmail').value.trim();
-      if (!email) { setAuthMessage('Enter your email address first.', true); return; }
-      try {
-        const client = await prepareForPermanentAuth();
-        const redirectTo = location.protocol.startsWith('http') ? `${location.origin}${location.pathname}` : undefined;
-        const { error } = await client.auth.resetPasswordForEmail(email, redirectTo ? { redirectTo } : undefined);
-        if (error) throw error;
-        setAuthMessage('Password-reset email sent.');
-      } catch (error) { setAuthMessage(error.message, true); }
+    document.getElementById('changeOtpEmailButton').addEventListener('click', async () => {
+      pendingOtpEmail = '';
+      document.getElementById('otpCode').value = '';
+      await updateAccountInterface();
+      setAuthMessage('Enter a different email address.');
     });
     document.getElementById('signOutButton').addEventListener('click', async () => {
       if (supabaseClient) await supabaseClient.auth.signOut();
       supabaseUser = null;
       accountContext = null;
+      pendingOtpEmail = '';
       stopAccountRefresh();
       await updateAccountInterface();
     });
