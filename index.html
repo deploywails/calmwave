@@ -1279,6 +1279,8 @@
     .account-summary strong { display: block; overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
     .account-summary span { display: inline-block; margin-top: 4px; padding: 3px 6px; border-radius: 999px; color: var(--primary); background: var(--blue-soft); font-size: 7px; font-weight: 800; }
     .account-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .account-name-editor { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 7px; margin-top: 12px; }
+    .account-name-editor .card-button { min-height: 41px; }
     .account-section-title { margin: 18px 0 8px; color: var(--text-soft); font-size: 9px; font-weight: 850; letter-spacing: 0.08em; text-transform: uppercase; }
 
     .appointment-list { display: grid; gap: 7px; max-height: 290px; overflow-y: auto; }
@@ -1683,6 +1685,7 @@
       .slot-list { grid-template-columns: 1fr; }
       .appointment-item { grid-template-columns: 1fr; }
       .appointment-actions { justify-content: flex-start; }
+      .account-name-editor { grid-template-columns: 1fr; }
       .call-dialog { inset: 0; width: 100%; max-width: none; height: 100vh; height: 100dvh; max-height: none; margin: 0; border: 0; border-radius: 0; }
       .call-dialog .modal-head { min-height: 56px; padding: 9px 11px; }
       .call-dialog .modal-head h2 { max-width: calc(100% - 45px); font-size: 13px; }
@@ -2093,6 +2096,10 @@
           <div class="account-avatar" id="accountAvatar">C</div>
           <div><strong id="accountEmail"></strong><span id="accountRole">Patient</span></div>
         </div>
+        <div class="account-name-editor" id="patientNameSection">
+          <div class="call-field"><label for="patientDisplayName">Your name for appointments</label><input id="patientDisplayName" type="text" maxlength="80" autocomplete="name" placeholder="Enter your name"></div>
+          <button class="card-button" id="savePatientNameButton" type="button">Save name</button>
+        </div>
         <div class="account-actions">
           <button class="card-button" id="professionalDashboardButton" type="button" hidden>Professional dashboard</button>
           <button class="card-button secondary" id="refreshAppointmentsButton" type="button">Refresh appointments</button>
@@ -2117,6 +2124,7 @@
         <div class="account-avatar" id="bookingProfessionalInitials">P</div>
         <div><strong id="bookingProfessionalName">Professional</strong><span id="bookingProfessionalSpecialty">Mental wellness</span></div>
       </div>
+      <div class="call-field" id="bookingPatientNameSection"><label for="bookingPatientName">Your name for the therapist</label><input id="bookingPatientName" type="text" maxlength="80" autocomplete="name" placeholder="Enter your name before booking"></div>
       <p class="auth-message" id="professionalBookingMessage">Choose an available appointment time.</p>
       <div class="slot-list" id="professionalSlotList"><div class="booking-empty">Loading available times...</div></div>
     </div>
@@ -2389,6 +2397,7 @@
     let accountContext = null;
     let backendProfessionals = [];
     let selectedProfessional = null;
+    let patientHasActiveTherapistBooking = false;
     let accountRefreshTimer = null;
     let authListenerRegistered = false;
     let pendingOtpEmail = '';
@@ -3058,6 +3067,8 @@
       const professional = accountContext.role === 'professional';
       document.getElementById('accountRole').textContent = professional ? 'Professional' : 'Patient';
       document.getElementById('professionalDashboardButton').hidden = !professional;
+      document.getElementById('patientNameSection').hidden = professional;
+      document.getElementById('patientDisplayName').value = accountContext.display_name || '';
       await loadMyAppointments();
     }
 
@@ -3162,14 +3173,21 @@
       document.getElementById('bookingProfessionalName').textContent = selectedProfessional.name;
       document.getElementById('bookingProfessionalSpecialty').textContent = selectedProfessional.specialty;
       document.getElementById('bookingProfessionalInitials').textContent = groupInitials(selectedProfessional.name);
+      document.getElementById('bookingPatientName').value = accountContext?.display_name || '';
       document.getElementById('professionalBookingMessage').textContent = 'Choose an available appointment time.';
       professionalSlotList.innerHTML = '<div class="booking-empty">Loading available times...</div>';
       if (therapistDialog.open) therapistDialog.close();
       if (!professionalBookingDialog.open) professionalBookingDialog.showModal();
+      await loadMyAppointments();
       await loadProfessionalSlots(professionalId);
     }
 
     async function loadProfessionalSlots(professionalId) {
+      if (patientHasActiveTherapistBooking) {
+        professionalSlotList.innerHTML = '<div class="booking-empty">You already have an upcoming therapist session. Cancel or complete it before booking another.</div>';
+        document.getElementById('professionalBookingMessage').textContent = 'Only one upcoming therapist session is allowed per patient.';
+        return;
+      }
       const from = new Date();
       const to = new Date(Date.now() + 60 * 24 * 60 * 60 * 1000);
       const { data, error } = await supabaseClient.rpc('list_available_slots', {
@@ -3192,7 +3210,17 @@
 
     async function bookProfessionalSlot(slotId) {
       const message = document.getElementById('professionalBookingMessage');
+      if (patientHasActiveTherapistBooking) {
+        message.textContent = 'Only one upcoming therapist session is allowed. Cancel or complete the existing session first.';
+        return;
+      }
       message.textContent = 'Booking session...';
+      try {
+        await savePatientDisplayName(document.getElementById('bookingPatientName').value);
+      } catch (error) {
+        message.textContent = error.message;
+        return;
+      }
       const requestId = globalThis.crypto?.randomUUID ? globalThis.crypto.randomUUID() : makeId();
       const { error } = await supabaseClient.rpc('book_appointment', { p_slot_id: slotId, p_request_id: requestId });
       if (error) {
@@ -3200,8 +3228,24 @@
         return;
       }
       message.textContent = 'Session requested. The professional has been notified to accept or decline.';
+      patientHasActiveTherapistBooking = true;
       await loadProfessionalSlots(selectedProfessional.id);
       await loadMyAppointments();
+    }
+
+    async function savePatientDisplayName(value) {
+      const name = value.trim();
+      if (name.length < 2 || name.length > 80) throw new Error('Enter your name using 2 to 80 characters.');
+      const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+      const { error } = await supabaseClient.rpc('update_my_patient_profile', {
+        p_display_name: name,
+        p_time_zone: timeZone
+      });
+      if (error) throw error;
+      accountContext = { ...(accountContext || {}), display_name: name };
+      document.getElementById('patientDisplayName').value = name;
+      document.getElementById('bookingPatientName').value = name;
+      return name;
     }
 
     function renderAppointmentItems(items) {
@@ -3232,6 +3276,7 @@
       }
       const items = parseRpcData(data) || [];
       const patientItems = items.filter(item => item.viewer_role === 'patient');
+      patientHasActiveTherapistBooking = patientItems.some(item => ['pending', 'accepted'].includes(item.status) && new Date(item.ends_at).getTime() > Date.now());
       const professionalItems = items
         .filter(item => item.viewer_role === 'professional')
         .sort((first, second) => {
@@ -5160,6 +5205,14 @@
       await updateAccountInterface();
     });
     document.getElementById('refreshAppointmentsButton').addEventListener('click', loadMyAppointments);
+    document.getElementById('savePatientNameButton').addEventListener('click', async () => {
+      const message = document.getElementById('accountMessage');
+      try {
+        const name = await savePatientDisplayName(document.getElementById('patientDisplayName').value);
+        message.textContent = `Name saved as ${name}.`;
+        await loadMyAppointments();
+      } catch (error) { message.textContent = error.message; }
+    });
     document.getElementById('professionalDashboardButton').addEventListener('click', openProfessionalDashboard);
     document.querySelectorAll('[data-professional-tab]').forEach(button => {
       button.addEventListener('click', () => {
