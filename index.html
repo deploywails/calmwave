@@ -2004,6 +2004,7 @@
               <button class="call-primary" id="scheduleCallButton" type="submit" disabled>Book selected peer call</button>
             </form>
             <div class="match-status" id="scheduleStatus"><span class="match-status-dot"></span><span id="scheduleStatusText">No booking selected</span></div>
+            <div class="backend-note" id="peerBookingLimit">0 of 5 upcoming peer calls booked.</div>
             <div class="booking-list" id="scheduledCallList"><div class="booking-empty">Your upcoming anonymous calls will appear here.</div></div>
             <div class="backend-note">The app must be open near the booked time. Browser notifications are not guaranteed.</div>
           </div>
@@ -2863,11 +2864,18 @@
       scheduleStatusText.textContent = text;
     }
 
+    function upcomingPeerBookingCount() {
+      const now = Date.now();
+      return scheduledBookings.filter(booking =>
+        ['waiting', 'matched'].includes(booking.status) && new Date(booking.starts_at).getTime() > now
+      ).length;
+    }
+
     function updateMatchmakingControls() {
       const hasConnectionActivity = Boolean(activeMediaCall || pendingMediaCall || currentBackendCall || scheduledReadyCallId);
       const canUseBackend = isSupabaseConfigured() && peerReady && peerSafetyConsent.checked && !hasConnectionActivity;
       findOnlinePeerButton.disabled = !canUseBackend || onlineMatchSearching;
-      scheduleCallButton.disabled = !isSupabaseConfigured() || !isPermanentAccount() || !peerSafetyConsent.checked || !selectedPeerScheduleTime || onlineMatchSearching || hasConnectionActivity;
+      scheduleCallButton.disabled = !isSupabaseConfigured() || !isPermanentAccount() || !peerSafetyConsent.checked || !selectedPeerScheduleTime || onlineMatchSearching || hasConnectionActivity || upcomingPeerBookingCount() >= 5;
     }
 
     function parseRpcData(data) {
@@ -3509,6 +3517,9 @@
     }
 
     function renderScheduledBookings() {
+      const bookingCount = upcomingPeerBookingCount();
+      document.getElementById('peerBookingLimit').textContent = `${bookingCount} of 5 upcoming peer calls booked.${bookingCount >= 5 ? ' Cancel or complete one before booking another.' : ''}`;
+      updateMatchmakingControls();
       if (!scheduledBookings.length) {
         scheduledCallList.innerHTML = '<div class="booking-empty">Your upcoming anonymous calls will appear here.</div>';
         return;
@@ -3590,6 +3601,10 @@
       if (!isPermanentAccount()) {
         setScheduleState('error', 'Sign in with email before scheduling a peer call');
         await openAccount();
+        return;
+      }
+      if (upcomingPeerBookingCount() >= 5) {
+        setScheduleState('error', 'You already have five upcoming peer calls. Cancel or complete one before booking another.');
         return;
       }
       if (onlineMatchSearching || activeMediaCall || currentBackendCall || scheduledReadyCallId) {
