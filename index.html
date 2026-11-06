@@ -9,51 +9,51 @@
   <style>
     :root {
       color-scheme: light;
-      --bg: #edf5f8;
-      --bg-deep: #e8e6f7;
-      --surface: rgba(255, 255, 255, 0.76);
+      --bg: #e5fbff;
+      --bg-deep: #f0eaff;
+      --surface: rgba(255, 255, 255, 0.9);
       --surface-solid: #ffffff;
-      --surface-soft: #f4f8fa;
-      --surface-hover: #eaf2f5;
-      --text: #18313b;
-      --text-soft: #637982;
-      --muted: #8ca0a7;
-      --border: rgba(37, 86, 100, 0.12);
-      --primary: #4a84a8;
-      --primary-dark: #326b91;
-      --purple: #8175c7;
-      --teal: #4db7aa;
-      --teal-soft: rgba(77, 183, 170, 0.14);
-      --blue-soft: rgba(74, 132, 168, 0.12);
-      --purple-soft: rgba(129, 117, 199, 0.13);
-      --danger: #b64c5b;
-      --danger-soft: #fff0f2;
-      --danger-border: rgba(182, 76, 91, 0.24);
-      --success: #48a885;
-      --shadow: 0 28px 90px rgba(37, 73, 91, 0.16);
-      --shadow-small: 0 10px 30px rgba(37, 73, 91, 0.11);
-      --focus: 0 0 0 4px rgba(74, 132, 168, 0.18);
+      --surface-soft: #effbff;
+      --surface-hover: #ddf5ff;
+      --text: #12364b;
+      --text-soft: #4f7488;
+      --muted: #7696a6;
+      --border: rgba(40, 125, 164, 0.17);
+      --primary: #378fd1;
+      --primary-dark: #246fb8;
+      --purple: #896ee2;
+      --teal: #27c1b0;
+      --teal-soft: rgba(39, 193, 176, 0.17);
+      --blue-soft: rgba(55, 143, 209, 0.15);
+      --purple-soft: rgba(137, 110, 226, 0.16);
+      --danger: #d34e68;
+      --danger-soft: #fff0f5;
+      --danger-border: rgba(211, 78, 104, 0.27);
+      --success: #2fa982;
+      --shadow: 0 28px 90px rgba(45, 102, 145, 0.2);
+      --shadow-small: 0 10px 30px rgba(45, 102, 145, 0.14);
+      --focus: 0 0 0 4px rgba(55, 143, 209, 0.2);
     }
 
     [data-theme="dark"] {
       color-scheme: dark;
-      --bg: #0b1418;
-      --bg-deep: #171426;
-      --surface: rgba(18, 31, 37, 0.82);
-      --surface-solid: #15242a;
-      --surface-soft: #1b2d34;
-      --surface-hover: #243a42;
-      --text: #edf8fa;
-      --text-soft: #a6bbc1;
-      --muted: #738d95;
-      --border: rgba(205, 237, 241, 0.1);
-      --primary: #75b3d5;
-      --primary-dark: #5799bf;
-      --purple: #a499e8;
-      --teal: #63cbbd;
-      --teal-soft: rgba(99, 203, 189, 0.13);
-      --blue-soft: rgba(117, 179, 213, 0.13);
-      --purple-soft: rgba(164, 153, 232, 0.14);
+      --bg: #081a24;
+      --bg-deep: #21163a;
+      --surface: rgba(17, 42, 54, 0.88);
+      --surface-solid: #142d3a;
+      --surface-soft: #1b3847;
+      --surface-hover: #254b5d;
+      --text: #f1fcff;
+      --text-soft: #b5d4df;
+      --muted: #82a9b8;
+      --border: rgba(173, 231, 247, 0.15);
+      --primary: #69c7ff;
+      --primary-dark: #4699db;
+      --purple: #b29cff;
+      --teal: #59dfcc;
+      --teal-soft: rgba(89, 223, 204, 0.17);
+      --blue-soft: rgba(105, 199, 255, 0.16);
+      --purple-soft: rgba(178, 156, 255, 0.18);
       --danger: #ff8794;
       --danger-soft: rgba(126, 39, 53, 0.25);
       --danger-border: rgba(255, 135, 148, 0.23);
@@ -73,9 +73,9 @@
       overflow: hidden;
       color: var(--text);
       background:
-        radial-gradient(circle at 7% 6%, rgba(98, 179, 191, 0.2), transparent 28%),
-        radial-gradient(circle at 93% 9%, rgba(143, 123, 210, 0.19), transparent 29%),
-        radial-gradient(circle at 74% 95%, rgba(95, 176, 158, 0.16), transparent 30%),
+        radial-gradient(circle at 7% 6%, rgba(47, 211, 200, 0.28), transparent 30%),
+        radial-gradient(circle at 93% 9%, rgba(151, 111, 238, 0.26), transparent 31%),
+        radial-gradient(circle at 74% 95%, rgba(60, 154, 235, 0.22), transparent 32%),
         linear-gradient(145deg, var(--bg), var(--bg-deep));
       font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       transition: color 240ms ease, background 240ms ease;
@@ -1297,6 +1297,18 @@
     .slot-item .card-button { width: 100%; margin-top: 9px; }
 
     .professional-dashboard { width: min(850px, calc(100% - 28px)); }
+    [data-professional-panel][hidden] { display: none; }
+    .professional-dashboard-summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px; border: 1px solid var(--border); border-radius: 14px; background: linear-gradient(135deg, var(--blue-soft), var(--teal-soft)); }
+    .professional-dashboard-summary strong { display: block; font-size: 13px; }
+    .professional-dashboard-summary span { display: block; margin-top: 3px; color: var(--text-soft); font-size: 8px; }
+    .professional-count { display: grid; flex: 0 0 auto; place-items: center; width: 42px; height: 42px; border-radius: 50%; color: #fff; background: linear-gradient(135deg, var(--teal), var(--primary)); font-size: 15px; font-weight: 850; box-shadow: var(--shadow-small); }
+    .professional-dashboard .auth-tabs { margin-top: 2px; }
+    .professional-dashboard .dashboard-panel { margin-top: 0; }
+    .dashboard-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+    .dashboard-heading h3 { margin: 0; }
+    .professional-session-list { max-height: 440px; }
+    .professional-dashboard .appointment-item.status-pending { border-color: rgba(211, 154, 85, 0.45); background: rgba(255, 191, 92, 0.09); }
+    .professional-dashboard .appointment-item.status-accepted { border-color: rgba(47, 169, 130, 0.35); background: rgba(47, 169, 130, 0.08); }
     .dashboard-grid { display: grid; grid-template-columns: minmax(250px, 0.75fr) minmax(0, 1.25fr); gap: 13px; }
     .dashboard-panel { padding: 14px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface-soft); }
     .dashboard-panel h3 { margin: 0 0 10px; font-size: 12px; }
@@ -2118,9 +2130,20 @@
       </button>
     </div>
     <div class="modal-body">
-      <div class="dashboard-grid">
-        <section class="dashboard-panel">
-          <h3>Add availability</h3>
+      <div class="professional-dashboard-summary">
+        <div><strong>Booked sessions</strong><span>Review, accept, decline, or join assigned appointments.</span></div>
+        <div class="professional-count" id="professionalBookingCount">0</div>
+      </div>
+      <div class="auth-tabs" role="tablist" aria-label="Professional dashboard section">
+        <button class="auth-tab active" type="button" role="tab" aria-selected="true" data-professional-tab="sessions">Booked Sessions</button>
+        <button class="auth-tab" type="button" role="tab" aria-selected="false" data-professional-tab="availability">Availability</button>
+      </div>
+      <section class="dashboard-panel" data-professional-panel="sessions">
+        <div class="dashboard-heading"><h3>Assigned sessions</h3><button class="card-button secondary" id="refreshProfessionalAppointments" type="button">Refresh</button></div>
+        <div class="appointment-list professional-session-list" id="professionalAppointmentList"><div class="booking-empty">No assigned sessions.</div></div>
+      </section>
+      <section class="dashboard-panel" data-professional-panel="availability" hidden>
+          <h3>Publish availability</h3>
           <form class="availability-form" id="availabilityForm">
             <div class="call-field"><label for="availabilityStart">Starts</label><input id="availabilityStart" type="datetime-local" step="900" required></div>
             <div class="call-field"><label for="availabilityEnd">Ends</label><input id="availabilityEnd" type="datetime-local" step="900" required></div>
@@ -2128,12 +2151,7 @@
             <button class="call-primary" type="submit">Publish time slot</button>
           </form>
           <p class="auth-message" id="availabilityMessage"></p>
-        </section>
-        <section class="dashboard-panel">
-          <h3>Assigned sessions</h3>
-          <div class="appointment-list" id="professionalAppointmentList"><div class="booking-empty">No assigned sessions.</div></div>
-        </section>
-      </div>
+      </section>
     </div>
   </dialog>
 
@@ -2997,9 +3015,10 @@
       const text = document.getElementById('callAccountText');
       const button = document.getElementById('callAccountButton');
       if (isPermanentAccount()) {
-        title.textContent = supabaseUser.email;
-        text.textContent = 'Signed in for peer and therapist scheduling.';
-        button.textContent = 'Account';
+        const professional = accountContext?.role === 'professional';
+        title.textContent = professional ? `Professional: ${supabaseUser.email}` : supabaseUser.email;
+        text.textContent = professional ? 'Booked sessions are ready in your dashboard.' : 'Signed in for peer and therapist scheduling.';
+        button.textContent = professional ? 'Booked sessions' : 'Account';
       } else {
         title.textContent = 'Scheduling requires email sign in';
         text.textContent = 'Sign in to schedule a peer or therapist session.';
@@ -3200,7 +3219,7 @@
         } else if (!professionalView && item.status === 'pending') {
           actions = `<button class="card-button secondary" data-appointment-action="cancel-patient" data-appointment-id="${escapeHTML(item.appointment_id)}">Cancel</button>`;
         }
-        return `<div class="appointment-item"><div><strong>${escapeHTML(item.counterpart_name || item.professional_name)}</strong><span>${escapeHTML(formatBookingDate(item.starts_at))} · ${escapeHTML(item.call_mode)}</span><span class="appointment-status">${escapeHTML(item.status)}</span></div><div class="appointment-actions">${actions}</div></div>`;
+        return `<div class="appointment-item status-${escapeHTML(item.status)}"><div><strong>${escapeHTML(item.counterpart_name || item.professional_name)}</strong><span>${escapeHTML(formatBookingDate(item.starts_at))} · ${escapeHTML(item.call_mode)}</span><span class="appointment-status">${escapeHTML(item.status)}</span></div><div class="appointment-actions">${actions}</div></div>`;
       }).join('');
     }
 
@@ -3212,8 +3231,16 @@
         return;
       }
       const items = parseRpcData(data) || [];
-      patientAppointmentList.innerHTML = renderAppointmentItems(items.filter(item => item.viewer_role === 'patient'));
-      professionalAppointmentList.innerHTML = renderAppointmentItems(items.filter(item => item.viewer_role === 'professional'));
+      const patientItems = items.filter(item => item.viewer_role === 'patient');
+      const professionalItems = items
+        .filter(item => item.viewer_role === 'professional')
+        .sort((first, second) => {
+          const priority = status => status === 'pending' ? 0 : status === 'accepted' ? 1 : 2;
+          return priority(first.status) - priority(second.status) || new Date(first.starts_at) - new Date(second.starts_at);
+        });
+      patientAppointmentList.innerHTML = renderAppointmentItems(patientItems);
+      professionalAppointmentList.innerHTML = renderAppointmentItems(professionalItems);
+      document.getElementById('professionalBookingCount').textContent = String(professionalItems.length);
     }
 
     async function handleAppointmentAction(action, appointmentId, callId) {
@@ -3242,6 +3269,15 @@
     async function openProfessionalDashboard() {
       if (accountContext?.role !== 'professional') return;
       if (accountDialog.open) accountDialog.close();
+      if (peerCallDialog.open) closePeerCallCenter();
+      document.querySelectorAll('[data-professional-tab]').forEach(tab => {
+        const selected = tab.dataset.professionalTab === 'sessions';
+        tab.classList.toggle('active', selected);
+        tab.setAttribute('aria-selected', String(selected));
+      });
+      document.querySelectorAll('[data-professional-panel]').forEach(panel => {
+        panel.hidden = panel.dataset.professionalPanel !== 'sessions';
+      });
       if (!professionalDashboardDialog.open) professionalDashboardDialog.showModal();
       await loadMyAppointments();
       startAccountRefresh();
@@ -3982,7 +4018,7 @@
       updateCallAccountStrip();
       loadProfessionalDirectory();
       if (isSupabaseConfigured()) {
-        initializeSupabaseBackend();
+        initializeSupabaseBackend().then(() => updateAccountInterface());
         clearInterval(bookingRefreshTimer);
         bookingRefreshTimer = setInterval(refreshScheduledBookings, 30000);
       } else {
@@ -4850,7 +4886,7 @@
 
     function initializeTheme() {
       const saved = storage.get(KEYS.theme, '');
-      const dark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const dark = saved ? saved === 'dark' : false;
       root.dataset.theme = dark ? 'dark' : 'light';
       updateThemeControls();
     }
@@ -4859,7 +4895,10 @@
     document.getElementById('entryBreathingButton').addEventListener('click', () => enterCalmWave(true));
 
     document.getElementById('peerCallButton').addEventListener('click', openPeerCallCenter);
-    document.getElementById('callAccountButton').addEventListener('click', openAccount);
+    document.getElementById('callAccountButton').addEventListener('click', () => {
+      if (accountContext?.role === 'professional') openProfessionalDashboard();
+      else openAccount();
+    });
     document.getElementById('mobilePeerCallButton').addEventListener('click', () => {
       closePanel();
       openPeerCallCenter();
@@ -5122,6 +5161,20 @@
     });
     document.getElementById('refreshAppointmentsButton').addEventListener('click', loadMyAppointments);
     document.getElementById('professionalDashboardButton').addEventListener('click', openProfessionalDashboard);
+    document.querySelectorAll('[data-professional-tab]').forEach(button => {
+      button.addEventListener('click', () => {
+        const target = button.dataset.professionalTab;
+        document.querySelectorAll('[data-professional-tab]').forEach(tab => {
+          const selected = tab === button;
+          tab.classList.toggle('active', selected);
+          tab.setAttribute('aria-selected', String(selected));
+        });
+        document.querySelectorAll('[data-professional-panel]').forEach(panel => {
+          panel.hidden = panel.dataset.professionalPanel !== target;
+        });
+      });
+    });
+    document.getElementById('refreshProfessionalAppointments').addEventListener('click', loadMyAppointments);
     professionalSlotList.addEventListener('click', event => {
       const button = event.target.closest('[data-professional-slot]');
       if (button) bookProfessionalSlot(button.dataset.professionalSlot);
