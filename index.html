@@ -1153,6 +1153,7 @@
     dialog::backdrop { background: rgba(7, 20, 25, 0.55); backdrop-filter: blur(7px); }
     .modal-head { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; border-bottom: 1px solid var(--border); }
     .modal-head h2 { margin: 0; font-size: 16px; }
+    .modal-head-actions { display: flex; align-items: center; gap: 7px; }
     .modal-body { display: grid; gap: 14px; max-height: min(68vh, 590px); padding: 18px 20px; overflow-y: auto; }
 
     .directory-dialog { width: min(980px, calc(100% - 28px)); }
@@ -2133,9 +2134,12 @@
   <dialog class="professional-dashboard" id="professionalDashboardDialog" aria-labelledby="professionalDashboardTitle">
     <div class="modal-head">
       <h2 id="professionalDashboardTitle">Professional Dashboard</h2>
-      <button class="icon-button" id="professionalDashboardClose" type="button" aria-label="Close professional dashboard">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 6 12 12M18 6 6 18" stroke-linecap="round"/></svg>
-      </button>
+      <div class="modal-head-actions">
+        <button class="card-button secondary" id="professionalSignOutButton" type="button">Sign out</button>
+        <button class="icon-button" id="professionalDashboardClose" type="button" aria-label="Close professional dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 6 12 12M18 6 6 18" stroke-linecap="round"/></svg>
+        </button>
+      </div>
     </div>
     <div class="modal-body">
       <div class="professional-dashboard-summary">
@@ -3087,6 +3091,22 @@
     function stopAccountRefresh() {
       clearInterval(accountRefreshTimer);
       accountRefreshTimer = null;
+    }
+
+    async function signOutCurrentAccount() {
+      stopAccountRefresh();
+      if (professionalDashboardDialog.open) professionalDashboardDialog.close();
+      if (supabaseClient && supabaseChannel) await supabaseClient.removeChannel(supabaseChannel);
+      supabaseChannel = null;
+      if (supabaseClient) await supabaseClient.auth.signOut();
+      supabaseUser = null;
+      accountContext = null;
+      pendingOtpEmail = '';
+      patientHasActiveTherapistBooking = false;
+      scheduledBookings = [];
+      await updateAccountInterface();
+      updateCallAccountStrip();
+      showToast('Signed out successfully');
     }
 
     async function prepareForPermanentAuth() {
@@ -5196,14 +5216,8 @@
       await updateAccountInterface();
       setAuthMessage('Enter a different email address.');
     });
-    document.getElementById('signOutButton').addEventListener('click', async () => {
-      if (supabaseClient) await supabaseClient.auth.signOut();
-      supabaseUser = null;
-      accountContext = null;
-      pendingOtpEmail = '';
-      stopAccountRefresh();
-      await updateAccountInterface();
-    });
+    document.getElementById('signOutButton').addEventListener('click', signOutCurrentAccount);
+    document.getElementById('professionalSignOutButton').addEventListener('click', signOutCurrentAccount);
     document.getElementById('refreshAppointmentsButton').addEventListener('click', loadMyAppointments);
     document.getElementById('savePatientNameButton').addEventListener('click', async () => {
       const message = document.getElementById('accountMessage');
