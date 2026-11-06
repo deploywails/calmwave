@@ -234,11 +234,30 @@
     }
 
     .entry-button.primary {
+      position: relative;
+      isolation: isolate;
+      min-height: 56px;
+      padding: 0 22px;
       border: 0;
+      border-radius: 999px;
       color: #fff;
       background: linear-gradient(135deg, var(--teal), var(--primary-dark));
       box-shadow: 0 10px 24px rgba(50, 107, 139, 0.24);
+      font-size: 13px;
+      animation: entry-cta-pulse 2.4s ease-in-out infinite;
     }
+
+    .entry-button.primary::before {
+      position: absolute;
+      z-index: -1;
+      inset: -7px;
+      border: 1px solid rgba(77, 183, 170, 0.34);
+      border-radius: inherit;
+      content: "";
+      animation: entry-cta-ring 2.4s ease-out infinite;
+    }
+
+    .entry-button.primary svg { width: 30px; height: 30px; padding: 7px; border-radius: 50%; background: rgba(255, 255, 255, 0.16); }
 
     .entry-button:hover { transform: translateY(-2px); border-color: var(--primary); box-shadow: var(--shadow-small); }
     .entry-button svg { width: 17px; }
@@ -306,6 +325,16 @@
     @keyframes entry-float {
       0%, 100% { transform: translateX(-50%) translateY(0) rotate(-1deg); }
       50% { transform: translateX(-50%) translateY(-9px) rotate(1deg); }
+    }
+
+    @keyframes entry-cta-pulse {
+      0%, 100% { box-shadow: 0 10px 24px rgba(50, 107, 139, 0.24), 0 0 0 0 rgba(77, 183, 170, 0.18); }
+      50% { box-shadow: 0 14px 30px rgba(50, 107, 139, 0.32), 0 0 0 11px rgba(77, 183, 170, 0); }
+    }
+
+    @keyframes entry-cta-ring {
+      0% { opacity: 0.8; transform: scale(0.98); }
+      75%, 100% { opacity: 0; transform: scale(1.08); }
     }
 
     .app-shell {
@@ -1384,7 +1413,7 @@
     .call-account-strip strong { display: block; font-size: 8px; }
     .call-account-strip span { display: block; margin-top: 2px; color: var(--text-soft); font-size: 7px; }
     .call-account-strip .card-button { flex: 0 0 auto; padding: 7px 9px; font-size: 8px; }
-    .call-connect-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-bottom: 14px; }
+    .call-connect-tabs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; margin-bottom: 14px; }
     .call-connect-tab { padding: 8px 6px; border: 1px solid var(--border); border-radius: 9px; color: var(--text-soft); background: var(--surface-solid); cursor: pointer; font-size: 8px; font-weight: 850; }
     .call-connect-tab.active { color: var(--primary); border-color: var(--primary); background: var(--blue-soft); }
     .call-connect-panel[hidden] { display: none; }
@@ -1752,7 +1781,7 @@
         <nav class="tool-nav" aria-label="Connection features">
           <button class="tool-button" id="mobilePeerCallButton" type="button">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 10.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/><path d="m15 13 5-3v9l-5-3v-3Z"/><circle cx="11" cy="17" r="4"/></svg>
-            Anonymous peer call
+            Peer and therapist calls
           </button>
           <button class="tool-button" id="mobileSupportGroupsButton" type="button">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2.5 19a5.5 5.5 0 0 1 11 0M13.5 17.5a4.5 4.5 0 0 1 8 1.5"/></svg>
@@ -1882,7 +1911,7 @@
 
   <dialog class="call-dialog" id="peerCallDialog" aria-labelledby="peerCallTitle">
     <div class="modal-head">
-      <h2 id="peerCallTitle">Anonymous Peer Call<span>One-to-one audio or video through an encrypted WebRTC connection</span></h2>
+      <h2 id="peerCallTitle">Scheduled Calls<span>Book a peer conversation or a therapist session</span></h2>
       <button class="icon-button" id="peerCallClose" type="button" aria-label="Close peer call center">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 6 12 12M18 6 6 18" stroke-linecap="round"/></svg>
       </button>
@@ -1906,7 +1935,7 @@
           <h3>Connect to another person</h3>
           <p>Choose the call type, then match now, schedule a peer conversation, or book a therapist.</p>
           <div class="call-account-strip">
-            <div><strong id="callAccountTitle">Scheduling requires email sign in</strong><span id="callAccountText">Immediate anonymous calls remain available.</span></div>
+            <div><strong id="callAccountTitle">Scheduling requires email sign in</strong><span id="callAccountText">Sign in to schedule a peer or therapist session.</span></div>
             <button class="card-button" id="callAccountButton" type="button">Sign in</button>
           </div>
           <div class="mode-selector" role="radiogroup" aria-label="Call type">
@@ -1920,12 +1949,11 @@
           <label class="peer-safety-consent"><input id="peerSafetyConsent" type="checkbox">I am 18 or older and agree not to share identifying information. I will end and report unsafe behavior.</label>
 
           <div class="call-connect-tabs" role="tablist" aria-label="Connection method">
-            <button class="call-connect-tab active" type="button" role="tab" aria-selected="true" data-call-tab="match">Match now</button>
-            <button class="call-connect-tab" type="button" role="tab" aria-selected="false" data-call-tab="schedule">Peer schedule</button>
+            <button class="call-connect-tab active" type="button" role="tab" aria-selected="true" data-call-tab="schedule">Peer schedule</button>
             <button class="call-connect-tab" type="button" role="tab" aria-selected="false" data-call-tab="therapist">Therapist</button>
           </div>
 
-          <div class="call-connect-panel" id="onlineMatchPanel" data-call-panel="match">
+          <div class="call-connect-panel" id="onlineMatchPanel" data-call-panel="match" hidden>
             <h4>Find someone online now</h4>
             <p>Join the anonymous queue and connect with one available CalmWave user who selected the same call type.</p>
             <div class="match-actions">
@@ -1939,7 +1967,7 @@
             <div class="backend-note">Matching is anonymous. Stay on this screen while searching. You can decline any incoming call.</div>
           </div>
 
-          <div class="call-connect-panel" id="scheduleCallPanel" data-call-panel="schedule" hidden>
+          <div class="call-connect-panel" id="scheduleCallPanel" data-call-panel="schedule">
             <h4>Schedule a peer conversation</h4>
             <p>Choose a date and available time. CalmWave securely pairs people who select the same slot and call type.</p>
             <form id="scheduleCallForm">
@@ -2939,7 +2967,7 @@
         button.textContent = 'Account';
       } else {
         title.textContent = 'Scheduling requires email sign in';
-        text.textContent = 'Immediate anonymous calls remain available.';
+        text.textContent = 'Sign in to schedule a peer or therapist session.';
         button.textContent = 'Sign in';
       }
       updateMatchmakingControls();
@@ -3892,6 +3920,14 @@
     function openPeerCallCenter() {
       callCenterOpen = true;
       callError.textContent = '';
+      document.querySelectorAll('[data-call-tab]').forEach(tab => {
+        const selected = tab.dataset.callTab === 'schedule';
+        tab.classList.toggle('active', selected);
+        tab.setAttribute('aria-selected', String(selected));
+      });
+      document.querySelectorAll('[data-call-panel]').forEach(panel => {
+        panel.hidden = panel.dataset.callPanel !== 'schedule';
+      });
       peerCallDialog.classList.remove('in-call');
       callLobby.hidden = false;
       callStage.hidden = true;
