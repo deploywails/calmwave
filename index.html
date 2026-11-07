@@ -2374,6 +2374,9 @@
     let callPeer = null;
     let peerReady = false;
     let selectedCallMode = 'video';
+    let selectedCallTab = ['schedule', 'therapist'].includes(storage.get('calmwave.call-tab.v1', 'schedule'))
+      ? storage.get('calmwave.call-tab.v1', 'schedule')
+      : 'schedule';
     let activeMediaCall = null;
     let pendingMediaCall = null;
     let localMediaStream = null;
@@ -3189,7 +3192,6 @@
       }
       selectedProfessional = backendProfessionals.find(item => item.id === professionalId);
       if (!selectedProfessional) return;
-      if (peerCallDialog.open) closePeerCallCenter();
       document.getElementById('bookingProfessionalName').textContent = selectedProfessional.name;
       document.getElementById('bookingProfessionalSpecialty').textContent = selectedProfessional.specialty;
       document.getElementById('bookingProfessionalInitials').textContent = groupInitials(selectedProfessional.name);
@@ -3334,7 +3336,6 @@
     async function openProfessionalDashboard() {
       if (accountContext?.role !== 'professional') return;
       if (accountDialog.open) accountDialog.close();
-      if (peerCallDialog.open) closePeerCallCenter();
       document.querySelectorAll('[data-professional-tab]').forEach(tab => {
         const selected = tab.dataset.professionalTab === 'sessions';
         tab.classList.toggle('active', selected);
@@ -4060,17 +4061,29 @@
       }
     }
 
-    function openPeerCallCenter() {
-      callCenterOpen = true;
-      callError.textContent = '';
+    function selectCallCenterTab(target, persist = true) {
+      selectedCallTab = target === 'therapist' ? 'therapist' : 'schedule';
+      if (persist) storage.set('calmwave.call-tab.v1', selectedCallTab);
       document.querySelectorAll('[data-call-tab]').forEach(tab => {
-        const selected = tab.dataset.callTab === 'schedule';
+        const selected = tab.dataset.callTab === selectedCallTab;
         tab.classList.toggle('active', selected);
         tab.setAttribute('aria-selected', String(selected));
       });
       document.querySelectorAll('[data-call-panel]').forEach(panel => {
-        panel.hidden = panel.dataset.callPanel !== 'schedule';
+        panel.hidden = panel.dataset.callPanel !== selectedCallTab;
       });
+      if (selectedCallTab === 'schedule') {
+        initializePeerScheduleCalendar();
+        refreshScheduledBookings();
+      } else {
+        loadProfessionalDirectory();
+      }
+    }
+
+    function openPeerCallCenter() {
+      callCenterOpen = true;
+      callError.textContent = '';
+      selectCallCenterTab(selectedCallTab, false);
       peerCallDialog.classList.remove('in-call');
       callLobby.hidden = false;
       callStage.hidden = true;
@@ -4079,7 +4092,6 @@
       const minimumTime = new Date(Date.now() + 5 * 60 * 1000);
       minimumTime.setMinutes(Math.ceil(minimumTime.getMinutes() / 15) * 15, 0, 0);
       scheduleCallTimeInput.min = new Date(minimumTime.getTime() - minimumTime.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-      initializePeerScheduleCalendar();
       updateCallAccountStrip();
       loadProfessionalDirectory();
       if (isSupabaseConfigured()) {
@@ -4971,20 +4983,7 @@
     document.getElementById('peerCallClose').addEventListener('click', closePeerCallCenter);
     document.querySelectorAll('[data-call-tab]').forEach(button => {
       button.addEventListener('click', () => {
-        const target = button.dataset.callTab;
-        document.querySelectorAll('[data-call-tab]').forEach(tab => {
-          const selected = tab === button;
-          tab.classList.toggle('active', selected);
-          tab.setAttribute('aria-selected', String(selected));
-        });
-        document.querySelectorAll('[data-call-panel]').forEach(panel => {
-          panel.hidden = panel.dataset.callPanel !== target;
-        });
-        if (target === 'schedule') {
-          refreshScheduledBookings();
-          initializePeerScheduleCalendar();
-        }
-        if (target === 'therapist') loadProfessionalDirectory();
+        selectCallCenterTab(button.dataset.callTab, true);
       });
     });
     peerSafetyConsent.addEventListener('change', updateMatchmakingControls);
@@ -5002,7 +5001,6 @@
       if (button) openProfessionalBooking(button.dataset.callProfessional);
     });
     document.getElementById('browseTherapistsFromCall').addEventListener('click', () => {
-      if (peerCallDialog.open) closePeerCallCenter();
       openTherapistDirectory();
     });
     scheduledCallList.addEventListener('click', event => {
@@ -5067,12 +5065,6 @@
     remoteCallVideo.addEventListener('click', () => remoteCallVideo.play().catch(() => {}));
     peerCallDialog.addEventListener('cancel', event => {
       event.preventDefault();
-      closePeerCallCenter();
-    });
-    peerCallDialog.addEventListener('click', event => {
-      const rect = peerCallDialog.getBoundingClientRect();
-      const outside = event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom;
-      if (outside) closePeerCallCenter();
     });
 
     form.addEventListener('submit', event => {
