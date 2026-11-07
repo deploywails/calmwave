@@ -1282,6 +1282,7 @@
     .account-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
     .account-name-editor { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 7px; margin-top: 12px; }
     .account-name-editor .card-button { min-height: 41px; }
+    .account-name-editor .card-button.saved { color: #fff; border-color: var(--success); background: var(--success); box-shadow: 0 7px 18px rgba(47, 169, 130, 0.22); }
     .account-section-title { margin: 18px 0 8px; color: var(--text-soft); font-size: 9px; font-weight: 850; letter-spacing: 0.08em; text-transform: uppercase; }
 
     .appointment-list { display: grid; gap: 7px; max-height: 290px; overflow-y: auto; }
@@ -3076,6 +3077,7 @@
       document.getElementById('professionalDashboardButton').hidden = !professional;
       document.getElementById('patientNameSection').hidden = professional;
       document.getElementById('patientDisplayName').value = accountContext.display_name || '';
+      setPatientNameSaveState(accountContext.display_name ? 'saved' : 'default');
       await loadMyAppointments();
     }
 
@@ -3267,7 +3269,15 @@
       accountContext = { ...(accountContext || {}), display_name: name };
       document.getElementById('patientDisplayName').value = name;
       document.getElementById('bookingPatientName').value = name;
+      setPatientNameSaveState('saved');
       return name;
+    }
+
+    function setPatientNameSaveState(state) {
+      const button = document.getElementById('savePatientNameButton');
+      button.disabled = state === 'saving';
+      button.classList.toggle('saved', state === 'saved');
+      button.textContent = state === 'saving' ? 'Saving...' : state === 'saved' ? 'Saved' : 'Save name';
     }
 
     function renderAppointmentItems(items) {
@@ -5213,11 +5223,19 @@
     document.getElementById('refreshAppointmentsButton').addEventListener('click', loadMyAppointments);
     document.getElementById('savePatientNameButton').addEventListener('click', async () => {
       const message = document.getElementById('accountMessage');
+      setPatientNameSaveState('saving');
       try {
         const name = await savePatientDisplayName(document.getElementById('patientDisplayName').value);
         message.textContent = `Name saved as ${name}.`;
         await loadMyAppointments();
-      } catch (error) { message.textContent = error.message; }
+      } catch (error) {
+        setPatientNameSaveState('default');
+        message.textContent = error.message;
+      }
+    });
+    document.getElementById('patientDisplayName').addEventListener('input', event => {
+      const unchanged = event.target.value.trim() === (accountContext?.display_name || '');
+      setPatientNameSaveState(unchanged && event.target.value.trim() ? 'saved' : 'default');
     });
     document.getElementById('professionalDashboardButton').addEventListener('click', openProfessionalDashboard);
     document.querySelectorAll('[data-professional-tab]').forEach(button => {
