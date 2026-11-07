@@ -23,6 +23,9 @@
       --primary-dark: #246fb8;
       --purple: #896ee2;
       --teal: #27c1b0;
+      --aqua: #38cfe0;
+      --coral: #f36f89;
+      --sun: #f3b84c;
       --teal-soft: rgba(39, 193, 176, 0.17);
       --blue-soft: rgba(55, 143, 209, 0.15);
       --purple-soft: rgba(137, 110, 226, 0.16);
@@ -51,6 +54,9 @@
       --primary-dark: #4699db;
       --purple: #b29cff;
       --teal: #59dfcc;
+      --aqua: #69dfef;
+      --coral: #ff8ea3;
+      --sun: #ffd06d;
       --teal-soft: rgba(89, 223, 204, 0.17);
       --blue-soft: rgba(105, 199, 255, 0.16);
       --purple-soft: rgba(178, 156, 255, 0.18);
@@ -1594,6 +1600,182 @@
     }
 
     .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    /* Bright coastal theme applied consistently across CalmWave. */
+    .app-shell {
+      position: relative;
+      border-color: rgba(72, 143, 205, 0.22);
+      background: linear-gradient(145deg, var(--surface), rgba(255, 255, 255, 0.64));
+    }
+
+    [data-theme="dark"] .app-shell { background: linear-gradient(145deg, var(--surface), rgba(36, 25, 66, 0.76)); }
+
+    .app-shell::before {
+      position: absolute;
+      z-index: 15;
+      top: 0;
+      right: 0;
+      left: 0;
+      height: 4px;
+      border-radius: 30px 30px 0 0;
+      background: linear-gradient(90deg, var(--teal), var(--aqua), var(--primary), var(--purple), var(--coral), var(--sun));
+      content: "";
+      pointer-events: none;
+    }
+
+    .side-panel {
+      background:
+        radial-gradient(circle at 15% 9%, var(--teal-soft), transparent 28%),
+        linear-gradient(180deg, var(--surface-solid), var(--blue-soft) 58%, var(--purple-soft));
+    }
+
+    .brand-copy strong,
+    .entry-brand strong {
+      color: transparent;
+      background: linear-gradient(100deg, var(--teal), var(--primary), var(--purple));
+      background-clip: text;
+      -webkit-background-clip: text;
+    }
+
+    .section-label { color: var(--primary); }
+    .tool-button { color: var(--text-soft); }
+    .tool-button:hover { color: var(--primary-dark); background: linear-gradient(110deg, var(--teal-soft), var(--blue-soft)); }
+    .tool-button svg { color: var(--purple); }
+
+    .new-chat,
+    .primary-button,
+    .send-button,
+    .call-primary,
+    .card-button:not(.secondary):not(.danger) {
+      color: #fff;
+      background: linear-gradient(125deg, var(--teal), var(--primary), var(--purple));
+      background-size: 180% 180%;
+      box-shadow: 0 9px 23px rgba(67, 126, 191, 0.25);
+    }
+
+    .card-button.secondary { color: var(--primary-dark); border-color: rgba(55, 143, 209, 0.24); background: linear-gradient(135deg, var(--surface-solid), var(--blue-soft)); }
+    [data-theme="dark"] .card-button.secondary { color: var(--primary); }
+
+    .mood-card {
+      border-color: rgba(66, 173, 183, 0.28);
+      background: linear-gradient(145deg, rgba(65, 218, 201, 0.2), rgba(86, 156, 226, 0.16), rgba(151, 111, 229, 0.17));
+    }
+
+    .mood-option { background: rgba(255, 255, 255, 0.52); }
+    [data-theme="dark"] .mood-option { background: rgba(255, 255, 255, 0.08); }
+    .mood-option.selected { border-color: var(--purple); box-shadow: 0 0 0 4px var(--purple-soft); }
+
+    .resource-group { border-color: rgba(77, 150, 203, 0.2); background: linear-gradient(135deg, var(--surface-soft), var(--purple-soft)); }
+
+    .topbar {
+      background:
+        radial-gradient(circle at 10% 0%, var(--teal-soft), transparent 35%),
+        linear-gradient(100deg, rgba(255, 255, 255, 0.58), var(--blue-soft), var(--purple-soft));
+    }
+
+    [data-theme="dark"] .topbar { background: linear-gradient(100deg, rgba(19, 50, 63, 0.82), var(--blue-soft), var(--purple-soft)); }
+
+    .find-therapist-button {
+      color: var(--primary-dark);
+      border-color: rgba(57, 143, 209, 0.26);
+      background: linear-gradient(130deg, var(--teal-soft), var(--blue-soft), var(--purple-soft));
+    }
+
+    .icon-button { border-color: rgba(70, 147, 197, 0.2); background: linear-gradient(145deg, var(--surface-solid), var(--blue-soft)); }
+
+    .messages {
+      background:
+        radial-gradient(circle at 92% 12%, var(--purple-soft), transparent 25%),
+        radial-gradient(circle at 4% 88%, var(--teal-soft), transparent 23%);
+    }
+
+    .message-row.bot .bubble:not(.welcome-bubble) {
+      border-color: rgba(70, 148, 204, 0.2);
+      background: linear-gradient(145deg, var(--surface-solid), var(--blue-soft));
+    }
+
+    .message-row.user .bubble {
+      color: #fff;
+      background: linear-gradient(135deg, var(--primary), var(--purple));
+      box-shadow: 0 10px 24px rgba(88, 91, 190, 0.24);
+    }
+
+    .welcome-bubble { background: linear-gradient(145deg, var(--surface-solid), var(--teal-soft), var(--purple-soft)); }
+
+    .composer-area { background: linear-gradient(to top, var(--surface-solid) 66%, rgba(255, 255, 255, 0)); }
+    [data-theme="dark"] .composer-area { background: linear-gradient(to top, var(--surface-solid) 66%, rgba(8, 26, 36, 0)); }
+    .composer { border-color: rgba(54, 154, 193, 0.24); background: linear-gradient(135deg, var(--surface-solid), rgba(235, 250, 255, 0.94)); }
+    [data-theme="dark"] .composer { background: linear-gradient(135deg, var(--surface-solid), var(--surface-soft)); }
+
+    .chip:nth-child(5n + 1) { color: #1d8176; background: var(--teal-soft); }
+    .chip:nth-child(5n + 2) { color: #2877ad; background: var(--blue-soft); }
+    .chip:nth-child(5n + 3) { color: #7359bf; background: var(--purple-soft); }
+    .chip:nth-child(5n + 4) { color: #c04f6b; background: rgba(243, 111, 137, 0.13); }
+    .chip:nth-child(5n + 5) { color: #a56e13; background: rgba(243, 184, 76, 0.16); }
+    [data-theme="dark"] .chip { color: var(--text); }
+
+    .interactive-card,
+    .therapist-card,
+    .group-card,
+    .dashboard-panel,
+    .call-identity,
+    .call-join,
+    .call-security {
+      border-color: rgba(69, 150, 202, 0.2);
+      background: linear-gradient(145deg, var(--surface-solid), var(--blue-soft));
+    }
+
+    .card-head {
+      background: linear-gradient(110deg, var(--teal-soft), var(--blue-soft), var(--purple-soft));
+    }
+
+    .therapist-card:hover,
+    .group-card:hover { border-color: var(--aqua); box-shadow: 0 16px 34px rgba(71, 130, 185, 0.18); }
+
+    dialog {
+      border-color: rgba(71, 146, 201, 0.28);
+      background: linear-gradient(145deg, var(--surface-solid), var(--surface-soft));
+    }
+
+    dialog::backdrop { background: rgba(31, 51, 83, 0.52); }
+    .modal-head { background: linear-gradient(105deg, var(--teal-soft), var(--blue-soft), var(--purple-soft)); }
+
+    .mode-selector,
+    .support-tabs,
+    .auth-tabs { border-color: rgba(62, 151, 197, 0.23); background: linear-gradient(135deg, var(--surface-solid), var(--blue-soft)); }
+
+    .mode-option.active,
+    .support-tab.active,
+    .auth-tab.active,
+    .call-connect-tab.active {
+      color: #fff;
+      border-color: transparent;
+      background: linear-gradient(120deg, var(--teal), var(--primary), var(--purple));
+      box-shadow: 0 7px 18px rgba(78, 113, 198, 0.24);
+    }
+
+    .call-connect-panel,
+    .account-summary,
+    .appointment-item,
+    .slot-item,
+    .booking-item {
+      border-color: rgba(68, 148, 199, 0.2);
+      background: linear-gradient(145deg, var(--surface-solid), var(--blue-soft));
+    }
+
+    .professional-dashboard-summary {
+      border-color: rgba(67, 162, 190, 0.27);
+      background: linear-gradient(120deg, var(--teal-soft), var(--blue-soft), var(--purple-soft), rgba(243, 111, 137, 0.1));
+    }
+
+    input,
+    textarea,
+    select { accent-color: var(--purple); }
+
+    .call-field input,
+    .call-field select { border-color: rgba(64, 148, 194, 0.24); background: linear-gradient(135deg, var(--surface-solid), var(--blue-soft)); }
+
+    .toast { border-color: rgba(54, 159, 179, 0.25); background: linear-gradient(120deg, var(--surface-solid), var(--teal-soft), var(--purple-soft)); }
 
     @keyframes message-in {
       from { opacity: 0; transform: translateY(9px) scale(0.985); }
