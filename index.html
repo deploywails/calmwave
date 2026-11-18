@@ -1495,6 +1495,7 @@
     .booking-empty { padding: 10px; border-radius: 9px; color: var(--muted); background: var(--surface-soft); font-size: 8px; text-align: center; }
     .pairing-summary { margin-top: 8px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 10px; color: var(--text-soft); background: linear-gradient(120deg, var(--teal-soft), var(--blue-soft)); font-size: 8px; font-weight: 800; }
     .booking-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: center; padding: 9px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-soft); }
+    .booking-item.deep-linked { border-color: var(--purple); box-shadow: 0 0 0 4px var(--purple-soft), var(--shadow-small); animation: message-in 320ms ease both; }
     .booking-item strong { display: block; font-size: 9px; }
     .booking-item span { display: block; margin-top: 3px; color: var(--text-soft); font-size: 7px; }
     .booking-actions { display: flex; gap: 4px; }
@@ -2569,6 +2570,9 @@
     let selectedCallTab = ['schedule', 'therapist'].includes(storage.get('calmwave.call-tab.v1', 'schedule'))
       ? storage.get('calmwave.call-tab.v1', 'schedule')
       : 'schedule';
+    const requestedCallId = new URLSearchParams(location.search).get('joinCall') || '';
+    let pendingEmailCallId = /^[0-9a-f-]{36}$/i.test(requestedCallId) ? requestedCallId : null;
+    let emailCallResumeInProgress = false;
     let activeMediaCall = null;
     let pendingMediaCall = null;
     let localMediaStream = null;
@@ -3269,6 +3273,7 @@
       document.getElementById('patientDisplayName').value = accountContext.display_name || '';
       setPatientNameSaveState(accountContext.display_name ? 'saved' : 'default');
       await loadMyAppointments();
+      if (pendingEmailCallId) setTimeout(resumePendingEmailCall, 0);
     }
 
     async function openAccount() {
@@ -3840,7 +3845,7 @@
         const matched = booking.status === 'matched';
         const status = matched ? 'Paired — anonymous partner confirmed' : 'Waiting for an anonymous partner';
         return `
-          <div class="booking-item">
+          <div class="booking-item" data-scheduled-call="${escapeHTML(booking.call_id || '')}">
             <div><strong>${escapeHTML(formatBookingDate(booking.starts_at))}</strong><span>${escapeHTML(booking.call_mode)}</span><span class="booking-pair-state ${matched ? 'matched' : 'waiting'}">${status}</span></div>
             <div class="booking-actions">
               ${booking.call_id ? `<button class="card-button" type="button" data-booking-action="join" data-call-id="${escapeHTML(booking.call_id)}" ${canJoin ? '' : 'disabled'}>Join</button>` : ''}
@@ -3858,6 +3863,64 @@
         renderScheduledBookings();
       } catch (error) {
         setScheduleState('error', error?.message || 'Could not load scheduled calls');
+      }
+    }
+
+    function clearEmailCallLink() {
+      pendingEmailCallId = null;
+      const url = new URL(location.href);
+      url.searchParams.delete('joinCall');
+      history.replaceState({}, '', `${url.pathname}${url.search}${url.hash}`);
+    }
+
+    async function resumePendingEmailCall() {
+      const callId = pendingEmailCallId;
+      if (!callId || emailCallResumeInProgress) return;
+      emailCallResumeInProgress = true;
+      try {
+      openPeerCallCenter();
+      selectCallCenterTab('schedule', true);
+      await initializeSupabaseBackend();
+      if (!isPermanentAccount()) {
+        await openAccount();
+        setAuthMessage('Sign in with the email that received the pairing notice to open this scheduled call.');
+        return;
+      }
+
+      if (accountDialog.open) accountDialog.close();
+      await refreshScheduledBookings();
+      const booking = scheduledBookings.find(item => item.call_id === callId);
+      if (!booking) {
+        setScheduleState('error', 'This paired call is not available for the signed-in account.');
+        clearEmailCallLink();
+        return;
+      }
+
+      requestAnimationFrame(() => {
+        const card = scheduledCallList.querySelector(`[data-scheduled-call="${callId}"]`);
+        card?.classList.add('deep-linked');
+        card?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+
+      const startsAt = new Date(booking.starts_at).getTime();
+      const canJoin = Date.now() >= startsAt - 10 * 60 * 1000 && Date.now() <= startsAt + 30 * 60 * 1000;
+      if (!canJoin) {
+        setScheduleState('ready', `Paired call confirmed for ${formatBookingDate(booking.starts_at)}. Join opens 10 minutes before the session.`);
+        clearEmailCallLink();
+        return;
+      }
+
+      const waitStarted = Date.now();
+      while (!peerReady && Date.now() - waitStarted < 10000) await pause(200);
+      if (!peerReady) {
+        setScheduleState('error', 'The secure call connection could not become ready. Use the Join button to retry.');
+        clearEmailCallLink();
+        return;
+      }
+      clearEmailCallLink();
+      startScheduledReadiness(callId);
+      } finally {
+        emailCallResumeInProgress = false;
       }
     }
 
@@ -5552,6 +5615,10 @@
     renderSupportGroups();
     setConnectionStatus('local', 'Free web AI + local fallback');
     initializeEntryScreen();
+    if (pendingEmailCallId) {
+      enterTuliva(false);
+      setTimeout(resumePendingEmailCall, 450);
+    }
   </script>
 </body>
 </html>
