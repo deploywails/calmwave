@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
   <meta name="theme-color" content="#f3f7fb">
-  <meta name="description" content="CalmWave is a private, supportive mental wellness companion with guided coping tools.">
-  <title>CalmWave | Your calm in the wave</title>
+  <meta name="description" content="Tuliva is a private, supportive mental wellness companion with guided coping tools.">
+  <title>Tuliva | Your calm in the wave</title>
   <style>
     :root {
       color-scheme: light;
@@ -220,7 +220,7 @@
     }
 
     .entry-affirmation svg { flex: 0 0 auto; width: 18px; color: var(--purple); }
-    .entry-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 25px; }
+    .entry-actions { display: flex; flex-wrap: wrap; gap: 12px; width: min(100%, 520px); margin-top: 27px; }
 
     .entry-button {
       display: inline-flex;
@@ -242,45 +242,52 @@
     .entry-button.primary {
       position: relative;
       isolation: isolate;
-      min-height: 56px;
-      padding: 0 22px;
+      flex: 0 0 100%;
+      min-height: 76px;
+      padding: 0 30px;
       border: 0;
-      border-radius: 999px;
+      overflow: visible;
+      border-radius: 54% 46% 52% 48% / 47% 54% 46% 53%;
       color: #fff;
-      background: linear-gradient(120deg, #27bfb3, #438fd3, #806bd4, #5f8fe3, #27bfb3);
+      background:
+        radial-gradient(circle at 24% 14%, rgba(255, 255, 255, 0.46), transparent 23%),
+        linear-gradient(120deg, #20cdbd, #3e9be3, #8a6ce4, #5f8fe3, #20cdbd);
       background-size: 300% 300%;
-      box-shadow: 0 12px 28px rgba(72, 105, 184, 0.3);
-      font-size: 13px;
+      box-shadow: 0 16px 36px rgba(72, 105, 184, 0.36);
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: 0.01em;
+      text-shadow: 0 2px 8px rgba(35, 51, 110, 0.28);
       transform-origin: center;
-      animation: entry-cta-bubble 1.8s ease-in-out infinite, entry-cta-gradient 6s ease infinite;
+      animation: entry-cta-bubble 1.55s ease-in-out infinite, entry-cta-gradient 5s ease infinite;
     }
 
     .entry-button.primary::before {
       position: absolute;
       z-index: -1;
-      inset: -7px;
-      border: 1px solid rgba(77, 183, 170, 0.34);
+      inset: -9px;
+      border: 2px solid rgba(72, 190, 211, 0.4);
       border-radius: inherit;
       content: "";
-      animation: entry-cta-ring 1.8s ease-out infinite;
+      animation: entry-cta-ring 1.55s ease-out infinite;
     }
 
     .entry-button.primary::after {
       position: absolute;
-      top: -7px;
-      right: 24px;
-      width: 9px;
-      height: 9px;
+      top: -15px;
+      right: 31px;
+      width: 15px;
+      height: 15px;
       border: 1px solid rgba(255, 255, 255, 0.7);
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.22);
-      box-shadow: -22px 7px 0 -2px rgba(255, 255, 255, 0.2), 15px 14px 0 -3px rgba(255, 255, 255, 0.24);
+      background: rgba(255, 255, 255, 0.3);
+      box-shadow: -34px 8px 0 -4px rgba(255, 255, 255, 0.28), 20px 19px 0 -5px rgba(255, 255, 255, 0.3), -63px 26px 0 -5px rgba(75, 222, 217, 0.34);
       content: "";
       pointer-events: none;
-      animation: entry-bubble-dots 1.8s ease-in-out infinite;
+      animation: entry-bubble-dots 1.55s ease-in-out infinite;
     }
 
-    .entry-button.primary svg { width: 30px; height: 30px; padding: 7px; border: 1px solid rgba(255, 255, 255, 0.34); border-radius: 50%; background: rgba(255, 255, 255, 0.2); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.32); }
+    .entry-button.primary svg { width: 38px; height: 38px; padding: 9px; border: 1px solid rgba(255, 255, 255, 0.44); border-radius: 50%; background: rgba(255, 255, 255, 0.24); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.42), 0 5px 12px rgba(42, 68, 135, 0.2); }
 
     .entry-button:hover { transform: translateY(-2px); border-color: var(--primary); box-shadow: var(--shadow-small); }
     .entry-button svg { width: 17px; }
@@ -351,8 +358,9 @@
     }
 
     @keyframes entry-cta-bubble {
-      0%, 100% { transform: translateY(0) scale(1); box-shadow: 0 12px 28px rgba(72, 105, 184, 0.3), 0 0 0 0 rgba(85, 158, 218, 0.22); }
-      50% { transform: translateY(-6px) scale(1.055); box-shadow: 0 20px 38px rgba(97, 86, 190, 0.38), 0 0 0 13px rgba(58, 190, 179, 0); }
+      0%, 100% { border-radius: 54% 46% 52% 48% / 47% 54% 46% 53%; transform: translateY(0) scale(1) rotate(0); box-shadow: 0 16px 36px rgba(72, 105, 184, 0.36), 0 0 0 0 rgba(85, 158, 218, 0.26); }
+      35% { border-radius: 47% 53% 44% 56% / 56% 45% 55% 44%; transform: translateY(-10px) scale(1.085) rotate(-0.5deg); box-shadow: 0 24px 46px rgba(97, 86, 190, 0.43), 0 0 0 16px rgba(58, 190, 179, 0); }
+      68% { border-radius: 57% 43% 55% 45% / 43% 57% 46% 54%; transform: translateY(-4px) scale(1.035) rotate(0.4deg); box-shadow: 0 19px 40px rgba(63, 137, 201, 0.38), 0 0 0 8px rgba(128, 108, 212, 0.05); }
     }
 
     @keyframes entry-cta-gradient {
@@ -361,13 +369,13 @@
     }
 
     @keyframes entry-cta-ring {
-      0% { opacity: 0.8; transform: scale(0.98); }
-      75%, 100% { opacity: 0; transform: scale(1.08); }
+      0% { opacity: 0.9; transform: scale(0.96); }
+      75%, 100% { opacity: 0; transform: scale(1.16); }
     }
 
     @keyframes entry-bubble-dots {
-      0%, 100% { opacity: 0.35; transform: translateY(5px) scale(0.8); }
-      50% { opacity: 1; transform: translateY(-9px) scale(1.15); }
+      0%, 100% { opacity: 0.3; transform: translateY(10px) scale(0.65); }
+      50% { opacity: 1; transform: translateY(-17px) scale(1.2); }
     }
 
     .app-shell {
@@ -1601,7 +1609,7 @@
 
     .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
-    /* Bright coastal theme applied consistently across CalmWave. */
+    /* Bright coastal theme applied consistently across Tuliva. */
     .app-shell {
       position: relative;
       border-color: rgba(72, 143, 205, 0.22);
@@ -1922,7 +1930,7 @@
               <path d="M16 14.8 10.8 10a3.4 3.4 0 0 1 4.8-4.8l.4.4.4-.4a3.4 3.4 0 0 1 4.8 4.8L16 14.8Z" fill="currentColor" stroke-linejoin="round"/>
             </svg>
           </div>
-          <div><strong>CalmWave</strong><span>Your calm in the wave</span></div>
+          <div><strong>Tuliva</strong><span>Your calm in the wave</span></div>
         </div>
 
         <div class="entry-eyebrow" id="entryGreeting">A private moment for you</div>
@@ -1969,7 +1977,7 @@
           </svg>
         </div>
         <div class="brand-copy">
-          <strong>CalmWave</strong>
+          <strong>Tuliva</strong>
           <span>Your calm in the wave</span>
         </div>
         <button class="icon-button panel-close" id="panelClose" type="button" aria-label="Close wellness panel">
@@ -2086,7 +2094,7 @@
             <span class="online-dot"></span>
           </div>
           <div>
-            <h1>CalmWave</h1>
+            <h1>Tuliva</h1>
             <div class="connection-status"><span class="status-pip local" id="statusPip"></span><span id="statusText">Private local support</span></div>
           </div>
         </div>
@@ -2111,11 +2119,11 @@
         </div>
       </header>
 
-      <section class="messages" id="messages" aria-label="Conversation with CalmWave" aria-live="polite"></section>
+      <section class="messages" id="messages" aria-label="Conversation with Tuliva" aria-live="polite"></section>
 
       <div class="composer-area">
         <form class="composer" id="chatForm">
-          <textarea id="messageInput" rows="1" maxlength="1200" placeholder="Share what's on your mind..." aria-label="Message CalmWave"></textarea>
+          <textarea id="messageInput" rows="1" maxlength="1200" placeholder="Share what's on your mind..." aria-label="Message Tuliva"></textarea>
           <button class="send-button" id="sendButton" type="submit" aria-label="Send message" disabled>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m22 2-7 20-4-9-9-4 20-7Z" stroke-linejoin="round"/><path d="M22 2 11 13"/></svg>
           </button>
@@ -2149,11 +2157,11 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M19 8v6M16 11h6" stroke-linecap="round"/></svg>
           </div>
           <h3>Private platform matching</h3>
-          <p>CalmWave creates temporary routing credentials privately and connects only the person matched by the platform.</p>
+          <p>Tuliva creates temporary routing credentials privately and connects only the person matched by the platform.</p>
           <div class="peer-status" id="peerStatus"><span class="peer-status-dot"></span><span id="peerStatusText">Creating a secure session...</span></div>
           <div class="call-security">
             <strong><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>Security and privacy</strong>
-            <p>WebRTC encrypts media in transit. PeerJS Cloud sees temporary signaling metadata, not call media. Routing credentials are hidden, short-lived, and validated against the matched session. Calls are not recorded by CalmWave.</p>
+            <p>WebRTC encrypts media in transit. PeerJS Cloud sees temporary signaling metadata, not call media. Routing credentials are hidden, short-lived, and validated against the matched session. Calls are not recorded by Tuliva.</p>
           </div>
         </section>
 
@@ -2181,7 +2189,7 @@
 
           <div class="call-connect-panel" id="onlineMatchPanel" data-call-panel="match" hidden>
             <h4>Find someone online now</h4>
-            <p>Join the anonymous queue and connect with one available CalmWave user who selected the same call type.</p>
+            <p>Join the anonymous queue and connect with one available Tuliva user who selected the same call type.</p>
             <div class="match-actions">
               <button class="call-primary" id="findOnlinePeer" type="button" disabled>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2.5 19a5.5 5.5 0 0 1 11 0M13.5 17.5a4.5 4.5 0 0 1 8 1.5"/></svg>
@@ -2195,7 +2203,7 @@
 
           <div class="call-connect-panel" id="scheduleCallPanel" data-call-panel="schedule">
             <h4>Schedule a peer conversation</h4>
-            <p>Choose a date and available time. CalmWave securely pairs people who select the same slot and call type.</p>
+            <p>Choose a date and available time. Tuliva securely pairs people who select the same slot and call type.</p>
             <form id="scheduleCallForm">
               <div class="call-field"><label for="peerScheduleDate">Choose date</label><input id="peerScheduleDate" type="date" required></div>
               <div class="call-field"><label for="peerScheduleTime">Choose time (15-minute intervals)</label><input id="peerScheduleTime" type="time" step="900" required></div>
@@ -2252,14 +2260,14 @@
 
   <dialog class="account-dialog" id="accountDialog" aria-labelledby="accountTitle">
     <div class="modal-head">
-      <h2 id="accountTitle">CalmWave Account</h2>
+      <h2 id="accountTitle">Tuliva Account</h2>
       <button class="icon-button" id="accountClose" type="button" aria-label="Close account">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 6 12 12M18 6 6 18" stroke-linecap="round"/></svg>
       </button>
     </div>
     <div class="modal-body">
       <div class="account-view" id="signedOutAccountView">
-        <p class="auth-message">Enter your email and CalmWave will send a one-time sign-in code. New emails create an account automatically.</p>
+        <p class="auth-message">Enter your email and Tuliva will send a one-time sign-in code. New emails create an account automatically.</p>
         <form class="auth-form" id="otpRequestForm">
           <div class="call-field"><label for="otpEmail">Email address</label><input id="otpEmail" type="email" autocomplete="email" required></div>
           <button class="call-primary" id="sendOtpButton" type="submit">Send one-time code</button>
@@ -2285,7 +2293,6 @@
           <button class="card-button" id="savePatientNameButton" type="button">Save name</button>
         </div>
         <div class="account-actions">
-          <button class="card-button" id="professionalDashboardButton" type="button" hidden>Professional dashboard</button>
           <button class="card-button secondary" id="refreshAppointmentsButton" type="button">Refresh appointments</button>
           <button class="card-button secondary" id="signOutButton" type="button">Sign out</button>
         </div>
@@ -2372,7 +2379,7 @@
     </div>
     <div class="therapist-directory-body">
       <div class="therapist-grid" id="therapistGrid" aria-live="polite"></div>
-      <p class="directory-disclaimer">Demo directory: replace these sample profiles and WhatsApp contacts in the <code>therapists</code> array with verified professionals before publishing. CalmWave does not verify or endorse placeholder profiles.</p>
+      <p class="directory-disclaimer">Demo directory: replace sample profiles with verified professionals before publishing. Tuliva does not verify or endorse placeholder profiles.</p>
     </div>
   </dialog>
 
@@ -2421,7 +2428,7 @@
   </dialog>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <noscript><p style="padding:2rem;text-align:center">CalmWave needs JavaScript enabled to provide chat and guided exercises.</p></noscript>
+  <noscript><p style="padding:2rem;text-align:center">Tuliva needs JavaScript enabled to provide chat and guided exercises.</p></noscript>
   <script src="https://unpkg.com/peerjs@1.5.5/dist/peerjs.min.js" integrity="sha256-dgTYwxvsTxNLDRXC2AsdCV6hivAFNU9DnxQpH817QWg=" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/@supabase/supabase-js@2.118.0/dist/umd/supabase.js" integrity="sha256-7jvo3hkrl8sdc9HpXWuCux9rZYwPl8TvdX/DMZlu09M=" crossorigin="anonymous"></script>
   <script>
@@ -2449,7 +2456,7 @@
         languages: [],
         location: '',
         phone: '+254790095796',
-        bio: 'Available for scheduled CalmWave counselling sessions after account activation.',
+        bio: 'Available for scheduled Tuliva counselling sessions after account activation.',
         availability: 'Activation pending',
         whatsapp: ''
       }
@@ -2611,7 +2618,7 @@
       id: globalThis.crypto?.randomUUID ? globalThis.crypto.randomUUID() : `m-${Date.now()}-${Math.random()}`,
       role: 'assistant',
       type: 'welcome',
-      text: "Hi, I'm CalmWave. This is a gentle space to pause, name what you're feeling, and find one manageable next step.",
+      text: "Hi, I'm Tuliva. This is a gentle space to pause, name what you're feeling, and find one manageable next step.",
       createdAt: Date.now()
     });
 
@@ -2681,7 +2688,7 @@
       content.className = `message-content${wide ? ' wide' : ''}`;
       const meta = document.createElement('div');
       meta.className = 'message-meta';
-      meta.textContent = `${message.role === 'assistant' ? 'CalmWave' : 'You'} | ${formatTime(message.createdAt)}`;
+      meta.textContent = `${message.role === 'assistant' ? 'Tuliva' : 'You'} | ${formatTime(message.createdAt)}`;
       content.appendChild(meta);
       row.appendChild(content);
       return { row, content };
@@ -2835,10 +2842,10 @@
             <div class="psychologist-options">
               <button class="psychologist-option" type="button" data-action="open-therapist-directory">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
-                <span><strong>Nearby psychologist</strong><span>View available CalmWave therapists</span></span>
+                <span><strong>Nearby psychologist</strong><span>View available Tuliva therapists</span></span>
               </button>
             </div>
-            <p class="professional-note">Only professionals activated in the CalmWave therapist directory are shown.</p>
+            <p class="professional-note">Only professionals activated in the Tuliva therapist directory are shown.</p>
           </div>
           <div class="support-panel" role="tabpanel" data-panel="support-lines" hidden>
             ${hotlineMarkup(false)}
@@ -2856,7 +2863,7 @@
 
     function whatsappLink(therapist) {
       const number = String(therapist.whatsapp || '').replace(/\D/g, '');
-      const message = encodeURIComponent(`Hello, I found ${therapist.name} through CalmWave and would like to ask about booking a session.`);
+      const message = encodeURIComponent(`Hello, I found ${therapist.name} through Tuliva and would like to ask about booking a session.`);
       return `https://wa.me/${number}?text=${message}`;
     }
 
@@ -3256,7 +3263,6 @@
       updateCallAccountStrip();
       const professional = accountContext.role === 'professional';
       document.getElementById('accountRole').textContent = professional ? 'Professional' : 'Patient';
-      document.getElementById('professionalDashboardButton').hidden = !professional;
       document.getElementById('patientNameSection').hidden = professional;
       document.getElementById('patientDisplayName').value = accountContext.display_name || '';
       setPatientNameSaveState(accountContext.display_name ? 'saved' : 'default');
@@ -3350,7 +3356,7 @@
         experience: '',
         rating: '',
         languages: item.languages || [],
-        bio: item.bio || `${item.title} offering scheduled CalmWave sessions.`,
+        bio: item.bio || `${item.title} offering scheduled Tuliva sessions.`,
         availability: item.accepting_patients ? 'Booking available' : 'Not accepting bookings',
         location: item.location || '',
         phone: item.phone || '',
@@ -4157,7 +4163,7 @@
         }
       } else {
         call.close();
-        callError.textContent = 'Rejected a call that was not created by CalmWave matching.';
+        callError.textContent = 'Rejected a call that was not created by Tuliva matching.';
         return;
       }
       pendingMediaCall = call;
@@ -4341,10 +4347,10 @@
       const message = { id: 'typing', role: 'assistant', createdAt: Date.now() };
       const { row, content } = createMessageShell(message);
       row.dataset.typing = 'true';
-      content.querySelector('.message-meta').textContent = 'CalmWave is thinking';
+      content.querySelector('.message-meta').textContent = 'Tuliva is thinking';
       const bubble = document.createElement('div');
       bubble.className = 'bubble typing-bubble';
-      bubble.setAttribute('aria-label', 'CalmWave is typing');
+      bubble.setAttribute('aria-label', 'Tuliva is typing');
       bubble.innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
       content.appendChild(bubble);
       messagesElement.appendChild(row);
@@ -4389,7 +4395,7 @@
       requestAnimationFrame(() => document.getElementById('enterChatButton').focus());
     }
 
-    function enterCalmWave(startWithBreathing = false) {
+    function enterTuliva(startWithBreathing = false) {
       if (entryScreen.classList.contains('leaving')) return;
       entryScreen.classList.add('leaving');
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -4799,7 +4805,7 @@
         return finishReply(`Take gentle care of yourself${name}. Before you go, consider choosing one small supportive thing for the next hour. You can return whenever you want to continue.`);
       }
       if (analysis.intent === 'identity') {
-        return finishReply("I am CalmWave, an on-device support companion. I can listen, remember the flow of this conversation, guide calming exercises, and help you consider next steps. I do not diagnose or replace a mental health professional. What kind of support would feel most useful right now?", 'support-choice');
+        return finishReply("I am Tuliva, an on-device support companion. I can listen, remember the flow of this conversation, guide calming exercises, and help you consider next steps. I do not diagnose or replace a mental health professional. What kind of support would feel most useful right now?", 'support-choice');
       }
       if (analysis.intent === 'how-are-you') {
         return finishReply(`I do not have feelings in the human sense, but I am present and ready to focus on you${name}. What feeling is taking up the most space for you?`, 'source');
@@ -4859,7 +4865,7 @@
       return finishReply(textReply, 'source');
     }
 
-    const CALMWAVE_SYSTEM_PROMPT = `You are CalmWave, a warm mental wellness support companion. Hold a natural, flowing conversation using the recent message history. Directly acknowledge what the person just said, connect it to relevant details they shared earlier, and vary your language so replies do not feel scripted. Be empathetic, calm, concise, and non-judgmental. Ask no more than one useful follow-up question at a time. If the person wants to vent, listen instead of immediately giving advice. If they request practical help, offer one or two manageable steps. Never diagnose, prescribe treatment, pretend to be a human therapist, or guarantee outcomes. Encourage qualified professional support when appropriate. Use plain text and usually stay under 170 words.`;
+    const TULIVA_SYSTEM_PROMPT = `You are Tuliva, a warm mental wellness support companion. Hold a natural, flowing conversation using the recent message history. Directly acknowledge what the person just said, connect it to relevant details they shared earlier, and vary your language so replies do not feel scripted. Be empathetic, calm, concise, and non-judgmental. Ask no more than one useful follow-up question at a time. If the person wants to vent, listen instead of immediately giving advice. If they request practical help, offer one or two manageable steps. Never diagnose, prescribe treatment, pretend to be a human therapist, or guarantee outcomes. Encourage qualified professional support when appropriate. Use plain text and usually stay under 170 words.`;
 
     async function readFreeAIStream(response, onUpdate) {
       const contentType = response.headers.get('content-type') || '';
@@ -4918,7 +4924,7 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-              messages: [{ role: 'system', content: CALMWAVE_SYSTEM_PROMPT }, ...history],
+              messages: [{ role: 'system', content: TULIVA_SYSTEM_PROMPT }, ...history],
               temperature: 0.72,
               stream: true
           }),
@@ -5055,7 +5061,7 @@
           if (!streamRow) {
             typing.remove();
             const shell = createMessageShell({ id: 'streaming', role: 'assistant', createdAt: streamStartedAt });
-            shell.content.querySelector('.message-meta').textContent = 'CalmWave is replying';
+            shell.content.querySelector('.message-meta').textContent = 'Tuliva is replying';
             streamBubble = document.createElement('div');
             streamBubble.className = 'bubble';
             shell.content.appendChild(streamBubble);
@@ -5078,7 +5084,7 @@
             streamRow?.remove();
             streamRow = null;
             webAIUnavailableUntil = Date.now() + (error.status === 402 ? 30000 : 60000);
-            showToast('Free web AI is busy. CalmWave is continuing locally.');
+            showToast('Free web AI is busy. Tuliva is continuing locally.');
           }
         }
 
@@ -5104,7 +5110,7 @@
             chatMessages.push(completeMessage);
             saveChat();
             streamRow.dataset.messageId = completeMessage.id;
-            streamRow.querySelector('.message-meta').textContent = `CalmWave | ${formatTime(streamStartedAt)}`;
+            streamRow.querySelector('.message-meta').textContent = `Tuliva | ${formatTime(streamStartedAt)}`;
             streamBubble.textContent = replyText;
           } else {
             appendMessage({ role: 'assistant', type: 'text', text: replyText, questionType });
@@ -5160,8 +5166,8 @@
       updateThemeControls();
     }
 
-    document.getElementById('enterChatButton').addEventListener('click', () => enterCalmWave(false));
-    document.getElementById('entryBreathingButton').addEventListener('click', () => enterCalmWave(true));
+    document.getElementById('enterChatButton').addEventListener('click', () => enterTuliva(false));
+    document.getElementById('entryBreathingButton').addEventListener('click', () => enterTuliva(true));
 
     document.getElementById('peerCallButton').addEventListener('click', openPeerCallCenter);
     document.getElementById('callAccountButton').addEventListener('click', () => {
@@ -5419,7 +5425,6 @@
       const unchanged = event.target.value.trim() === (accountContext?.display_name || '');
       setPatientNameSaveState(unchanged && event.target.value.trim() ? 'saved' : 'default');
     });
-    document.getElementById('professionalDashboardButton').addEventListener('click', openProfessionalDashboard);
     document.querySelectorAll('[data-professional-tab]').forEach(button => {
       button.addEventListener('click', () => {
         const target = button.dataset.professionalTab;
