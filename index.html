@@ -3908,7 +3908,7 @@
       pendingEmailCallId = null;
       const url = new URL(location.href);
       url.searchParams.delete('joinCall');
-      history.replaceState({}, '', `${url.pathname}${url.search}${url.hash}`);
+      history.replaceState(history.state || { tuliva: true, tulivaView: activeHistoryView }, '', `${url.pathname}${url.search}${url.hash}`);
     }
 
     async function resumePendingEmailCall() {
@@ -4659,8 +4659,18 @@
       historyNavigationInProgress = false;
     });
 
-    function enterTuliva(startWithBreathing = false) {
+    function enterTuliva(startWithBreathing = false, preserveCallLink = false) {
       if (entryScreen.classList.contains('leaving')) return;
+      if (!preserveCallLink && pendingEmailCallId) clearEmailCallLink();
+      if (!preserveCallLink) {
+        if (accountDialog.open) accountDialog.close();
+        if (therapistDialog.open) therapistDialog.close();
+        if (therapistProfileDialog.open) therapistProfileDialog.close();
+        if (professionalBookingDialog.open) professionalBookingDialog.close();
+        if (professionalDashboardDialog.open) professionalDashboardDialog.close();
+        if (supportGroupsDialog.open) supportGroupsDialog.close();
+        if (peerCallDialog.open) closePeerCallCenter();
+      }
       pushTulivaView('chat');
       entryScreen.classList.add('leaving');
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -5855,7 +5865,7 @@
     setConnectionStatus('local', 'Free web AI + local fallback');
     initializeEntryScreen();
     if (pendingEmailCallId) {
-      enterTuliva(false);
+      enterTuliva(false, true);
       setTimeout(resumePendingEmailCall, 450);
     }
   </script>
