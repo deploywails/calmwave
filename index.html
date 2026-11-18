@@ -2601,6 +2601,7 @@
     const requestedCallId = new URLSearchParams(location.search).get('joinCall') || '';
     let pendingEmailCallId = /^[0-9a-f-]{36}$/i.test(requestedCallId) ? requestedCallId : null;
     let emailCallResumeInProgress = false;
+    let emailCallResumeTimer = null;
     let activeHistoryView = 'welcome';
     let historyNavigationInProgress = false;
     let activeMediaCall = null;
@@ -4660,8 +4661,12 @@
     });
 
     function enterTuliva(startWithBreathing = false, preserveCallLink = false) {
-      if (entryScreen.classList.contains('leaving')) return;
-      if (!preserveCallLink && pendingEmailCallId) clearEmailCallLink();
+      if (!preserveCallLink) {
+        clearTimeout(emailCallResumeTimer);
+        emailCallResumeTimer = null;
+        if (pendingEmailCallId) clearEmailCallLink();
+      }
+      if (entryScreen.classList.contains('leaving') && preserveCallLink) return;
       if (!preserveCallLink) {
         if (accountDialog.open) accountDialog.close();
         if (therapistDialog.open) therapistDialog.close();
@@ -5441,8 +5446,21 @@
       updateThemeControls();
     }
 
-    document.getElementById('enterChatButton').addEventListener('click', () => enterTuliva(false));
-    document.getElementById('entryBreathingButton').addEventListener('click', () => enterTuliva(true));
+    document.getElementById('enterChatButton').addEventListener('pointerdown', () => {
+      clearTimeout(emailCallResumeTimer);
+      emailCallResumeTimer = null;
+      if (pendingEmailCallId) clearEmailCallLink();
+    });
+    document.getElementById('enterChatButton').addEventListener('click', event => {
+      event.preventDefault();
+      event.stopPropagation();
+      enterTuliva(false);
+    });
+    document.getElementById('entryBreathingButton').addEventListener('click', event => {
+      event.preventDefault();
+      event.stopPropagation();
+      enterTuliva(true);
+    });
 
     document.getElementById('peerCallButton').addEventListener('click', openPeerCallCenter);
     document.getElementById('callAccountButton').addEventListener('click', () => {
@@ -5866,7 +5884,7 @@
     initializeEntryScreen();
     if (pendingEmailCallId) {
       enterTuliva(false, true);
-      setTimeout(resumePendingEmailCall, 450);
+      emailCallResumeTimer = setTimeout(resumePendingEmailCall, 450);
     }
   </script>
 </body>
