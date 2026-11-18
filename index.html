@@ -1417,12 +1417,17 @@
     .group-empty p { max-width: 390px; margin: 7px auto 0; font-size: 9px; line-height: 1.6; }
 
     .call-dialog {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
       width: min(1040px, calc(100% - 28px));
+      height: min(780px, calc(100vh - 28px));
+      height: min(780px, calc(100dvh - 28px));
       max-height: calc(100vh - 28px);
+      max-height: calc(100dvh - 28px);
     }
 
     .call-dialog .modal-head h2 span { display: block; margin-top: 3px; color: var(--text-soft); font-size: 9px; font-weight: 500; }
-    .call-body { position: relative; min-height: 520px; padding: 20px; overflow-y: auto; }
+    .call-body { position: relative; min-height: 0; height: 100%; padding: 20px 20px 34px; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
     .call-lobby { display: grid; grid-template-columns: minmax(270px, 0.86fr) minmax(0, 1.14fr); gap: 16px; }
     .call-lobby[hidden], .call-stage[hidden], .incoming-call[hidden] { display: none; }
 
@@ -2160,7 +2165,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 6 12 12M18 6 6 18" stroke-linecap="round"/></svg>
       </button>
     </div>
-    <div class="call-body">
+    <div class="call-body" tabindex="0" aria-label="Call scheduling content">
       <div class="call-lobby" id="callLobby">
         <section class="call-identity">
           <div class="call-identity-mark" aria-hidden="true">
@@ -3447,6 +3452,7 @@
         return;
       }
       message.textContent = 'Session requested. The professional has been notified to accept or decline.';
+      showToast('Therapist session requested successfully');
       patientHasActiveTherapistBooking = true;
       await loadProfessionalSlots(selectedProfessional.id);
       await loadMyAppointments();
@@ -4000,9 +4006,12 @@
           p_starts_at: selectedDate.toISOString(),
           p_call_mode: selectedCallMode
         });
-        setScheduleState('ready', result?.status === 'matched' ? 'Paired for the selected time' : 'Booked; waiting for a compatible person');
+        const confirmation = result?.status === 'matched' ? 'Paired for the selected time' : 'Booked successfully; waiting for an anonymous match';
+        setScheduleState('ready', confirmation);
+        showToast(confirmation);
         scheduleCallTimeInput.value = '';
         await refreshScheduledBookings();
+        scheduleStatus.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       } catch (error) {
         setScheduleState('error', error?.message || 'Could not schedule the call');
       } finally {
