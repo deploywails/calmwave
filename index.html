@@ -2243,9 +2243,9 @@
             <p>Choose a date and available time. Tuliva securely pairs people who select the same slot and call type.</p>
             <form id="scheduleCallForm">
               <div class="call-field"><label for="peerScheduleDate">Choose date</label><input id="peerScheduleDate" type="date" required></div>
-              <div class="call-field"><label for="peerScheduleTime">Choose time (15-minute intervals)</label><input id="peerScheduleTime" type="time" step="900" required></div>
+              <div class="call-field"><label>Available timeframes (East Africa Time)</label></div>
               <div class="available-timeframes" id="peerAvailableTimeframes"><span>Sign in to view available timeframes.</span></div>
-              <div class="slot-availability" id="peerSlotAvailability">Choose a date and time to check availability.</div>
+              <div class="slot-availability" id="peerSlotAvailability">Choose one of the available timeframes above.</div>
               <input id="scheduleCallTime" type="hidden">
               <button class="call-primary" id="scheduleCallButton" type="submit" disabled>Book selected peer call</button>
             </form>
@@ -2648,7 +2648,6 @@
     let pendingOtpEmail = '';
     let selectedPeerScheduleTime = null;
     let selectedPeerSlotAvailable = false;
-    let peerAvailabilityGeneration = 0;
     const handledBackendCalls = new Set();
     const blockedPeerIds = new Set(storage.getJSON('calmwave.blocked-peer-ids.v1', []));
     let conversationVersion = 0;
@@ -3972,55 +3971,26 @@
       }
     }
 
-    async function updatePeerScheduleDateTime() {
-      const dateInput = document.getElementById('peerScheduleDate');
-      const timeInput = document.getElementById('peerScheduleTime');
+    function selectPeerTimeframe(startsAt) {
       const availability = document.getElementById('peerSlotAvailability');
-      const generation = ++peerAvailabilityGeneration;
-      selectedPeerScheduleTime = null;
-      selectedPeerSlotAvailable = false;
-      scheduleCallTimeInput.value = '';
-      if (dateInput.value && timeInput.value) {
-        const value = new Date(`${dateInput.value}T${timeInput.value}:00`);
-        if (!Number.isNaN(value.getTime()) && value.getTime() >= Date.now() + 5 * 60 * 1000) {
-          selectedPeerScheduleTime = value.toISOString();
-          scheduleCallTimeInput.value = selectedPeerScheduleTime;
-          if (!isPermanentAccount()) {
-            availability.classList.remove('full');
-            availability.textContent = 'Sign in to check availability for this time.';
-          } else {
-            availability.classList.remove('full');
-            availability.textContent = 'Checking availability...';
-            try {
-              const result = await backendRpc('get_peer_slot_availability', {
-                p_starts_at: selectedPeerScheduleTime,
-                p_call_mode: selectedCallMode
-              });
-              if (generation !== peerAvailabilityGeneration) return;
-              selectedPeerSlotAvailable = result?.available === true;
-              availability.classList.toggle('full', !selectedPeerSlotAvailable);
-              availability.textContent = selectedPeerSlotAvailable
-                ? `${result.spots_left} of 6 places remain for this ${selectedCallMode} timeframe.`
-                : 'This timeframe already has three pairs. Choose another available time.';
-              setScheduleState(selectedPeerSlotAvailable ? '' : 'error', selectedPeerSlotAvailable ? `Selected ${formatBookingDate(value.toISOString())}` : 'Selected timeframe is full');
-            } catch (error) {
-              if (generation !== peerAvailabilityGeneration) return;
-              availability.classList.add('full');
-              availability.textContent = error?.message || 'Could not check availability.';
-            }
-          }
-        } else {
-          setScheduleState('error', 'Choose a time at least five minutes from now');
-          availability.classList.add('full');
-          availability.textContent = 'Choose a future time.';
-        }
-      }
+      const value = new Date(startsAt);
+      selectedPeerScheduleTime = value.toISOString();
+      selectedPeerSlotAvailable = true;
+      scheduleCallTimeInput.value = selectedPeerScheduleTime;
+      availability.classList.remove('full');
+      availability.textContent = `Available: ${formatBookingDate(selectedPeerScheduleTime)} · ${selectedCallMode} call`;
+      setScheduleState('ready', `Selected ${formatBookingDate(selectedPeerScheduleTime)}`);
       updateMatchmakingControls();
     }
 
     async function loadPeerTimeframes() {
       const container = document.getElementById('peerAvailableTimeframes');
       const date = document.getElementById('peerScheduleDate').value;
+      selectedPeerScheduleTime = null;
+      selectedPeerSlotAvailable = false;
+      scheduleCallTimeInput.value = '';
+      document.getElementById('peerSlotAvailability').textContent = 'Choose one of the available timeframes above.';
+      updateMatchmakingControls();
       if (!date || !isPermanentAccount()) {
         container.innerHTML = '<span>Sign in to view available timeframes.</span>';
         return;
@@ -4032,7 +4002,7 @@
         container.innerHTML = slots.length ? slots.map(slot => {
           const time = new Date(slot.starts_at);
           const label = new Intl.DateTimeFormat([], { hour: 'numeric', minute: '2-digit' }).format(time);
-          return `<button class="timeframe-option" type="button" data-available-time="${escapeHTML(slot.starts_at)}">${escapeHTML(label)} · ${escapeHTML(slot.spots_left)} left</button>`;
+          return `<button class="timeframe-option" type="button" data-available-time="${escapeHTML(slot.starts_at)}">${escapeHTML(label)} · ${escapeHTML(slot.spots_left)} of 8 left</button>`;
         }).join('') : '<span>No open timeframes remain for this date and call type.</span>';
       } catch (error) {
         container.innerHTML = `<span>${escapeHTML(error?.message || 'Could not load available timeframes.')}</span>`;
@@ -4041,7 +4011,6 @@
 
     function initializePeerScheduleCalendar() {
       const dateInput = document.getElementById('peerScheduleDate');
-      const timeInput = document.getElementById('peerScheduleTime');
       const today = new Date();
       const maximum = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
       const localDate = date => new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
@@ -4050,8 +4019,6 @@
       dateInput.min = localDate(today);
       dateInput.max = localDate(maximum);
       if (!dateInput.value) dateInput.value = localDate(nextSlot);
-      if (!timeInput.value) timeInput.value = `${String(nextSlot.getHours()).padStart(2, '0')}:${String(nextSlot.getMinutes()).padStart(2, '0')}`;
-      updatePeerScheduleDateTime();
       loadPeerTimeframes();
     }
 
@@ -5531,20 +5498,13 @@
       bookScheduledCall();
     });
     document.getElementById('peerScheduleDate').addEventListener('change', () => {
-      updatePeerScheduleDateTime();
       loadPeerTimeframes();
     });
-    document.getElementById('peerScheduleTime').addEventListener('change', updatePeerScheduleDateTime);
-    document.getElementById('peerScheduleTime').addEventListener('input', updatePeerScheduleDateTime);
     document.getElementById('peerAvailableTimeframes').addEventListener('click', event => {
       const button = event.target.closest('[data-available-time]');
       if (!button) return;
-      const value = new Date(button.dataset.availableTime);
-      const localDate = new Date(value.getTime() - value.getTimezoneOffset() * 60000).toISOString();
-      document.getElementById('peerScheduleDate').value = localDate.slice(0, 10);
-      document.getElementById('peerScheduleTime').value = localDate.slice(11, 16);
       document.querySelectorAll('[data-available-time]').forEach(option => option.classList.toggle('selected', option === button));
-      updatePeerScheduleDateTime();
+      selectPeerTimeframe(button.dataset.availableTime);
     });
     document.getElementById('callTherapistList').addEventListener('click', event => {
       const button = event.target.closest('[data-call-professional]');
@@ -5569,7 +5529,6 @@
         });
         updateCallStartButton();
         if (selectedCallTab === 'schedule') {
-          updatePeerScheduleDateTime();
           loadPeerTimeframes();
         }
       });
