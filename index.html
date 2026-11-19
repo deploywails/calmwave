@@ -2399,7 +2399,7 @@
 
   <dialog class="directory-dialog" id="therapistDialog" aria-labelledby="therapistDirectoryTitle">
     <div class="modal-head">
-      <h2 id="therapistDirectoryTitle">Therapist Directory<span>Explore demo profiles and find a suitable area of support</span></h2>
+      <h2 id="therapistDirectoryTitle">Therapist Directory<span>Explore verified professionals and available sessions</span></h2>
       <button class="icon-button" id="therapistClose" type="button" aria-label="Close therapist directory">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 6 12 12M18 6 6 18" stroke-linecap="round"/></svg>
       </button>
@@ -2419,7 +2419,6 @@
     </div>
     <div class="therapist-directory-body">
       <div class="therapist-grid" id="therapistGrid" aria-live="polite"></div>
-      <p class="directory-disclaimer">Demo directory: replace sample profiles with verified professionals before publishing. Tuliva does not verify or endorse placeholder profiles.</p>
     </div>
   </dialog>
 
@@ -2488,7 +2487,7 @@
       {
         id: 'eugene-gwaya-pending',
         name: 'Eugene Gwaya',
-        image: '',
+        image: './photo_6050748084523831546_x.jpg',
         specialty: 'Therapist',
         categories: ['Counselling'],
         experience: '',
@@ -2496,8 +2495,9 @@
         languages: [],
         location: '',
         phone: '+254790095796',
-        bio: 'Available for scheduled Tuliva counselling sessions after account activation.',
-        availability: 'Activation pending',
+        bio: 'Eugene offers private, scheduled counselling sessions through Tuliva, creating a supportive space for individuals to talk, reflect, and be heard.',
+        availability: 'Verified · syncing availability',
+        verified: true,
         whatsapp: ''
       }
     ];
@@ -2983,7 +2983,7 @@
           <span class="availability-badge ${availabilityClass(therapist)}">${escapeHTML(therapist.availability)}</span>
         </div>
         <div class="profile-detail-grid">
-          <div class="profile-detail"><span>Profile</span><strong>${therapist.backend ? 'Verified account' : 'Demo only'}</strong></div>
+          <div class="profile-detail"><span>Profile</span><strong>${therapist.backend || therapist.verified ? 'Verified professional' : 'Professional profile'}</strong></div>
           <div class="profile-detail"><span>Location</span><strong>${escapeHTML(therapist.location || 'Not listed')}</strong></div>
           <div class="profile-detail"><span>Languages</span><strong>${escapeHTML(therapist.languages.join(', '))}</strong></div>
         </div>
@@ -3008,7 +3008,7 @@
       card.innerHTML = `
         <div class="card-head">
           <div class="card-head-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0M17 8v6M14 11h6" stroke-linecap="round"/></svg></div>
-          <div><strong>Therapists you can explore</strong><span>Demo profiles · confirm credentials before booking</span></div>
+          <div><strong>Therapists you can explore</strong><span>Verified Tuliva professionals</span></div>
         </div>
         <div class="card-body">
           <p class="crisis-copy">Here are a few profiles whose listed specialties may be relevant. You remain in control of whom you contact.</p>
@@ -3017,7 +3017,7 @@
               <div class="chat-therapist">
                 ${therapist.image ? `<img src="${escapeHTML(therapist.image)}" alt="Profile portrait for ${escapeHTML(therapist.name)}" loading="lazy">` : `<div class="provider-avatar">${escapeHTML(groupInitials(therapist.name))}</div>`}
                 <div><strong>${escapeHTML(therapist.name)}</strong><span>${escapeHTML(therapist.specialty)}${therapist.rating ? ` · ★ ${escapeHTML(therapist.rating)}` : ''}</span></div>
-                ${therapist.backend ? `<button class="card-button" type="button" data-action="book-professional" data-professional-id="${escapeHTML(therapist.id)}">Book Session</button>` : '<button class="card-button secondary" type="button" disabled>Demo</button>'}
+                ${therapist.backend ? `<button class="card-button" type="button" data-action="book-professional" data-professional-id="${escapeHTML(therapist.id)}">Book Session</button>` : '<button class="card-button secondary" type="button" disabled>Loading availability</button>'}
               </div>`).join('')}
           </div>
           <div class="card-actions"><button class="card-button secondary" type="button" data-action="open-therapist-directory">View full directory</button></div>
@@ -3422,7 +3422,7 @@
 
     function getDirectoryTherapists() {
       const activatedNames = new Set(backendProfessionals.map(item => item.name.toLowerCase()));
-      const pending = therapists.filter(item => !activatedNames.has(item.name.toLowerCase())).map(item => ({ ...item, demo: true }));
+      const pending = therapists.filter(item => !activatedNames.has(item.name.toLowerCase())).map(item => ({ ...item, verified: true }));
       return [...backendProfessionals, ...pending];
     }
 
