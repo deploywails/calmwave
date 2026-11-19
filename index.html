@@ -4021,7 +4021,7 @@
           const time = new Date(slot.starts_at);
           const label = new Intl.DateTimeFormat([], { hour: 'numeric', minute: '2-digit' }).format(time);
           const selected = selectedPeerTimeframes.has(time.toISOString());
-          return `<button class="timeframe-option${selected ? ' selected' : ''}" type="button" data-available-time="${escapeHTML(slot.starts_at)}">${escapeHTML(label)} · ${escapeHTML(slot.spots_left)} of 8 left</button>`;
+          return `<button class="timeframe-option${selected ? ' selected' : ''}" type="button" data-available-time="${escapeHTML(slot.starts_at)}">${escapeHTML(label)}</button>`;
         }).join('') : '<span>No open timeframes remain for this date and call type.</span>';
       } catch (error) {
         container.innerHTML = `<span>${escapeHTML(error?.message || 'Could not load available timeframes.')}</span>`;
