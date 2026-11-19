@@ -1434,8 +1434,15 @@
 
     .call-dialog .modal-head h2 span { display: block; margin-top: 3px; color: var(--text-soft); font-size: 9px; font-weight: 500; }
     .call-body { position: relative; min-height: 0; height: 100%; padding: 20px 20px 34px; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
-    .call-lobby { display: grid; grid-template-columns: minmax(270px, 0.86fr) minmax(0, 1.14fr); gap: 16px; }
+    .call-lobby { display: grid; grid-template-columns: minmax(0, 1fr); gap: 13px; }
     .call-lobby[hidden], .call-stage[hidden], .incoming-call[hidden] { display: none; }
+
+    .confidentiality-banner { display: flex; align-items: center; gap: 12px; padding: 13px 15px; border: 1px solid rgba(39, 193, 176, 0.3); border-radius: 15px; background: linear-gradient(120deg, var(--teal-soft), var(--blue-soft), var(--purple-soft)); }
+    .confidentiality-icon { display: grid; flex: 0 0 auto; place-items: center; width: 44px; height: 44px; border-radius: 14px; color: #fff; background: linear-gradient(135deg, var(--teal), var(--primary)); box-shadow: 0 8px 18px rgba(45, 137, 165, 0.22); }
+    .confidentiality-icon svg { width: 22px; }
+    .confidentiality-banner strong { display: block; font-size: 13px; }
+    .confidentiality-banner p { margin: 4px 0 0; color: var(--text-soft); font-size: 10px; line-height: 1.55; }
+    .confidentiality-banner .peer-status { margin-top: 7px; }
 
     .call-identity,
     .call-join,
@@ -1822,13 +1829,16 @@
 
     .toast { border-color: rgba(54, 159, 179, 0.25); background: linear-gradient(120deg, var(--surface-solid), var(--teal-soft), var(--purple-soft)); }
 
-    .card-button { min-height: 36px; font-size: 11px !important; line-height: 1.2; }
-    .call-primary, .primary-button, .new-chat { font-size: 12px; }
-    .tool-button { font-size: 12px; }
-    .chip { font-size: 10px; }
-    .call-connect-tab, .auth-tab, .mode-option, .support-tab { font-size: 10px; }
-    .find-therapist-button { font-size: 11px; }
-    .booking-actions button, .appointment-actions button, .provider-actions .card-button, .therapist-card-actions .card-button { font-size: 10px !important; }
+    .card-button { min-height: 38px; font-size: 12px !important; line-height: 1.25; }
+    .call-primary, .primary-button, .new-chat { font-size: 13px; }
+    .tool-button { font-size: 14px; }
+    .section-label { font-size: 11px; }
+    .resource-group summary { font-size: 12px; }
+    .resource-content { font-size: 11px; }
+    .chip { font-size: 11px; }
+    .call-connect-tab, .auth-tab, .mode-option, .support-tab { font-size: 11px; }
+    .find-therapist-button { font-size: 12px; }
+    .booking-actions button, .appointment-actions button, .provider-actions .card-button, .therapist-card-actions .card-button { font-size: 11px !important; }
 
     @keyframes message-in {
       from { opacity: 0; transform: translateY(9px) scale(0.985); }
@@ -2039,6 +2049,24 @@
         New conversation
       </button>
 
+      <div class="mobile-connections">
+        <div class="section-label">Connections</div>
+        <nav class="tool-nav" aria-label="Connection features">
+          <button class="tool-button" id="mobilePeerCallButton" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 10.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/><path d="m15 13 5-3v9l-5-3v-3Z"/><circle cx="11" cy="17" r="4"/></svg>
+            Peer and therapist calls
+          </button>
+          <button class="tool-button" id="mobileSupportGroupsButton" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2.5 19a5.5 5.5 0 0 1 11 0M13.5 17.5a4.5 4.5 0 0 1 8 1.5"/></svg>
+            Support groups
+          </button>
+          <button class="tool-button" id="mobileFindTherapistButton" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0M17 8v6M14 11h6"/></svg>
+            Find a therapist
+          </button>
+        </nav>
+      </div>
+
       <div class="section-label">Calming tools</div>
       <nav class="tool-nav" aria-label="Calming exercises">
         <button class="tool-button" type="button" data-tool="breathing">
@@ -2058,24 +2086,6 @@
           Connect to help
         </button>
       </nav>
-
-      <div class="mobile-connections">
-        <div class="section-label">Connections</div>
-        <nav class="tool-nav" aria-label="Connection features">
-          <button class="tool-button" id="mobilePeerCallButton" type="button">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 10.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/><path d="m15 13 5-3v9l-5-3v-3Z"/><circle cx="11" cy="17" r="4"/></svg>
-            Peer and therapist calls
-          </button>
-          <button class="tool-button" id="mobileSupportGroupsButton" type="button">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2.5 19a5.5 5.5 0 0 1 11 0M13.5 17.5a4.5 4.5 0 0 1 8 1.5"/></svg>
-            Support groups
-          </button>
-          <button class="tool-button" id="mobileFindTherapistButton" type="button">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0M17 8v6M14 11h6"/></svg>
-            Find a therapist
-          </button>
-        </nav>
-      </div>
 
       <div class="section-label">Daily check-in</div>
       <section class="mood-card" aria-labelledby="moodHeading">
@@ -2123,10 +2133,6 @@
         </details>
       </div>
 
-      <div class="side-privacy">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4" stroke-linecap="round"/></svg>
-        <span>Not a replacement for professional help. Chat history stays on this device; web AI sends recent messages to Pollinations.</span>
-      </div>
     </aside>
 
     <div class="panel-backdrop" id="panelBackdrop" aria-hidden="true"></div>
@@ -2200,18 +2206,10 @@
     </div>
     <div class="call-body" tabindex="0" aria-label="Call scheduling content">
       <div class="call-lobby" id="callLobby">
-        <section class="call-identity">
-          <div class="call-identity-mark" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M19 8v6M16 11h6" stroke-linecap="round"/></svg>
-          </div>
-          <h3>Private platform matching</h3>
-          <p>Tuliva creates temporary routing credentials privately and connects only the person matched by the platform.</p>
-          <div class="peer-status" id="peerStatus"><span class="peer-status-dot"></span><span id="peerStatusText">Creating a secure session...</span></div>
-          <div class="call-security">
-            <strong><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>Security and privacy</strong>
-            <p>WebRTC encrypts media in transit. PeerJS Cloud sees temporary signaling metadata, not call media. Routing credentials are hidden, short-lived, and validated against the matched session. Calls are not recorded by Tuliva.</p>
-          </div>
-        </section>
+        <div class="confidentiality-banner">
+          <div class="confidentiality-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg></div>
+          <div><strong>Secure and confidential conversations</strong><p>Call media is encrypted in transit, routing details are short-lived, and participants remain anonymous. Calls are not recorded by Tuliva.</p><div class="peer-status" id="peerStatus"><span class="peer-status-dot"></span><span id="peerStatusText">Creating a secure session...</span></div></div>
+        </div>
 
         <section class="call-join">
           <h3>Connect to another person</h3>
@@ -3146,17 +3144,27 @@
       ).length;
     }
 
+    function hasActiveMatchedPeerSession() {
+      const now = Date.now();
+      return scheduledBookings.some(booking => booking.status === 'matched' && new Date(booking.starts_at).getTime() + 45 * 60 * 1000 > now);
+    }
+
     function requiredPeerSelections() {
+      if (hasActiveMatchedPeerSession()) return 0;
       return Math.max(0, 5 - upcomingPeerBookingCount());
     }
 
     function updatePeerSelectionProgress() {
       const required = requiredPeerSelections();
       const progress = document.getElementById('peerSelectionProgress');
-      progress.textContent = required
+      progress.textContent = hasActiveMatchedPeerSession()
+        ? 'Match confirmed'
+        : required
         ? `${selectedPeerTimeframes.size} of ${required} selected`
         : '5 of 5 booked';
-      document.getElementById('peerSlotAvailability').textContent = required
+      document.getElementById('peerSlotAvailability').textContent = hasActiveMatchedPeerSession()
+        ? 'Your alternatives were cleared. New booking opens after the matched session ends or is cancelled.'
+        : required
         ? `Select ${required - selectedPeerTimeframes.size} more timeframe${required - selectedPeerTimeframes.size === 1 ? '' : 's'} to hold five upcoming peer bookings.`
         : 'You already have five upcoming peer bookings.';
     }
@@ -4008,6 +4016,11 @@
       const date = document.getElementById('peerScheduleDate').value;
       updatePeerSelectionProgress();
       updateMatchmakingControls();
+      if (hasActiveMatchedPeerSession()) {
+        selectedPeerTimeframes.clear();
+        container.innerHTML = '<span>A peer match is confirmed. New timeframes become available after that session ends or is cancelled.</span>';
+        return;
+      }
       if (!date || !isPermanentAccount()) {
         container.innerHTML = '<span>Sign in to view available timeframes.</span>';
         return;
@@ -4062,6 +4075,10 @@
       }
       if (upcomingPeerBookingCount() >= 5) {
         setScheduleState('error', 'You already have five upcoming peer calls. Cancel or complete one before booking another.');
+        return;
+      }
+      if (hasActiveMatchedPeerSession()) {
+        setScheduleState('error', 'Complete or cancel the matched peer session before booking again.');
         return;
       }
       if (onlineMatchSearching || activeMediaCall || currentBackendCall || scheduledReadyCallId) {
