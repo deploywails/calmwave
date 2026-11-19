@@ -3342,6 +3342,7 @@
       document.getElementById('patientDisplayName').value = accountContext.display_name || '';
       setPatientNameSaveState(accountContext.display_name ? 'saved' : 'default');
       await loadMyAppointments();
+      if (callCenterOpen && selectedCallTab === 'schedule') await loadPeerTimeframes();
       if (pendingEmailCallId) setTimeout(resumePendingEmailCall, 0);
     }
 
@@ -4022,7 +4023,9 @@
         return;
       }
       if (!date || !isPermanentAccount()) {
-        container.innerHTML = '<span>Sign in to view available timeframes.</span>';
+        container.innerHTML = supabaseInitPromise
+          ? '<span>Restoring your account and loading available timeframes...</span>'
+          : '<span>Sign in to view available timeframes.</span>';
         return;
       }
       container.innerHTML = '<span>Loading available timeframes...</span>';
@@ -4522,6 +4525,7 @@
       pushTulivaView('calls');
       callCenterOpen = true;
       callError.textContent = '';
+      const backendPromise = isSupabaseConfigured() ? initializeSupabaseBackend() : null;
       selectCallCenterTab(selectedCallTab, false);
       peerCallDialog.classList.remove('in-call');
       callLobby.hidden = false;
@@ -4530,8 +4534,8 @@
       if (!callPeer || callPeer.destroyed) initializeCallPeer();
       updateCallAccountStrip();
       loadProfessionalDirectory();
-      if (isSupabaseConfigured()) {
-        initializeSupabaseBackend().then(() => updateAccountInterface());
+      if (backendPromise) {
+        backendPromise.then(() => updateAccountInterface());
         clearInterval(bookingRefreshTimer);
         bookingRefreshTimer = setInterval(refreshScheduledBookings, 30000);
       } else {
