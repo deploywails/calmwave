@@ -1520,6 +1520,9 @@
     [data-theme="dark"] .booking-pair-state.matched { color: var(--success); }
     [data-theme="dark"] .booking-pair-state.waiting { color: var(--sun); }
     .backend-note { margin-top: 8px; color: var(--muted); font-size: 7px; line-height: 1.45; }
+    .selection-instruction { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; padding: 10px 11px; border: 1px solid rgba(137, 110, 226, 0.28); border-radius: 11px; background: linear-gradient(120deg, var(--purple-soft), var(--blue-soft)); }
+    .selection-instruction strong { font-size: 10px; }
+    .selection-instruction span { flex: 0 0 auto; padding: 4px 7px; border-radius: 999px; color: #fff; background: var(--purple); font-size: 9px; font-weight: 850; }
     .available-timeframes { display: flex; flex-wrap: wrap; gap: 5px; max-height: 112px; margin: 9px 0; padding: 8px; overflow-y: auto; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-soft); }
     .available-timeframes > span { color: var(--muted); font-size: 9px; }
     .timeframe-option { padding: 7px 9px; border: 1px solid var(--border); border-radius: 999px; color: var(--primary-dark); background: var(--surface-solid); cursor: pointer; font-size: 10px; font-weight: 800; }
@@ -2240,14 +2243,14 @@
 
           <div class="call-connect-panel" id="scheduleCallPanel" data-call-panel="schedule">
             <h4>Schedule a peer conversation</h4>
-            <p>Choose a date and available time. Tuliva securely pairs people who select the same slot and call type.</p>
+            <p>Tuliva securely pairs people who select the same hourly timeframe and call type.</p>
+            <div class="selection-instruction"><strong>Select five upcoming timeframes</strong><span id="peerSelectionProgress">0 of 5 selected</span></div>
             <form id="scheduleCallForm">
               <div class="call-field"><label for="peerScheduleDate">Choose date</label><input id="peerScheduleDate" type="date" required></div>
               <div class="call-field"><label>Available timeframes (East Africa Time)</label></div>
               <div class="available-timeframes" id="peerAvailableTimeframes"><span>Sign in to view available timeframes.</span></div>
-              <div class="slot-availability" id="peerSlotAvailability">Choose one of the available timeframes above.</div>
-              <input id="scheduleCallTime" type="hidden">
-              <button class="call-primary" id="scheduleCallButton" type="submit" disabled>Book selected peer call</button>
+              <div class="slot-availability" id="peerSlotAvailability">Choose five available timeframes across one or more dates.</div>
+              <button class="call-primary" id="scheduleCallButton" type="submit" disabled>Book selected timeframes</button>
             </form>
             <div class="match-status" id="scheduleStatus"><span class="match-status-dot"></span><span id="scheduleStatusText">No booking selected</span></div>
             <div class="backend-note" id="peerBookingLimit">0 of 5 upcoming peer calls booked.</div>
@@ -2543,7 +2546,6 @@
     const cancelOnlineMatchButton = document.getElementById('cancelOnlineMatch');
     const onlineMatchStatus = document.getElementById('onlineMatchStatus');
     const onlineMatchStatusText = document.getElementById('onlineMatchStatusText');
-    const scheduleCallTimeInput = document.getElementById('scheduleCallTime');
     const scheduleCallButton = document.getElementById('scheduleCallButton');
     const scheduleStatus = document.getElementById('scheduleStatus');
     const scheduleStatusText = document.getElementById('scheduleStatusText');
@@ -2646,8 +2648,7 @@
     let accountRefreshTimer = null;
     let authListenerRegistered = false;
     let pendingOtpEmail = '';
-    let selectedPeerScheduleTime = null;
-    let selectedPeerSlotAvailable = false;
+    const selectedPeerTimeframes = new Set();
     const handledBackendCalls = new Set();
     const blockedPeerIds = new Set(storage.getJSON('calmwave.blocked-peer-ids.v1', []));
     let conversationVersion = 0;
@@ -3145,11 +3146,27 @@
       ).length;
     }
 
+    function requiredPeerSelections() {
+      return Math.max(0, 5 - upcomingPeerBookingCount());
+    }
+
+    function updatePeerSelectionProgress() {
+      const required = requiredPeerSelections();
+      const progress = document.getElementById('peerSelectionProgress');
+      progress.textContent = required
+        ? `${selectedPeerTimeframes.size} of ${required} selected`
+        : '5 of 5 booked';
+      document.getElementById('peerSlotAvailability').textContent = required
+        ? `Select ${required - selectedPeerTimeframes.size} more timeframe${required - selectedPeerTimeframes.size === 1 ? '' : 's'} to hold five upcoming peer bookings.`
+        : 'You already have five upcoming peer bookings.';
+    }
+
     function updateMatchmakingControls() {
       const hasConnectionActivity = Boolean(activeMediaCall || pendingMediaCall || currentBackendCall || scheduledReadyCallId);
       const canUseBackend = isSupabaseConfigured() && peerReady && peerSafetyConsent.checked && !hasConnectionActivity;
       findOnlinePeerButton.disabled = !canUseBackend || onlineMatchSearching;
-      scheduleCallButton.disabled = !isSupabaseConfigured() || !isPermanentAccount() || !peerSafetyConsent.checked || !selectedPeerScheduleTime || !selectedPeerSlotAvailable || onlineMatchSearching || hasConnectionActivity || upcomingPeerBookingCount() >= 5;
+      const required = requiredPeerSelections();
+      scheduleCallButton.disabled = !isSupabaseConfigured() || !isPermanentAccount() || !peerSafetyConsent.checked || required < 1 || selectedPeerTimeframes.size !== required || onlineMatchSearching || hasConnectionActivity;
     }
 
     function parseRpcData(data) {
@@ -3879,6 +3896,8 @@
         : waitingCount
           ? `${waitingCount} session${waitingCount === 1 ? '' : 's'} waiting for an anonymous match`
           : 'No peer matches yet.';
+      if (selectedPeerTimeframes.size > requiredPeerSelections()) selectedPeerTimeframes.clear();
+      updatePeerSelectionProgress();
       updateMatchmakingControls();
       if (!scheduledBookings.length) {
         scheduledCallList.innerHTML = '<div class="booking-empty">Your upcoming anonymous calls will appear here.</div>';
@@ -3972,24 +3991,22 @@
     }
 
     function selectPeerTimeframe(startsAt) {
-      const availability = document.getElementById('peerSlotAvailability');
-      const value = new Date(startsAt);
-      selectedPeerScheduleTime = value.toISOString();
-      selectedPeerSlotAvailable = true;
-      scheduleCallTimeInput.value = selectedPeerScheduleTime;
-      availability.classList.remove('full');
-      availability.textContent = `Available: ${formatBookingDate(selectedPeerScheduleTime)} · ${selectedCallMode} call`;
-      setScheduleState('ready', `Selected ${formatBookingDate(selectedPeerScheduleTime)}`);
+      const normalized = new Date(startsAt).toISOString();
+      const required = requiredPeerSelections();
+      if (selectedPeerTimeframes.has(normalized)) selectedPeerTimeframes.delete(normalized);
+      else if (selectedPeerTimeframes.size < required) selectedPeerTimeframes.add(normalized);
+      else showToast(`Select only ${required} timeframe${required === 1 ? '' : 's'} to reach five bookings`);
+      document.querySelectorAll('[data-available-time]').forEach(option => {
+        option.classList.toggle('selected', selectedPeerTimeframes.has(new Date(option.dataset.availableTime).toISOString()));
+      });
+      updatePeerSelectionProgress();
       updateMatchmakingControls();
     }
 
     async function loadPeerTimeframes() {
       const container = document.getElementById('peerAvailableTimeframes');
       const date = document.getElementById('peerScheduleDate').value;
-      selectedPeerScheduleTime = null;
-      selectedPeerSlotAvailable = false;
-      scheduleCallTimeInput.value = '';
-      document.getElementById('peerSlotAvailability').textContent = 'Choose one of the available timeframes above.';
+      updatePeerSelectionProgress();
       updateMatchmakingControls();
       if (!date || !isPermanentAccount()) {
         container.innerHTML = '<span>Sign in to view available timeframes.</span>';
@@ -3998,11 +4015,13 @@
       container.innerHTML = '<span>Loading available timeframes...</span>';
       try {
         const result = await backendRpc('list_peer_timeframes', { p_date: date, p_call_mode: selectedCallMode });
-        const slots = Array.isArray(result) ? result : [];
+        const existingTimes = new Set(scheduledBookings.map(item => new Date(item.starts_at).toISOString()));
+        const slots = (Array.isArray(result) ? result : []).filter(slot => !existingTimes.has(new Date(slot.starts_at).toISOString()));
         container.innerHTML = slots.length ? slots.map(slot => {
           const time = new Date(slot.starts_at);
           const label = new Intl.DateTimeFormat([], { hour: 'numeric', minute: '2-digit' }).format(time);
-          return `<button class="timeframe-option" type="button" data-available-time="${escapeHTML(slot.starts_at)}">${escapeHTML(label)} · ${escapeHTML(slot.spots_left)} of 8 left</button>`;
+          const selected = selectedPeerTimeframes.has(time.toISOString());
+          return `<button class="timeframe-option${selected ? ' selected' : ''}" type="button" data-available-time="${escapeHTML(slot.starts_at)}">${escapeHTML(label)} · ${escapeHTML(slot.spots_left)} of 8 left</button>`;
         }).join('') : '<span>No open timeframes remain for this date and call type.</span>';
       } catch (error) {
         container.innerHTML = `<span>${escapeHTML(error?.message || 'Could not load available timeframes.')}</span>`;
@@ -4053,23 +4072,26 @@
         setScheduleState('error', 'Accept the adult safety agreement first');
         return;
       }
-      const selectedDate = new Date(scheduleCallTimeInput.value);
-      if (Number.isNaN(selectedDate.getTime()) || selectedDate.getTime() < Date.now() + 5 * 60 * 1000) {
-        setScheduleState('error', 'Choose a time at least five minutes from now');
+      const required = requiredPeerSelections();
+      if (required < 1 || selectedPeerTimeframes.size !== required) {
+        setScheduleState('error', `Select exactly ${required} more timeframe${required === 1 ? '' : 's'} to hold five upcoming bookings`);
         return;
       }
       scheduleCallButton.disabled = true;
-      setScheduleState('searching', 'Saving your anonymous booking...');
+      setScheduleState('searching', 'Saving all selected peer bookings...');
       try {
-        const result = await backendRpc('book_scheduled_call', {
-          p_starts_at: selectedDate.toISOString(),
+        const result = await backendRpc('book_peer_schedule_bundle', {
+          p_starts_at: [...selectedPeerTimeframes],
           p_call_mode: selectedCallMode
         });
-        const confirmation = result?.status === 'matched' ? 'Paired for the selected time' : 'Booked successfully; waiting for an anonymous match';
+        const results = Array.isArray(result) ? result : [];
+        const paired = results.filter(item => item.status === 'matched').length;
+        const confirmation = `${results.length} timeframe${results.length === 1 ? '' : 's'} booked successfully${paired ? ` · ${paired} paired immediately` : ''}`;
         setScheduleState('ready', confirmation);
         showToast(confirmation);
-        scheduleCallTimeInput.value = '';
+        selectedPeerTimeframes.clear();
         await refreshScheduledBookings();
+        await loadPeerTimeframes();
         scheduleStatus.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       } catch (error) {
         setScheduleState('error', error?.message || 'Could not schedule the call');
@@ -4489,9 +4511,6 @@
       callStage.hidden = true;
       if (!peerCallDialog.open) peerCallDialog.showModal();
       if (!callPeer || callPeer.destroyed) initializeCallPeer();
-      const minimumTime = new Date(Date.now() + 5 * 60 * 1000);
-      minimumTime.setMinutes(Math.ceil(minimumTime.getMinutes() / 15) * 15, 0, 0);
-      scheduleCallTimeInput.min = new Date(minimumTime.getTime() - minimumTime.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
       updateCallAccountStrip();
       loadProfessionalDirectory();
       if (isSupabaseConfigured()) {
@@ -5521,13 +5540,16 @@
     });
     document.querySelectorAll('[data-call-mode]').forEach(button => {
       button.addEventListener('click', () => {
+        const previousMode = selectedCallMode;
         selectedCallMode = button.dataset.callMode === 'audio' ? 'audio' : 'video';
+        if (selectedCallMode !== previousMode) selectedPeerTimeframes.clear();
         document.querySelectorAll('[data-call-mode]').forEach(option => {
           const selected = option === button;
           option.classList.toggle('active', selected);
           option.setAttribute('aria-checked', String(selected));
         });
         updateCallStartButton();
+        updatePeerSelectionProgress();
         if (selectedCallTab === 'schedule') {
           loadPeerTimeframes();
         }
